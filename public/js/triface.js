@@ -14,7 +14,7 @@ var triface = function() {
         var error = request.error || function(response) {console.log(response);};
 
         rpc.request(request, function(response) {
-            success(eval(response.data));
+            success(JSON.parse(response.data));
         }, function(response) {
             error(response);
         });
@@ -29,6 +29,12 @@ var triface = function() {
         request.method = 'POST';
         api.request(request);
     };
+
+    api.get({url: "/model", success: function(response) {
+        _.each(response, function(model) {
+            api[model.name] = model;
+        });
+    }});
 
     return {
         api: api
