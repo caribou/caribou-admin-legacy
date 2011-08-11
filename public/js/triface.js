@@ -33,7 +33,27 @@ var triface = function() {
 
     var go = function(path) {
         History.pushState(path, path, path);
-        History.log(path);
+    };
+
+    var routing = {
+        actions: {},
+
+        add: function(path, name, action) {
+            sherpa.add(path).to(name);
+            this.actions[name] = action;
+        },
+
+        match: function(path) {
+            var match = sherpa.recognize(path);
+            var action = this.actions[match.destination];
+            return function() {
+                return action(match.params);
+            };
+        },
+
+        action: function() {
+            return this.match(History.getState().hash);
+        }
     };
 
     api.init = function() {
@@ -42,10 +62,16 @@ var triface = function() {
                 api[model.name] = model;
             });
         }});
+
+        window.onstatechange = function(e) {
+            var action = routing.action();
+            action();
+        };
     };
 
     return {
         api: api,
-        go: go
+        go: go,
+        routing: routing
     };
 }();

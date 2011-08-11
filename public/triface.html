@@ -27,8 +27,8 @@
 
 <script id="contentMenu" type="text/x-jquery-tmpl">
   <ul>
-    {{each(i, selection) selections}}
-    <li class="${class || 'menu_item'}" onclick="${selection.url}">${selection.title}</li>
+    {{each(i, choice) choices}}
+    <li class="${classes || 'menu_item'}" onclick="triface.go('${choice.url}')">${choice.title}</li>
     {{/each}}
   </ul>
 </script>
