@@ -11,6 +11,7 @@
     <script src="js/amplify.store.js" type="text/javascript"></script>
     <script src="js/history.adapter.jquery.js" type="text/javascript"></script>
     <script src="js/history.js" type="text/javascript"></script>
+    <script src="js/sherpa.js" type="text/javascript"></script>
     <script src="js/backbone.js" type="text/javascript"></script>
     <script src="js/triface.js" type="text/javascript"></script>
     <script src="js/admin.js" type="text/javascript"></script>
@@ -23,6 +24,14 @@
 </html>
 
 <script type="text/javascript">$(document).ready(triface.admin.init)</script>
+
+<script id="contentMenu" type="text/x-jquery-tmpl">
+  <ul>
+    {{each(i, selection) selections}}
+    <li class="${class || 'menu_item'}" onclick="${selection.url}">${selection.title}</li>
+    {{/each}}
+  </ul>
+</script>
 
 <script id="contentRow" type="text/x-jquery-tmpl">
   {{each(i, heading) headings}}

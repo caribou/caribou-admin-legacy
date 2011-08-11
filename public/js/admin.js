@@ -30,7 +30,6 @@ triface.admin = function() {
         init: function() {
             triface.api.init();
             home();
-            History.log(History.getState());
         }
     };
 }();

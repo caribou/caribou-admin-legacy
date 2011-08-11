@@ -8,6 +8,7 @@ var triface = function() {
     });
 
     var api = {};
+    var sherpa = new Sherpa.Router();
 
     api.request = function(request) {
         var success = request.success || function(response) {};
