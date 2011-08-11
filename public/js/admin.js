@@ -9,15 +9,28 @@ triface.admin = function() {
         };
     }();
 
+    var home = function() {
+        var state = History.getState();
+        var path = state.hash;
+        var url = (path.length > 1) ? path : '/model';
+        triface.api.get({
+            url: url,
+            success: function(response) {
+                var body = template.table(response);
+                $('#triface').html(body);
+            }
+        });
+    };
+
+    window.onstatechange = function(e) {
+        home();
+    };
+
     return {
         init: function() {
-            triface.api.get({
-                url: '/model',
-                success: function(response) {
-                    var body = template.table(response);
-                    $('#triface').append(body);
-                }
-            });
+            triface.api.init();
+            home();
+            History.log(History.getState());
         }
     };
 }();
