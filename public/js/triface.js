@@ -14,6 +14,7 @@ var triface = function() {
         var state = History.getState().hash.split('?');
         var path = state[0];
         var query = {};
+
         if (state[1]) {
             var params = state[1].split('&');
             if (params[0] === '') {
@@ -26,6 +27,7 @@ var triface = function() {
                 return args;
             }, {});
         }
+
         return {path: path, query: query};
     };
 
