@@ -1,50 +1,67 @@
 triface.admin = function() {
     var template = function() {
-        var table = function(items) {
-            return $('#contentTable').tmpl({items: items, headings: _.keys(_.first(items))});
+        var table = function(modelname, headings, items) {
+            return $('#contentTable').tmpl({modelname: modelname, headings: headings, items: items});
         };
 
         var nav = function(choices) {
             return $('#contentMenu').tmpl({choices: choices, classes: ''});
         };
 
+        var detail = function(modelname, headings, item) {
+            return $('#contentDetail').tmpl({modelname: modelname, headings: headings, item: item});
+        };
+
         return {
+            nav: nav,
             table: table,
-            nav: nav
+            detail: detail
         };
     }();
 
-    var home = function(params) {
+    var headerNav = function() {
+        if ($('#header').html() == '') {
+            var choices = _.map(triface.models, function(model) {
+                return {url: _.template('/<%= name %>', model), title: model.name};
+            });
+            var nav = template.nav(choices);
+            $('#header').html(nav);
+        }
+    };
+
+    var home = function(params, query) {
+        headerNav();
+    };
+
+    var contentList = function(params, query) {
         triface.api.get({
-            url: '/model',
+            url: _.template('/<%= model %>', params),
             success: function(response) {
-                var choices = _.map(response, function(model) {
-                    return {url: _.template('/<%= name %>', model), title: model.name};
-                });
-                var body = template.nav(choices);
+                headerNav();
+                var body = template.table(params.model, _.keys(_.first(response)), response);
                 $('#triface').html(body);
             }
         });
     };
 
-    var modelList = function(params) {
+    var contentDetail = function(params, query) {
         triface.api.get({
-            url: _.template('/<%= model %>', params),
+            url: _.template('/<%= model %>/<%= id %>', params),
             success: function(response) {
-                var body = template.table(response);
+                headerNav();
+                var body = template.detail(params.model, _.keys(response), response);
                 $('#triface').html(body);
             }
         });
     };
 
     triface.routing.add('/', 'home', home);
-    triface.routing.add('/:model', 'modelList', modelList);
+    triface.routing.add('/:model', 'contentList', contentList);
+    triface.routing.add('/:model/:id', 'contentDetail', contentDetail);
 
     return {
         init: function() {
-            triface.api.init();
-            var action = triface.routing.action();
-            action();
+            triface.init();
         }
     };
 }();

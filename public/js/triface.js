@@ -10,9 +10,28 @@ var triface = function() {
     var api = {};
     var sherpa = new Sherpa.Router();
 
+    var getPath = function() {
+        var state = History.getState().hash.split('?');
+        var path = state[0];
+        var query = {};
+        if (state[1]) {
+            var params = state[1].split('&');
+            if (params[0] === '') {
+                params = params.slice(1);
+            }
+
+            query = _.reduce(params, function(args, param) {
+                var parts = param.split('=');
+                args[parts[0]] = parts[1];
+                return args;
+            }, {});
+        }
+        return {path: path, query: query};
+    };
+
     api.request = function(request) {
         var success = request.success || function(response) {};
-        var error = request.error || function(response) {console.log(response);};
+        var error = request.error || function(response) {History.log(response);};
 
         rpc.request(request, function(response) {
             success(JSON.parse(response.data));
@@ -43,35 +62,46 @@ var triface = function() {
             this.actions[name] = action;
         },
 
-        match: function(path) {
+        match: function(path, query) {
             var match = sherpa.recognize(path);
             var action = this.actions[match.destination];
             return function() {
-                return action(match.params);
+                return action(match.params, query);
             };
         },
 
         action: function() {
-            return this.match(History.getState().hash);
+            var match = getPath();
+            return this.match(match.path, match.query);
         }
     };
 
-    api.init = function() {
+    var models = {};
+    var fetchModels = function(success) {
         api.get({url: "/model", success: function(response) {
             _.each(response, function(model) {
-                api[model.name] = model;
+                models[model.name] = model;
             });
+            success();
         }});
+    };
 
-        window.onstatechange = function(e) {
-            var action = routing.action();
-            action();
-        };
+    var act = function() {
+        var action = routing.action();
+        action();
+    };
+
+    var init = function(success) {
+        window.onstatechange = act;
+        fetchModels(act);
     };
 
     return {
+        init: init,
         api: api,
         go: go,
+        act: act,
+        models: models,
         routing: routing
     };
 }();
