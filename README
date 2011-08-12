@@ -1,0 +1,18 @@
+# Interface Admin mark III --------------
+
+## Setup ----------------------------
+
+Install the core triface api repository: https://github.com/kaleidomedallion/triface
+Add the following to your /etc/hosts file:
+
+  127.0.0.1 api.triface.local
+  127.0.0.1 admin.triface.local
+
+Include the respective nginx config files from each repository in your main nginx config, 
+and swap out the root paths to point to your installation directory.
+
+## Usage ----------------------------
+
+Navigate to http://admin.triface.local
+
+Enjoy!
