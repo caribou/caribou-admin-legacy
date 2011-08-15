@@ -19,18 +19,20 @@
   </head>
   <body>
     <div id="header"></div>
-    <div id="triface"></div>
+    <div id="container"></div>
   </body>
 </html>
 
 <script type="text/javascript">$(document).ready(triface.admin.init)</script>
 
 <script id="contentMenu" type="text/x-jquery-tmpl">
-  <ul>
-    {{each(i, choice) choices}}
-    <li class="${classes || 'menu_item'}" onclick="triface.go('${choice.url}')">${choice.title}</li>
-    {{/each}}
-  </ul>
+  <div id="nav">
+    <ul>
+      {{each(i, choice) choices}}
+      <li class="${choice.title} ${classes} ${chosen === choice.title ? 'selected' : ''}" onclick="triface.admin.nav.select('${choice.title}', '${choice.url}')">${choice.title}</li>
+      {{/each}}
+    </ul>
+  </div>
 </script>
 
 <script id="contentRow" type="text/x-jquery-tmpl">
@@ -40,6 +42,7 @@
 </script>
 
 <script id="contentTable" type="text/x-jquery-tmpl">
+  <div id="add" onclick="triface.go('/${modelname}/new')">add new ${modelname}</div>
   <table cellspacing=5>
     <thead>
       <tr>
@@ -59,10 +62,19 @@
 </script>
 
 <script id="contentDetail" type="text/x-jquery-tmpl">
-  <form method="post">
-    {{each(i, heading) headings}}
-    <label>${heading}</label>
-    <input type="text" name="${modelname}[${heading}]" value="${item[heading]}" />
-    {{/each}}
-  </form>
+  <div id="${modelname}" class="form">
+    <form>
+      <ul>
+        {{each(i, heading) headings}}
+        <li>
+          <label>${heading}</label>
+          <div class="field">
+            <input type="text" name="${modelname}[${heading}]" value="${item[heading]}" />
+          </div>
+        </li>
+        {{/each}}
+      </ul>
+      <div class="save" onclick="triface.save('${modelname}')">save</div>
+    </form>
+  </div>
 </script>
