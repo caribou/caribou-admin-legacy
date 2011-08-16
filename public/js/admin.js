@@ -20,13 +20,20 @@ triface.admin = function() {
     }();
 
     var nav = function() {
-        var select = function(choice, url) {
+        var highlight = function(choice) {
             $('#nav li').removeClass('selected');
-            $('#nav li.'+choice).addClass('selected');
+            if (choice) {
+                $('#nav li.'+choice).addClass('selected');
+            }
+        };
+
+        var select = function(choice, url) {
+            highlight(choice);
             triface.go(url);
         };
 
         return {
+            highlight: highlight,
             select: select
         };
     }();
@@ -36,13 +43,16 @@ triface.admin = function() {
             var choices = _.map(triface.models, function(model) {
                 return {url: _.template('/<%= name %>', model), title: model.name};
             });
-            var nav = template.nav(modelname, choices);
-            $('#header').html(nav);
+            var navup = template.nav(modelname, choices);
+            $('#header').html(navup);
         }
+
+        nav.highlight(modelname);
     };
 
     var home = function(params, query) {
         headerNav();
+        $('#container').html('');
     };
 
     var contentList = function(params, query) {
