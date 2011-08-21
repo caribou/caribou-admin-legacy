@@ -8,8 +8,14 @@ Add the following to your /etc/hosts file:
   127.0.0.1 api.triface.local
   127.0.0.1 admin.triface.local
 
+ngingx
 Include the respective nginx config files from each repository in your main nginx config, 
 and swap out the root paths to point to your installation directory.
+
+Apache httpd
+Include the respective Apache *-vhost config files from each repository in your main httpd config,
+making sure to change the root paths to point at your local installation directory.
+
 
 ## Usage ----------------------------
 
