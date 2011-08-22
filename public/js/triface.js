@@ -36,6 +36,7 @@ var triface = function() {
         var error = request.error || function(response) {History.log(response);};
 
         rpc.request(request, function(response) {
+            History.log(response.data);
             success(JSON.parse(response.data));
         }, function(response) {
             error(response);
@@ -80,12 +81,16 @@ var triface = function() {
 
     var models = {};
     var fetchModels = function(success) {
-        api.get({url: "/model", success: function(response) {
-            _.each(response, function(model) {
-                models[model.name] = model;
-            });
-            success();
-        }});
+        api.get({
+            url: "/model",
+            data: {include: "fields"},
+            success: function(response) {
+                _.each(response, function(model) {
+                    models[model.name] = model;
+                });
+                success();
+            }
+        });
     };
 
     var act = function() {

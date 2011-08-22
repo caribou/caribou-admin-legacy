@@ -60,25 +60,23 @@ triface.admin = function() {
             url: _.template('/<%= model %>', params),
             success: function(response) {
                 headerNav(params.model);
-                if (response.length > 0) {
-                    var body = template.table(params.model, _.keys(_.first(response)), response);
-                    $('#container').html(body);
-                } else {
-                    $('#container').html('No items to show');
-                }
+                var model = triface.models[params.model];
+                History.log(model);
+                var body = template.table(params.model, _.map(model.fields, function(field) {
+                    return field.name;
+                }), response);
+                $('#container').html(body);
             }
         });
     };
 
     var contentNew = function(params, query) {
-        // triface.api.get({
-        //     url: _.template('/<%= model %>/<%= id %>', params),
-        //     success: function(response) {
-        //         headerNav(params.model);
-        //         var body = template.detail(params.model, _.keys(response), response);
-        //         $('#container').html(body);
-        //     }
-        // });
+        headerNav(params.model);
+        var model = triface.models[params.model];
+        var body = template.detail(params.model, _.map(model.fields, function(field) {
+            return field.name;
+        }), {});
+        $('#container').html(body);
     };
 
     var contentDetail = function(params, query) {
