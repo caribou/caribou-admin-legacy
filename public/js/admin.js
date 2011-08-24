@@ -8,8 +8,9 @@ triface.admin = function() {
             return $('#contentMenu').tmpl({chosen: chosen || '', choices: choices, classes: ''});
         };
 
-        var detail = function(modelname, headings, item) {
-            return $('#contentDetail').tmpl({modelname: modelname, headings: headings, item: item});
+        var detail = function(model, item) {
+            History.log(model);
+            return $('#contentDetail').tmpl({model: model, item: item});
         };
 
         return {
@@ -70,12 +71,14 @@ triface.admin = function() {
         });
     };
 
+        // _.map(model.fields, function(field) {
+        //           return field.name;
+        //       })
+
     var contentNew = function(params, query) {
         headerNav(params.model);
         var model = triface.models[params.model];
-        var body = template.detail(params.model, _.map(model.fields, function(field) {
-            return field.name;
-        }), {});
+        var body = template.detail(model, {});
         $('#container').html(body);
     };
 
@@ -84,7 +87,8 @@ triface.admin = function() {
             url: _.template('/<%= model %>/<%= id %>', params),
             success: function(response) {
                 headerNav(params.model);
-                var body = template.detail(params.model, _.keys(response), response);
+                var model = triface.models[params.model];
+                var body = template.detail(model, response);
                 $('#container').html(body);
             }
         });

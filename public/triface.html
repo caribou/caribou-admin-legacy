@@ -62,20 +62,52 @@
 </script>
 
 <script id="contentDetail" type="text/x-jquery-tmpl">
-  <div id="add" onclick="triface.go('/${modelname}/new')">add new ${modelname}</div>
-  <div id="${modelname}" class="form">
+  <div id="add" onclick="triface.go('/${model.name}/new')">add new ${model.name}</div>
+  <div id="${model.name}" class="form">
     <form>
       <ul>
-        {{each(i, heading) headings}}
+        {{each(i, field) model.fields}}
         <li>
-          <label>${heading}</label>
+          <label>${field.name}</label>
           <div class="field">
-            <input type="text" name="${modelname}[${heading}]" value="${item[heading]}" />
+            {{tmpl(null, {field: field}) "#"+field.type+"Field"}}
           </div>
         </li>
         {{/each}}
       </ul>
-      <div class="save" onclick="triface.save('${modelname}')">save</div>
+      <div class="save" onclick="triface.save('${model.name}')">save</div>
     </form>
   </div>
+</script>
+
+<script id="booleanField" type="text/x-jquery-tmpl">
+  <input type="checkbox" name="${model.name}[${$item.field.name}]" value="${item[$item.field.name]}" />
+</script>
+
+<script id="stringField" type="text/x-jquery-tmpl">
+  <input type="text" name="${model.name}[${$item.field.name}]" value="${item[$item.field.name]}" />
+</script>
+
+<script id="integerField" type="text/x-jquery-tmpl">
+  <input type="text" name="${model.name}[${$item.field.name}]" value="${item[$item.field.name]}" />
+</script>
+
+<script id="textField" type="text/x-jquery-tmpl">
+  <textarea name="${model.name}[${$item.field.name}]">${item[$item.field.name]}</textarea>
+</script>
+
+<script id="timestampField" type="text/x-jquery-tmpl">
+  <input type="text" name="${model.name}[${$item.field.name}]" value="${item[$item.field.name]}" />
+</script>
+
+<script id="collectionField" type="text/x-jquery-tmpl">
+  <input type="text" name="${model.name}[${$item.field.name}]" value="${item[$item.field.name].length}" />
+</script>
+
+<script id="partField" type="text/x-jquery-tmpl">
+  <input type="text" name="${model.name}[${$item.field.name}]" value="${item[$item.field.name]}" />
+</script>
+
+<script id="linkField" type="text/x-jquery-tmpl">
+  <input type="text" name="${model.name}[${$item.field.name}]" value="${item[$item.field.name]}" />
 </script>
