@@ -1,16 +1,15 @@
 triface.admin = function() {
     var template = function() {
-        var table = function(modelname, headings, items) {
-            return $('#contentTable').tmpl({modelname: modelname, headings: headings, items: items});
-        };
-
         var nav = function(chosen, choices) {
             return $('#contentMenu').tmpl({chosen: chosen || '', choices: choices, classes: ''});
         };
 
-        var detail = function(model, item) {
-            History.log(model);
-            return $('#contentDetail').tmpl({model: model, item: item});
+        var table = function(model, items) {
+            return $('#contentTable').tmpl({model: model, items: items});
+        };
+
+        var detail = function(model, content) {
+            return $('#contentDetail').tmpl({model: model, content: content});
         };
 
         return {
@@ -62,18 +61,15 @@ triface.admin = function() {
             success: function(response) {
                 headerNav(params.model);
                 var model = triface.models[params.model];
-                History.log(model);
-                var body = template.table(params.model, _.map(model.fields, function(field) {
-                    return field.name;
-                }), response);
+                var body = template.table(model, response);
                 $('#container').html(body);
             }
         });
     };
 
-        // _.map(model.fields, function(field) {
-        //           return field.name;
-        //       })
+// _.map(model.fields, function(field) {
+//                     return field.name;
+//                 }), 
 
     var contentNew = function(params, query) {
         headerNav(params.model);
