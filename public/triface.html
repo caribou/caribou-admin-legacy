@@ -64,14 +64,19 @@
 <script id="contentDetail" type="text/x-jquery-tmpl">
   <div id="add" onclick="triface.go('/${model.name}/new')">add new ${model.name}</div>
   <div id="${model.name}" class="form">
-    <form>
+    <form id="${model.name}_form">
+      <input type="hidden" name="${model.name}[id]" value="${content.id}" />
       <ul>
         {{each(i, field) model.fields}}
         <li>
-          <label>${field.name}</label>
+          <label>${field.name}:</label>
+          {{if field.editable}}
           <div class="field">
             {{tmpl(null, {field: field}) "#"+field.type+"Field"}}
           </div>
+          {{else}}
+          ${$data.content[field.name]}
+          {{/if}}
         </li>
         {{/each}}
       </ul>

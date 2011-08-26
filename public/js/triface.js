@@ -98,6 +98,31 @@ var triface = function() {
         action();
     };
 
+    var formData = function(selector) {
+        var verbose = $(selector).serializeArray();
+        var data = {};
+        for (var i = 0; i < verbose.length; i++) {
+            data[verbose[i].name] = verbose[i].value;
+        }
+        return data;
+    };
+
+    var save = function(name) {
+        var data = formData('#'+name+'_form');
+        var url = '/' + name;
+        var id = name + '[id]'
+        if (data[id] && !(data[id] === '')) {url += '/' + data[id]}
+        delete data[id];
+
+        api.post({
+            url: url,
+            data: data,
+            success: function(response) {
+                History.log(response);
+            }
+        });
+    };
+
     var init = function(success) {
         window.onstatechange = act;
         fetchModels(act);
@@ -109,6 +134,7 @@ var triface = function() {
         go: go,
         act: act,
         models: models,
-        routing: routing
+        routing: routing,
+        save: save
     };
 }();

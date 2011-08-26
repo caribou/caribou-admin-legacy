@@ -67,10 +67,6 @@ triface.admin = function() {
         });
     };
 
-// _.map(model.fields, function(field) {
-//                     return field.name;
-//                 }), 
-
     var contentNew = function(params, query) {
         headerNav(params.model);
         var model = triface.models[params.model];
