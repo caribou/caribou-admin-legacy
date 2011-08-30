@@ -106,7 +106,7 @@
 </script>
 
 <script id="collectionField" type="text/x-jquery-tmpl">
-  <input type="text" name="${model.name}[${$item.field.name}]" value="${content[$item.field.name]}" />
+  {{tmpl({model: $item.field.target(), items: content[$item.field.name]}) "#contentTable"}}
 </script>
 
 <script id="partField" type="text/x-jquery-tmpl">

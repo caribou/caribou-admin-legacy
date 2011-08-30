@@ -80,11 +80,20 @@ triface.admin = function() {
     };
 
     var contentDetail = function(params, query) {
+        var model = triface.models[params.model];
+        var include = _.map(_.filter(model.fields, function(field) {
+            return field.type === 'collection';
+        }), function(collection) {
+            return collection.name;
+        }).join(',');
+
+        var url = _.template('/<%= model %>/<%= id %>', params);
+
         triface.api.get({
-            url: _.template('/<%= model %>/<%= id %>', params),
+            url: url,
+            data: {include: include},
             success: function(response) {
                 headerNav(params.model);
-                var model = triface.models[params.model];
                 var body = $('#contentDetail').tmpl({
                     model: model, 
                     content: response, 
@@ -119,7 +128,14 @@ triface.admin = function() {
             url: url,
             data: data,
             success: function(response) {
-                triface.go(url);
+                var model = triface.models[name];
+                var body = $('#contentDetail').tmpl({
+                    model: model, 
+                    content: response, 
+                    action: 'update'
+                });
+
+                $('#container').html(body);
             }
         });
     };
