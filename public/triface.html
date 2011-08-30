@@ -62,8 +62,8 @@
 </script>
 
 <script id="contentDetail" type="text/x-jquery-tmpl">
-  <div id="add" onclick="triface.go('/${model.name}/new')">add new ${model.name}</div>
   <div id="${model.name}" class="form">
+    <div id="add" onclick="triface.go('/${model.name}/new')">add new ${model.name}</div>
     <form id="${model.name}_form">
       <input type="hidden" name="${model.name}[id]" value="${content.id}" />
       <ul>

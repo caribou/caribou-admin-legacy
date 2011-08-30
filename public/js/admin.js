@@ -128,14 +128,7 @@ triface.admin = function() {
             url: url,
             data: data,
             success: function(response) {
-                var model = triface.models[name];
-                var body = $('#contentDetail').tmpl({
-                    model: model, 
-                    content: response, 
-                    action: 'update'
-                });
-
-                $('#container').html(body);
+                triface.go(url);
             }
         });
     };

@@ -58,7 +58,17 @@ var triface = function() {
     };
 
     var go = function(path) {
-        History.pushState(path, path, path);
+        var state = History.getState();
+        var trodden = _.last(state.cleanUrl.match(/http:\/\/[^\/]+(.*)/));
+
+        History.log(path);
+        History.log(trodden);
+
+        if (path === trodden) {
+            window.location.reload();
+        } else {
+            History.pushState(path, path, path);
+        }
     };
 
     var routing = {
