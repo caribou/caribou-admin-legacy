@@ -53,6 +53,11 @@ var triface = function() {
         api.request(request);
     };
 
+    api.put = function(request) {
+        request.method = 'PUT';
+        api.request(request);
+    };
+
     var go = function(path) {
         History.pushState(path, path, path);
     };
@@ -114,22 +119,6 @@ var triface = function() {
         return data;
     };
 
-    var save = function(name) {
-        var data = formData('#'+name+'_form');
-        var url = '/' + name;
-        var id = name + '[id]';
-        if (data[id] && !(data[id] === '')) {url += '/' + data[id];}
-        delete data[id];
-
-        api.post({
-            url: url,
-            data: data,
-            success: function(response) {
-                History.log(response);
-            }
-        });
-    };
-
     var init = function(success) {
         window.onstatechange = act;
         fetchModels(act);
@@ -142,7 +131,6 @@ var triface = function() {
         act: act,
         models: models,
         routing: routing,
-        save: save,
         formData: formData
     };
 }();

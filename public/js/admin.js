@@ -70,7 +70,12 @@ triface.admin = function() {
     var contentNew = function(params, query) {
         headerNav(params.model);
         var model = triface.models[params.model];
-        var body = template.detail(model, {});
+        var body = $('#contentDetail').tmpl({
+            model: model, 
+            content: {}, 
+            action: 'create'
+        });
+
         $('#container').html(body);
     };
 
@@ -80,8 +85,41 @@ triface.admin = function() {
             success: function(response) {
                 headerNav(params.model);
                 var model = triface.models[params.model];
-                var body = template.detail(model, response);
+                var body = $('#contentDetail').tmpl({
+                    model: model, 
+                    content: response, 
+                    action: 'update'
+                });
+
                 $('#container').html(body);
+            }
+        });
+    };
+
+    var contentCreate = function(name) {
+        var data = triface.formData('#'+name+'_form');
+        var url = '/' + name;
+
+        triface.api.post({
+            url: url,
+            data: data,
+            success: function(response) {
+                triface.go(url + '/' + response.id);
+            }
+        });
+    };
+
+    var contentUpdate = function(name) {
+        var data = triface.formData('#'+name+'_form');
+        var id = name + '[id]';
+        var url = '/' + name + '/' + data[id];
+        delete data[id];
+
+        triface.api.put({
+            url: url,
+            data: data,
+            success: function(response) {
+                triface.go(url);
             }
         });
     };
@@ -96,7 +134,10 @@ triface.admin = function() {
             triface.init();
         },
 
-        nav: nav
+        nav: nav,
+
+        create: contentCreate,
+        update: contentUpdate
     };
 }();
 
