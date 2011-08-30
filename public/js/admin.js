@@ -134,6 +134,16 @@ triface.admin = function() {
         });
     };
 
+    var contentDelete = function(name, id) {
+        var url = '/' + name + '/' + id;
+        triface.api.delete({
+            url: url,
+            success: function(response) {
+                $('#'+name+'_'+id).remove();
+            }
+        });
+    };
+
     triface.routing.add('/', 'home', home);
     triface.routing.add('/:model', 'contentList', contentList);
     triface.routing.add('/:model/new', 'contentNew', contentNew);
@@ -147,7 +157,8 @@ triface.admin = function() {
         nav: nav,
 
         create: contentCreate,
-        update: contentUpdate
+        update: contentUpdate,
+        delete: contentDelete
     };
 }();
 

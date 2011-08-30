@@ -57,6 +57,11 @@ var triface = function() {
         api.request(request);
     };
 
+    api.delete = function(request) {
+        request.method = 'DELETE';
+        api.request(request);
+    };
+
     var go = function(path) {
         var state = History.getState();
         var trodden = _.last(state.cleanUrl.match(/http:\/\/[^\/]+(.*)/));

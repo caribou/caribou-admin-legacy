@@ -12,7 +12,6 @@
     <script src="/js/history.adapter.jquery.js" type="text/javascript"></script>
     <script src="/js/history.js" type="text/javascript"></script>
     <script src="/js/sherpa.js" type="text/javascript"></script>
-    <script src="/js/backbone.js" type="text/javascript"></script>
     <script src="/js/triface.js" type="text/javascript"></script>
     <script src="/js/admin.js" type="text/javascript"></script>
     <link href="/css/triface.css" rel="stylesheet" type="text/css" />
@@ -39,6 +38,7 @@
   {{each(i, field) model.fields}}
   <td>${$item.content[field.name]}</td>
   {{/each}}
+  <td><span class="edit" onclick="triface.go('/${model.name}/${$item.content.id}')">edit</span> | <span class="delete" onclick="triface.admin.delete('${model.slug}', ${$item.content.id})">delete</span></td>
 </script>
 
 <script id="contentTable" type="text/x-jquery-tmpl">
@@ -49,11 +49,12 @@
         {{each(i, field) model.fields}}
         <th>${field.name}</th>
         {{/each}}
+        <th>actions</th>
       </tr>
     </thead>
     <tbody>
       {{each(i, content) items}}
-      <tr onclick="triface.go('/${$data.model.name}/${content.id}')">
+      <tr id="${$data.model.name}_${content.id}">
         {{tmpl(null, {content: content}) "#contentRow"}}
       </tr>
       {{/each}}
@@ -62,7 +63,7 @@
 </script>
 
 <script id="contentDetail" type="text/x-jquery-tmpl">
-  <div id="${model.name}" class="form">
+  <div id="${model.name}_${content.id}" class="form">
     <div id="add" onclick="triface.go('/${model.name}/new')">add new ${model.name}</div>
     <form id="${model.name}_form">
       <input type="hidden" name="${model.name}[id]" value="${content.id}" />

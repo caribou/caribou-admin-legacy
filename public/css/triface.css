@@ -43,3 +43,11 @@ ul {
 .save {
     color: #7777cc;
 }
+
+.edit {
+    color: #55cc99 !important;
+}
+
+.delete {
+    color: #882222 !important;
+}
