@@ -61,11 +61,8 @@ var triface = function() {
         var state = History.getState();
         var trodden = _.last(state.cleanUrl.match(/http:\/\/[^\/]+(.*)/));
 
-        History.log(path);
-        History.log(trodden);
-
         if (path === trodden) {
-            window.location.reload();
+            act();
         } else {
             History.pushState(path, path, path);
         }
