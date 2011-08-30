@@ -99,19 +99,26 @@ var triface = function() {
     };
 
     var formData = function(selector) {
-        var verbose = $(selector).serializeArray();
         var data = {};
+
+        var verbose = $(selector).serializeArray();
         for (var i = 0; i < verbose.length; i++) {
             data[verbose[i].name] = verbose[i].value;
         }
+
+        var checks = $(selector + " input:checkbox");
+        for (i = 0; i < checks.length; i++) {
+            data[checks[i].name] = checks[i].checked;
+        }
+
         return data;
     };
 
     var save = function(name) {
         var data = formData('#'+name+'_form');
         var url = '/' + name;
-        var id = name + '[id]'
-        if (data[id] && !(data[id] === '')) {url += '/' + data[id]}
+        var id = name + '[id]';
+        if (data[id] && !(data[id] === '')) {url += '/' + data[id];}
         delete data[id];
 
         api.post({
@@ -135,6 +142,7 @@ var triface = function() {
         act: act,
         models: models,
         routing: routing,
-        save: save
+        save: save,
+        formData: formData
     };
 }();

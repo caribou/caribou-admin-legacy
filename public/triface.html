@@ -86,7 +86,7 @@
 </script>
 
 <script id="booleanField" type="text/x-jquery-tmpl">
-  <input type="checkbox" name="${model.name}[${$item.field.name}]" value="${content[$item.field.name]}" />
+  <input type="checkbox" name="${model.name}[${$item.field.name}]" value="true" {{if content[$item.field.name]}}checked{{/if}} />
 </script>
 
 <script id="stringField" type="text/x-jquery-tmpl">
