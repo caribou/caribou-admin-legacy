@@ -40,7 +40,8 @@ triface.admin = function() {
 
     var headerNav = function(modelname) {
         if ($('#header').html() == '') {
-            var choices = _.map(triface.models, function(model) {
+            var choices = _.map(triface.modelNames, function(modelName) {
+                var model = triface.models[modelName];
                 return {url: _.template('/<%= name %>', model), title: model.name};
             });
             var navup = template.nav(modelname, choices);

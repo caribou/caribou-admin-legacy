@@ -94,6 +94,8 @@ var triface = function() {
     };
 
     var models = {};
+    var modelNames = [];
+
     var fetchModels = function(success) {
         api.get({
             url: "/model",
@@ -109,6 +111,7 @@ var triface = function() {
 
                     models[model.id] = model;
                     models[model.name] = model;
+                    modelNames.push(model.name);
                 });
                 success();
             }
@@ -147,6 +150,7 @@ var triface = function() {
         go: go,
         act: act,
         models: models,
+        modelNames: modelNames,
         routing: routing,
         formData: formData
     };
