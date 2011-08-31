@@ -71,13 +71,13 @@
         {{each(i, field) model.fields}}
         <li>
           <label>${field.name}:</label>
-          {{if field.editable}}
           <div class="field">
+            {{if field.editable}}
             {{tmpl({model: $data.model, content: $data.content, field: field}) "#"+field.type+"Field"}}
+            {{else}}
+            ${$data.content[field.name]}
+            {{/if}}
           </div>
-          {{else}}
-          ${$data.content[field.name]}
-          {{/if}}
         </li>
         {{/each}}
       </ul>
