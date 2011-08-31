@@ -42,6 +42,7 @@
 </script>
 
 <script id="contentTable" type="text/x-jquery-tmpl">
+  ${History.log($data+'|'+$item)}
   <div id="add" onclick="triface.go('/${model.name}/new')">add new ${model.name}</div>
   <table cellspacing=5>
     <thead>

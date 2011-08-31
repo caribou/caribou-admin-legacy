@@ -106,15 +106,20 @@ var triface = function() {
                 _.each(response, function(model) {
                     for (var i = 0; i < model.fields.length; i++) {
                         var target_id = model.fields[i].target_id;
-                        model.fields[i].target = target_id ? function() {
-                            return models[target_id];
-                        } : function() {};
+                        model.fields[i].target = target_id ? function(target_id) {
+                            return function() {
+                                return models[target_id];
+                            }
+                        }(target_id) : function() {};
                     }
+                });
 
+                _.each(response, function(model) {
                     models[model.id] = model;
                     models[model.name] = model;
                     modelNames.push(model.name);
                 });
+
                 success();
             }
         });
