@@ -112,9 +112,7 @@ var triface = function() {
                             }
                         }(target_id) : function() {};
                     }
-                });
 
-                _.each(response, function(model) {
                     models[model.id] = model;
                     models[model.name] = model;
                     modelNames.push(model.name);

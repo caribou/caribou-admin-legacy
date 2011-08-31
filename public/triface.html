@@ -36,13 +36,12 @@
 
 <script id="contentRow" type="text/x-jquery-tmpl">
   {{each(i, field) model.fields}}
-  <td>${$item.content[field.name]}</td>
+  <td>${content[field.name]}</td>
   {{/each}}
-  <td><span class="edit" onclick="triface.go('/${model.name}/${$item.content.id}')">edit</span> | <span class="delete" onclick="triface.admin.delete('${model.slug}', ${$item.content.id})">delete</span></td>
+  <td><span class="edit" onclick="triface.go('/${model.name}/${content.id}')">edit</span> | <span class="delete" onclick="triface.admin.delete('${model.slug}', ${content.id})">delete</span></td>
 </script>
 
 <script id="contentTable" type="text/x-jquery-tmpl">
-  ${History.log($data+'|'+$item)}
   <div id="add" onclick="triface.go('/${model.name}/new')">add new ${model.name}</div>
   <table cellspacing=5>
     <thead>
@@ -56,7 +55,7 @@
     <tbody>
       {{each(i, content) items}}
       <tr id="${$data.model.name}_${content.id}">
-        {{tmpl(null, {content: content}) "#contentRow"}}
+        {{tmpl({model: $data.model, content: content}) "#contentRow"}}
       </tr>
       {{/each}}
     </tbody>
@@ -74,7 +73,7 @@
           <label>${field.name}:</label>
           {{if field.editable}}
           <div class="field">
-            {{tmpl(null, {field: field}) "#"+field.type+"Field"}}
+            {{tmpl({model: $data.model, content: $data.content, field: field}) "#"+field.type+"Field"}}
           </div>
           {{else}}
           ${$data.content[field.name]}
@@ -88,33 +87,33 @@
 </script>
 
 <script id="booleanField" type="text/x-jquery-tmpl">
-  <input type="checkbox" name="${model.name}[${$item.field.name}]" value="true" {{if content[$item.field.name]}}checked{{/if}} />
+  <input type="checkbox" name="${model.name}[${field.name}]" value="true" {{if content[field.name]}}checked{{/if}} />
 </script>
 
 <script id="stringField" type="text/x-jquery-tmpl">
-  <input type="text" name="${model.name}[${$item.field.name}]" value="${content[$item.field.name]}" />
+  <input type="text" name="${model.name}[${field.name}]" value="${content[field.name]}" />
 </script>
 
 <script id="integerField" type="text/x-jquery-tmpl">
-  <input type="text" name="${model.name}[${$item.field.name}]" value="${content[$item.field.name]}" />
+  <input type="text" name="${model.name}[${field.name}]" value="${content[field.name]}" />
 </script>
 
 <script id="textField" type="text/x-jquery-tmpl">
-  <textarea name="${model.name}[${$item.field.name}]">${content[$item.field.name]}</textarea>
+  <textarea name="${model.name}[${field.name}]">${content[field.name]}</textarea>
 </script>
 
 <script id="timestampField" type="text/x-jquery-tmpl">
-  <input type="text" name="${model.name}[${$item.field.name}]" value="${content[$item.field.name]}" />
+  <input type="text" name="${model.name}[${field.name}]" value="${content[field.name]}" />
 </script>
 
 <script id="collectionField" type="text/x-jquery-tmpl">
-  {{tmpl({model: $item.field.target(), items: content[$item.field.name]}) "#contentTable"}}
+  {{tmpl({model: field.target(), items: content[field.name]}) "#contentTable"}}
 </script>
 
 <script id="partField" type="text/x-jquery-tmpl">
-  <input type="text" name="${model.name}[${$item.field.name}]" value="${content[$item.field.name]}" />
+  <input type="text" name="${model.name}[${field.name}]" value="${content[field.name]}" />
 </script>
 
 <script id="linkField" type="text/x-jquery-tmpl">
-  <input type="text" name="${model.name}[${$item.field.name}]" value="${content[$item.field.name]}" />
+  <input type="text" name="${model.name}[${field.name}]" value="${content[field.name]}" />
 </script>
