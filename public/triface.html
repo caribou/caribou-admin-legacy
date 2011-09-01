@@ -38,7 +38,11 @@
   {{each(i, field) model.fields}}
   <td>${content[field.name]}</td>
   {{/each}}
-  <td><span class="edit" onclick="triface.go('/${model.name}/${content.id}')">edit</span> | <span class="delete" onclick="triface.admin.delete('${model.slug}', ${content.id})">delete</span></td>
+  <td>
+    <span class="edit" onclick="triface.go('/${model.name}/${content.id}')">edit</span>
+    {{if !content.locked}}
+    | <span class="delete" onclick="triface.admin.delete('${model.slug}', ${content.id})">delete</span></td>
+    {{/if}}
 </script>
 
 <script id="contentTable" type="text/x-jquery-tmpl">
