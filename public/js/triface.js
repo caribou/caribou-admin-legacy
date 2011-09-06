@@ -109,7 +109,7 @@ var triface = function() {
                         model.fields[i].target = target_id ? function(target_id) {
                             return function() {
                                 return models[target_id];
-                            }
+                            };
                         }(target_id) : function() {};
                     }
 
@@ -130,10 +130,12 @@ var triface = function() {
 
     var formData = function(selector) {
         var data = {};
-
         var verbose = $(selector).serializeArray();
+
         for (var i = 0; i < verbose.length; i++) {
-            data[verbose[i].name] = verbose[i].value;
+            if (verbose[i].value && !(verbose[i].value === '')) {
+                data[verbose[i].name] = verbose[i].value;
+            }
         }
 
         var checks = $(selector + " input:checkbox");
