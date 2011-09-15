@@ -4,8 +4,8 @@ interface.admin = function() {
             return $('#tabbedNavigation').tmpl({chosen: chosen || '', choices: choices, classes: ''});
         };
 
-        var getMainContentForList = function(model, items) {
-            return $('#mainContentForList').tmpl({model: model, items: items});
+        var getMainContentForList = function(model, content) {
+            return $('#mainContentForList').tmpl({model: model, content: content});
         };
 
         var getMainContentForEdit = function(model, content) {
@@ -92,7 +92,7 @@ interface.admin = function() {
                 $('.action_items').html(action_items);
                 var sidebar = template.getSidebarForList(model, response.response);
                 $('#sidebar').html(sidebar);
-                var main_content = template.getMainContentForList(model, response.response);
+                var main_content = template.getMainContentForList(model, response);
                 $('#main_content').html(main_content);
             }
         });
@@ -205,6 +205,7 @@ interface.admin = function() {
     interface.routing.add('/', 'home', home);
     interface.routing.add('/:model', 'contentList', contentList);
     interface.routing.add('/:model/new', 'contentNew', contentNew);
+    interface.routing.add('/:model/:page', 'contentList', contentList);
     interface.routing.add('/:model/:id/edit', 'contentEdit', contentEdit);
     interface.routing.add('/:model/:id/view', 'contentView', contentView);
 
