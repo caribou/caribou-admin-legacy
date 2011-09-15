@@ -1,4 +1,4 @@
-var triface = function() {
+var interface = function() {
     var rpc = new easyXDM.Rpc({
         remote: "http://api.triface.local/cors/"
     }, {

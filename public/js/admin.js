@@ -1,35 +1,61 @@
-triface.admin = function() {
+interface.admin = function() {
     var template = function() {
-        var nav = function(chosen, choices) {
-            return $('#contentMenu').tmpl({chosen: chosen || '', choices: choices, classes: ''});
+        var getTabbedNavigation = function(chosen, choices) {
+            return $('#tabbedNavigation').tmpl({chosen: chosen || '', choices: choices, classes: ''});
         };
 
-        var table = function(model, items) {
-            return $('#contentTable').tmpl({model: model, items: items});
+        var getMainContentForList = function(model, items) {
+            return $('#mainContentForList').tmpl({model: model, items: items});
         };
 
-        var detail = function(model, content) {
-            return $('#contentDetail').tmpl({model: model, content: content});
+        var getMainContentForEdit = function(model, content) {
+            return $('#mainContentForEdit').tmpl({model: model, content: content});
+        };
+        
+        var getMainContentForView = function(model, content) {
+            return $('#mainContentForView').tmpl({model: model, content: content});
+        };
+        
+        var getActionItemsForList = function(model, content) {
+            return $('#actionItemsForList').tmpl({model: model, content: content});
+        };
+        
+        var getActionItemsForEdit = function(model, content) {
+            return $('#actionItemsForEdit').tmpl({model: model, content: content});
+        };
+        
+        var getActionItemsForView = function(model, content) {
+            return $('#actionItemsForView').tmpl({model: model, content: content});
+        };
+        
+        var getSidebarForList = function(model, content) {
+            return $('#sidebarForList').tmpl({model: model, content: content});
         };
 
         return {
-            nav: nav,
-            table: table,
-            detail: detail
+            getTabbedNavigation: getTabbedNavigation,
+            getMainContentForList: getMainContentForList,
+            getMainContentForEdit: getMainContentForEdit,
+            getMainContentForView: getMainContentForView,
+            getActionItemsForList: getActionItemsForList,
+            getActionItemsForEdit: getActionItemsForEdit,
+            getActionItemsForView: getActionItemsForView,
+            getSidebarForList: getSidebarForList
         };
     }();
 
     var nav = function() {
         var highlight = function(choice) {
-            $('#nav li').removeClass('selected');
+            $('#tabs li').removeClass('current');
             if (choice) {
-                $('#nav li.'+choice).addClass('selected');
+                $('#tabs li#'+choice).addClass('current');
+                $('#page_title').html(choice);
             }
         };
 
         var select = function(choice, url) {
             highlight(choice);
-            triface.go(url);
+            interface.go(url);
         };
 
         return {
@@ -39,13 +65,13 @@ triface.admin = function() {
     }();
 
     var headerNav = function(modelname) {
-        if ($('#header').html() == '') {
-            var choices = _.map(triface.modelNames, function(modelName) {
-                var model = triface.models[modelName];
+        if ($('#tabs').html() == '') {
+            var choices = _.map(interface.modelNames, function(modelName) {
+                var model = interface.models[modelName];
                 return {url: _.template('/<%= name %>', model), title: model.name};
             });
-            var navup = template.nav(modelname, choices);
-            $('#header').html(navup);
+            var navup = template.getTabbedNavigation(modelname, choices);
+            $('#tabs').html(navup);
         }
 
         nav.highlight(modelname);
@@ -57,31 +83,35 @@ triface.admin = function() {
     };
 
     var contentList = function(params, query) {
-        triface.api.get({
+        interface.api.get({
             url: _.template('/<%= model %>', params),
             success: function(response) {
                 headerNav(params.model);
-                var model = triface.models[params.model];
-                var body = template.table(model, response);
-                $('#container').html(body);
+                var model = interface.models[params.model];
+                var action_items = template.getActionItemsForList(model, response);
+                $('.action_items').html(action_items);
+                var sidebar = template.getSidebarForList(model, response);
+                $('#sidebar').html(sidebar);
+                var main_content = template.getMainContentForList(model, response);
+                $('#main_content').html(main_content);
             }
         });
     };
 
     var contentNew = function(params, query) {
         headerNav(params.model);
-        var model = triface.models[params.model];
-        var body = $('#contentDetail').tmpl({
+        var model = interface.models[params.model];
+        var main_content = $('#contentDetail').tmpl({
             model: model, 
             content: {}, 
             action: 'create'
         });
 
-        $('#container').html(body);
+        $('#main_content').html(main_content);
     };
 
-    var contentDetail = function(params, query) {
-        var model = triface.models[params.model];
+    var contentEdit = function(params, query) {
+        var model = interface.models[params.model];
         var include = _.map(_.filter(model.fields, function(field) {
             return field.type === 'collection';
         }), function(collection) {
@@ -90,27 +120,55 @@ triface.admin = function() {
 
         var url = _.template('/<%= model %>/<%= id %>', params);
 
-        triface.api.get({
+        interface.api.get({
             url: url,
             data: {include: include},
             success: function(response) {
                 headerNav(params.model);
-                var body = $('#contentDetail').tmpl({
+                var action_items = template.getActionItemsForEdit(model, response);
+                $('.action_items').html(action_items);
+                var main_content = $('#mainContentForEdit').tmpl({
                     model: model, 
                     content: response, 
                     action: 'update'
                 });
+                $('#main_content').html(main_content);
+            }
+        });
+    };
+    
+    var contentView = function(params, query) {
+        var model = interface.models[params.model];
+        var include = _.map(_.filter(model.fields, function(field) {
+            return field.type === 'collection';
+        }), function(collection) {
+            return collection.name;
+        }).join(',');
 
-                $('#container').html(body);
+        var url = _.template('/<%= model %>/<%= id %>', params);
+
+        interface.api.get({
+            url: url,
+            data: {include: include},
+            success: function(response) {
+                headerNav(params.model);
+                var action_items = template.getActionItemsForView(model, response);
+                $('.action_items').html(action_items);
+                var body = $('#mainContentForView').tmpl({
+                    model: model, 
+                    content: response, 
+                    action: 'update'
+                });
+                $('#main_content').html(body);
             }
         });
     };
 
     var contentCreate = function(name) {
-        var data = triface.formData('#'+name+'_form');
+        var data = interface.formData('#'+name+'_form');
         var url = '/' + name;
 
-        triface.api.post({
+        interface.api.post({
             url: url,
             data: data,
             success: function(response) {
@@ -120,23 +178,23 @@ triface.admin = function() {
     };
 
     var contentUpdate = function(name) {
-        var data = triface.formData('#'+name+'_form');
+        var data = interface.formData('#'+name+'_form');
         var id = name + '[id]';
         var url = '/' + name + '/' + data[id];
         delete data[id];
 
-        triface.api.put({
+        interface.api.put({
             url: url,
             data: data,
             success: function(response) {
-                triface.go(url);
+                interface.go(url);
             }
         });
     };
 
     var contentDelete = function(name, id) {
         var url = '/' + name + '/' + id;
-        triface.api.delete({
+        interface.api.delete({
             url: url,
             success: function(response) {
                 $('#'+name+'_'+id).remove();
@@ -144,18 +202,17 @@ triface.admin = function() {
         });
     };
 
-    triface.routing.add('/', 'home', home);
-    triface.routing.add('/:model', 'contentList', contentList);
-    triface.routing.add('/:model/new', 'contentNew', contentNew);
-    triface.routing.add('/:model/:id', 'contentDetail', contentDetail);
+    interface.routing.add('/', 'home', home);
+    interface.routing.add('/:model', 'contentList', contentList);
+    interface.routing.add('/:model/new', 'contentNew', contentNew);
+    interface.routing.add('/:model/:id/edit', 'contentEdit', contentEdit);
+    interface.routing.add('/:model/:id/view', 'contentView', contentView);
 
     return {
         init: function() {
-            triface.init();
+            interface.init();
         },
-
         nav: nav,
-
         create: contentCreate,
         update: contentUpdate,
         delete: contentDelete
