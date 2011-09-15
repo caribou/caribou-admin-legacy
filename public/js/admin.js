@@ -62,7 +62,7 @@ triface.admin = function() {
             success: function(response) {
                 headerNav(params.model);
                 var model = triface.models[params.model];
-                var body = template.table(model, response);
+                var body = template.table(model, response.response);
                 $('#container').html(body);
             }
         });
@@ -97,7 +97,7 @@ triface.admin = function() {
                 headerNav(params.model);
                 var body = $('#contentDetail').tmpl({
                     model: model, 
-                    content: response, 
+                    content: response.response, 
                     action: 'update'
                 });
 
@@ -114,7 +114,7 @@ triface.admin = function() {
             url: url,
             data: data,
             success: function(response) {
-                triface.go(url + '/' + response.id);
+                triface.go(url + '/' + response.response.id);
             }
         });
     };

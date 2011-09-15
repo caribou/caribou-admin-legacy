@@ -103,7 +103,7 @@ var triface = function() {
             url: "/model",
             data: {include: "fields"},
             success: function(response) {
-                _.each(response, function(model) {
+                _.each(response.response, function(model) {
                     for (var i = 0; i < model.fields.length; i++) {
                         var target_id = model.fields[i].target_id;
                         model.fields[i].target = target_id ? function(target_id) {
