@@ -135,17 +135,9 @@
       <em>All</em>
        <span class="count">(${content.meta.count})</span>
      </span>
-    <span class="scope in_progress">
-      <a href="/admin/orders?order=id_desc&amp;page=1&amp;scope=in_progress">In Progress</a>
-       <span class="count">(32)</span>
-     </span>
-    <span class="scope complete">
-      <a href="/admin/orders?order=id_desc&amp;page=1&amp;scope=complete">Complete</a>
-       <span class="count">(265)</span>
-     </span>
   </div>
   <div class="paginated_collection">
-    <div class="pagination_information">Displaying ${model.name} <b>1&nbsp;-&nbsp;30</b> of <b>84</b> in total</div>
+    <div class="pagination_information">Displaying ${model.name} <b>1 - 30</b> of <b>84</b> in total</div>
     <div class="paginated_collection_contents">
       <div class="index_content">
         <div class="index_as_table">
@@ -154,7 +146,7 @@
               <tr>
                 {{each(i, field) model.fields}}
                 <th class="{{if i==0}}sorted-desc{{/if}} sortable">
-                  <a href="javascript:;" onclick="interface.go('/${$data.model.name}?order=${field.name}_desc')">${field.name}</a>
+                  <a href="javascript:;" onclick="interface.go('/${$data.model.name}?order_by=${field.name}&order=desc')">${field.name}</a>
                 </th>
                 {{/each}}
                 <th>&nbsp;</th>
@@ -178,7 +170,7 @@
           1
         </span>
         <span class="page">
-          <a href="/admin/customers?order=id_desc&amp;page=2" rel="next">2</a>
+          <a href="javascript:;" onclick="interface.go('/${$data.model.name}?order_by=${field.name}&order=desc&page=2')" rel="next">2</a>
         </span>
         <span class="page">
           <a href="/admin/customers?order=id_desc&amp;page=3">3</a>
@@ -225,10 +217,10 @@
       <ol>
         {{each(i, field) model.fields}}
         <li class="${field.type} required" id="${$data.model.name}_${field.name}_input">
-          <label for="${$data.model.name}_${field.name}">${field.name}<abbr title="required">*</abbr></label>
           {{if field.editable}}
           {{tmpl({model: $data.model, content: $data.content, field: field}) "#"+field.type+"Field"}}
           {{else}}
+          <label>${field.name}</label>
           ${$data.content[field.name]}
           {{/if}}
         </li>
@@ -267,37 +259,48 @@
 </script>
 
 <script id="booleanField" type="text/x-jquery-tmpl">
-  <input type="checkbox" name="${model.name}[${field.name}]" value="true" {{if content[field.name]}}checked{{/if}} />
+  <label for="${model.name}_${field.name}">
+    <input type="checkbox" id="${model.name}_${field.name}" name="${model.name}[${field.name}]" value="true" {{if content[field.name]}}checked{{/if}} />
+    ${field.name}
+  </label>
 </script>
 
 <script id="stringField" type="text/x-jquery-tmpl">
+  <label for="${$data.model.name}_${field.name}">${field.name}<abbr title="required">*</abbr></label>
   <input type="text" id="${model.name}_${field.name}" name="${model.name}[${field.name}]" maxlength="255" value="${content[field.name]}" />
 </script>
 
 <script id="slugField" type="text/x-jquery-tmpl">
+  <label for="${$data.model.name}_${field.name}">${field.name}<abbr title="required">*</abbr></label>
   <input type="text" name="${model.name}[${field.name}]" value="${content[field.name]}" />
 </script>
 
 <script id="integerField" type="text/x-jquery-tmpl">
+  <label for="${$data.model.name}_${field.name}">${field.name}<abbr title="required">*</abbr></label>
   <input type="text" name="${model.name}[${field.name}]" value="${content[field.name]}" />
 </script>
 
 <script id="textField" type="text/x-jquery-tmpl">
+  <label for="${$data.model.name}_${field.name}">${field.name}<abbr title="required">*</abbr></label>
   <textarea name="${model.name}[${field.name}]">${content[field.name]}</textarea>
 </script>
 
 <script id="timestampField" type="text/x-jquery-tmpl">
+  <label for="${$data.model.name}_${field.name}">${field.name}<abbr title="required">*</abbr></label>
   <input type="text" name="${model.name}[${field.name}]" value="${content[field.name]}" />
 </script>
 
 <script id="collectionField" type="text/x-jquery-tmpl">
+  <label for="${$data.model.name}_${field.name}">${field.name}<abbr title="required">*</abbr></label>
   {{tmpl({model: field.target(), items: content[field.name]}) "#contentTable"}}
 </script>
 
 <script id="partField" type="text/x-jquery-tmpl">
+  <label for="${$data.model.name}_${field.name}">${field.name}<abbr title="required">*</abbr></label>
   <input type="text" name="${model.name}[${field.name}]" value="${content[field.name]}" />
 </script>
 
 <script id="linkField" type="text/x-jquery-tmpl">
+  <label for="${$data.model.name}_${field.name}">${field.name}<abbr title="required">*</abbr></label>
   <input type="text" name="${model.name}[${field.name}]" value="${content[field.name]}" />
 </script>
