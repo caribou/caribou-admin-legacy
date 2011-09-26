@@ -1,3 +1,18 @@
+_.range = function(n, m) {
+    var back = [];
+    var begin = 0;
+    var end = n-1;
+    if (m){
+        begin = n;
+        end = m;
+    }
+    for (var i = begin; i <= end; i++) {
+        back.push(i);
+    }
+
+    return back;
+};
+
 var interface = function() {
     var rpc = new easyXDM.Rpc({
         remote: "http://api.triface.local/cors/"

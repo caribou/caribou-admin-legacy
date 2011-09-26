@@ -133,11 +133,19 @@
   <div class="scopes">
     <span class="scope all selected">
       <em>All</em>
-       <span class="count">(${content.meta.count})</span>
-     </span>
+      <span class="count">(${meta.total_items})</span>
+    </span>
+    <!-- <span class="scope in_progress"> -->
+    <!--   <a href="/admin/orders?order=id_desc&amp;page=1&amp;scope=in_progress">In Progress</a> -->
+    <!--   <span class="count">(32)</span> -->
+    <!-- </span> -->
+    <!-- <span class="scope complete"> -->
+    <!--   <a href="/admin/orders?order=id_desc&amp;page=1&amp;scope=complete">Complete</a> -->
+    <!--   <span class="count">(265)</span> -->
+    <!-- </span> -->
   </div>
   <div class="paginated_collection">
-    <div class="pagination_information">Displaying ${model.name} <b>1 - 30</b> of <b>84</b> in total</div>
+    <div class="pagination_information">Displaying ${model.name} <b>${(meta.page-1)*(meta.page_size)+1}&nbsp;-&nbsp;${(meta.page-1)*(meta.page_size)+meta.count}</b> of <b>${meta.total_items}</b> in total</div>
     <div class="paginated_collection_contents">
       <div class="index_content">
         <div class="index_as_table">
@@ -145,17 +153,17 @@
             <thead>
               <tr>
                 {{each(i, field) model.fields}}
-                <th class="{{if i==0}}sorted-desc{{/if}} sortable">
-                  <a href="javascript:;" onclick="interface.go('/${$data.model.name}?order_by=${field.name}&order=desc')">${field.name}</a>
+                <th class="{{if field.slug === meta.order_by}}sorted-${meta.order}{{/if}} sortable">
+                  <a href="javascript:;" onclick="interface.go('/${$data.model.name}?page=${meta.page}&page_size=${meta.page_size}&order_by=${field.name}&order=${meta.order === 'asc' ? 'desc' : 'asc'}')">${field.name}</a>
                 </th>
                 {{/each}}
                 <th>&nbsp;</th>
               </tr>
             </thead>
             <tbody>
-              {{each(i, content) content.response}}
-              <tr id="${$data.model.name}_${content.id}" class="{{if i%2==0}}odd{{else}}even{{/if}}">
-                {{tmpl({model: $data.model, content: content}) "#mainContentForRow"}}
+              {{each(i, item) content}}
+              <tr id="${$data.model.name}_${item.id}" class="{{if i%2==0}}odd{{else}}even{{/if}}">
+                {{tmpl({model: $data.model, content: item}) "#mainContentForRow"}}
               </tr>
               {{/each}}
             </tbody>
@@ -166,20 +174,30 @@
     <div id="index_footer">
       Download:&nbsp;<a href="http://api.triface.local/${model.name}.csv">CSV</a>&nbsp;<a href="http://api.triface.local/${model.name}.xml">XML</a>&nbsp;<a href="http://api.triface.local/${model.name}.json">JSON</a>
       <nav class="pagination">
-        <span class="page current">
-          1
+        <span class="first">
+          <a href="javascript:;" onclick="interface.go('/${model.name}?page=1&page_size=${meta.page_size}&order_by=${meta.order_by}&order=${meta.order}')">First &laquo;</a>
         </span>
+        {{if meta.page > 1}}
+        <span class="previous">
+          <a href="javascript:;" onclick="interface.go('/${model.name}?page=${meta.page-1}&page_size=${meta.page_size}&order_by=${meta.order_by}&order=${meta.order}')" rel="previous">Previous &lsaquo;</a>
+        </span>
+        {{/if}}
+        {{each(i, page) _.range(1, meta.total_pages)}}
+        {{if page === $data.meta.page}}
+        <span class="page current">${$data.meta.page}</span>
+        {{else}}
         <span class="page">
-          <a href="javascript:;" onclick="interface.go('/${$data.model.name}?order_by=${field.name}&order=desc&page=2')" rel="next">2</a>
+          <a href="javascript:;" onclick="interface.go('/${model.name}?page=${page}&page_size=${$data.meta.page_size}&order_by=${$data.meta.order_by}&order=${$data.meta.order}')">${page}</a>
         </span>
-        <span class="page">
-          <a href="/admin/customers?order=id_desc&amp;page=3">3</a>
-        </span>
+        {{/if}}
+        {{/each}}
+        {{if meta.page < meta.total_pages}}
         <span class="next">
-          <a href="/admin/customers?order=id_desc&amp;page=2" rel="next">Next &rsaquo;</a>
+          <a href="javascript:;" onclick="interface.go('/${model.name}?page=${meta.page+1}&page_size=${meta.page_size}&order_by=${meta.order_by}&order=${meta.order}')" rel="next">Next &rsaquo;</a>
         </span>
+        {{/if}}
         <span class="last">
-          <a href="/admin/customers?order=id_desc&amp;page=3">Last &raquo;</a>
+          <a href="javascript:;" onclick="interface.go('/${model.name}?page=${meta.total_pages}&page_size=${meta.page_size}&order_by=${meta.order_by}&order=${meta.order}')">Last &raquo;</a>
         </span>
       </nav>
     </div>
@@ -188,27 +206,6 @@
 
 <script id="mainContentForEdit" type="text/x-jquery-tmpl">
 
-    <form id="${model.name}_form">
-      <input type="hidden" name="${model.name}[id]" value="${content.id}" />
-      <ul>
-        {{each(i, field) model.fields}}
-        <li>
-          <label class="label">${field.name}</label>
-          <div class="field">
-            {{if field.editable}}
-            {{tmpl({model: $data.model, content: $data.content, field: field}) "#"+field.type+"Field"}}
-            {{else}}
-            ${$data.content[field.name]}
-            {{/if}}
-          </div>
-        </li>
-        {{/each}}
-      </ul>
-      <div class="save" onclick="interface.admin.${action}('${model.name}')">save</div>
-    </form>
-  
-  
-  
   <form accept-charset="UTF-8" action="/${model.name}/${content.id}" class="formtastic ${model.name}" id="${model.name}_edit" method="post">
     <div style="margin:0;padding:0;display:inline">
       <input type="hidden" name="${model.name}[id]" value="${content.id}" />
@@ -230,7 +227,7 @@
     <fieldset class="buttons">
       <ol>
         <li class="commit">
-          <input class="update" id="${model.name}_submit" name="commit" type="submit" value="Update ${model.name}" />
+          <div class="update" onclick="interface.admin.${action}('${model.name}')">${action} ${model.name}</div>
         </li>
         <li class="cancel">
           <a href="/${model.name}">Cancel</a>
@@ -291,8 +288,7 @@
 </script>
 
 <script id="collectionField" type="text/x-jquery-tmpl">
-  <label for="${$data.model.name}_${field.name}">${field.name}<abbr title="required">*</abbr></label>
-  {{tmpl({model: field.target(), items: content[field.name]}) "#contentTable"}}
+  {{tmpl({model: field.target(), content: content[field.name], meta: {}}) "#mainContentForList"}}
 </script>
 
 <script id="partField" type="text/x-jquery-tmpl">

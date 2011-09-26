@@ -515,7 +515,7 @@ form {
         display: list-item; }
     form fieldset > ol > li.error input[type=text], form fieldset > ol > li.error input[type=password], form fieldset > ol > li.error input[type=email], form fieldset > ol > li.error input[type=url], form fieldset > ol > li.error input[type=tel], form fieldset > ol > li.error textarea {
       border: 1px solid #932419; }
-  form input[type=submit] {
+  form input[type=submit], .update {
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.37);
     -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.37);
     -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.37);
