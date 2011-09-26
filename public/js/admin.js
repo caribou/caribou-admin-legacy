@@ -1,48 +1,14 @@
 interface.admin = function() {
-    var template = function() {
-        var getTabbedNavigation = function(chosen, choices) {
-            return $('#tabbedNavigation').tmpl({chosen: chosen || '', choices: choices, classes: ''});
-        };
-
-        var getMainContentForList = function(model, content) {
-            return $('#mainContentForList').tmpl({model: model, content: content});
-        };
-
-        var getMainContentForEdit = function(model, content) {
-            return $('#mainContentForEdit').tmpl({model: model, content: content});
-        };
-        
-        var getMainContentForView = function(model, content) {
-            return $('#mainContentForView').tmpl({model: model, content: content});
-        };
-        
-        var getActionItemsForList = function(model, content) {
-            return $('#actionItemsForList').tmpl({model: model, content: content});
-        };
-        
-        var getActionItemsForEdit = function(model, content) {
-            return $('#actionItemsForEdit').tmpl({model: model, content: content});
-        };
-        
-        var getActionItemsForView = function(model, content) {
-            return $('#actionItemsForView').tmpl({model: model, content: content});
-        };
-        
-        var getSidebarForList = function(model, content) {
-            return $('#sidebarForList').tmpl({model: model, content: content});
-        };
-
-        return {
-            getTabbedNavigation: getTabbedNavigation,
-            getMainContentForList: getMainContentForList,
-            getMainContentForEdit: getMainContentForEdit,
-            getMainContentForView: getMainContentForView,
-            getActionItemsForList: getActionItemsForList,
-            getActionItemsForEdit: getActionItemsForEdit,
-            getActionItemsForView: getActionItemsForView,
-            getSidebarForList: getSidebarForList
-        };
-    }();
+    var template = {};
+    var findTemplates = function() {
+        var templates = _.map($('script[type="text/x-jquery-tmpl"]'), 
+                              function(tmpl) {return tmpl.id;});
+        _.each(templates, function(tmpl) {
+            template[tmpl] = function(env) {
+                return $('#'+tmpl).tmpl(env);
+            };
+        });
+    };
 
     var nav = function() {
         var highlight = function(choice) {
@@ -70,7 +36,7 @@ interface.admin = function() {
                 var model = interface.models[modelName];
                 return {url: _.template('/<%= name %>', model), title: model.name};
             });
-            var navup = template.getTabbedNavigation(modelname, choices);
+            var navup = template.tabbedNavigation({chosen: modelname, choices: choices});
             $('#tabs').html(navup);
         }
 
@@ -83,16 +49,22 @@ interface.admin = function() {
     };
 
     var contentList = function(params, query) {
+        console.log(params);
+        console.log(query);
         interface.api.get({
             url: _.template('/<%= model %>', params),
+            data: query,
             success: function(response) {
                 headerNav(params.model);
                 var model = interface.models[params.model];
-                var action_items = template.getActionItemsForList(model, response.response);
+                var action_items = template.actionItemsForList({
+                    model: model, content: response.response, meta: response.meta});
                 $('.action_items').html(action_items);
-                var sidebar = template.getSidebarForList(model, response.response);
+                var sidebar = template.sidebarForList({
+                    model: model, content: response.response, meta: response.meta});
                 $('#sidebar').html(sidebar);
-                var main_content = template.getMainContentForList(model, response);
+                var main_content = template.mainContentForList({
+                    model: model, content: response.response, meta: response.meta});
                 $('#main_content').html(main_content);
             }
         });
@@ -101,7 +73,7 @@ interface.admin = function() {
     var contentNew = function(params, query) {
         headerNav(params.model);
         var model = interface.models[params.model];
-        var main_content = $('#contentDetail').tmpl({
+        var main_content = template.mainContentForEdit({
             model: model, 
             content: {}, 
             action: 'create'
@@ -125,11 +97,13 @@ interface.admin = function() {
             data: {include: include},
             success: function(response) {
                 headerNav(params.model);
-                var action_items = template.getActionItemsForEdit(model, response.response);
+                var action_items = template.actionItemsForEdit({
+                    model: model, content: response.response, meta: response.meta});
                 $('.action_items').html(action_items);
-                var main_content = $('#mainContentForEdit').tmpl({
+                var main_content = template.mainContentForEdit({
                     model: model, 
                     content: response.response, 
+                    meta: response.meta,
                     action: 'update'
                 });
                 $('#main_content').html(main_content);
@@ -152,11 +126,13 @@ interface.admin = function() {
             data: {include: include},
             success: function(response) {
                 headerNav(params.model);
-                var action_items = template.getActionItemsForView(model, response.response);
+                var action_items = template.actionItemsForView({
+                    model: model, content: response.response, meta: response.meta});
                 $('.action_items').html(action_items);
-                var body = $('#mainContentForView').tmpl({
+                var body = template.mainContentForView({
                     model: model, 
                     content: response.response, 
+                    meta: response.meta,
                     action: 'update'
                 });
                 $('#main_content').html(body);
@@ -165,20 +141,22 @@ interface.admin = function() {
     };
 
     var contentCreate = function(name) {
-        var data = interface.formData('#'+name+'_form');
+        var data = interface.formData('#'+name+'_edit');
         var url = '/' + name;
 
         interface.api.post({
             url: url,
             data: data,
             success: function(response) {
-                triface.go(url + '/' + response.response.id);
+                interface.go(url + '/' + response.response.id + '/edit');
             }
         });
+
+        return false;
     };
 
     var contentUpdate = function(name) {
-        var data = interface.formData('#'+name+'_form');
+        var data = interface.formData('#'+name+'_edit');
         var id = name + '[id]';
         var url = '/' + name + '/' + data[id];
         delete data[id];
@@ -187,9 +165,11 @@ interface.admin = function() {
             url: url,
             data: data,
             success: function(response) {
-                interface.go(url);
+                interface.go(url + '/edit');
             }
         });
+
+        return false;
     };
 
     var contentDelete = function(name, id) {
@@ -212,6 +192,7 @@ interface.admin = function() {
     return {
         init: function() {
             interface.init();
+            findTemplates();
         },
         nav: nav,
         create: contentCreate,
