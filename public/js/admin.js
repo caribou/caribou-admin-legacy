@@ -1,18 +1,3 @@
-_.range = function(n, m) {
-    var back = [];
-    var begin = 0;
-    var end = n-1;
-    if (m){
-        begin = n;
-        end = m;
-    }
-    for (var i = begin; i <= end; i++) {
-        back.push(i);
-    }
-
-    return back;
-};
-
 interface.admin = function() {
     var template = {};
     var findTemplates = function() {

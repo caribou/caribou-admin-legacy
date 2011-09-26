@@ -153,7 +153,7 @@
             <thead>
               <tr>
                 {{each(i, field) model.fields}}
-                <th class="{{if i==0}}sorted-desc{{/if}} sortable">
+                <th class="{{if field.slug === meta.order_by}}sorted-${meta.order}{{/if}} sortable">
                   <a href="javascript:;" onclick="interface.go('/${$data.model.name}?page=${meta.page}&page_size=${meta.page_size}&order_by=${field.name}&order=${meta.order === 'asc' ? 'desc' : 'asc'}')">${field.name}</a>
                 </th>
                 {{/each}}
