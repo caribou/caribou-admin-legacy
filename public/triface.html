@@ -174,15 +174,6 @@
     <div id="index_footer">
       Download:&nbsp;<a href="http://api.triface.local/${model.name}.csv">CSV</a>&nbsp;<a href="http://api.triface.local/${model.name}.xml">XML</a>&nbsp;<a href="http://api.triface.local/${model.name}.json">JSON</a>
       <nav class="pagination">
-        <span class="page current">
-          1
-        </span>
-        <span class="page">
-          <a href="/admin/customers?order=id_desc&amp;page=2" rel="next">2</a>
-        </span>
-        <span class="page">
-          <a href="/admin/customers?order=id_desc&amp;page=3">3</a>
-        </span>
         <span class="first">
           <a href="javascript:;" onclick="interface.go('/${model.name}?page=1&page_size=${meta.page_size}&order_by=${meta.order_by}&order=${meta.order}')">First &laquo;</a>
         </span>
@@ -191,9 +182,18 @@
           <a href="javascript:;" onclick="interface.go('/${model.name}?page=${meta.page-1}&page_size=${meta.page_size}&order_by=${meta.order_by}&order=${meta.order}')" rel="previous">Previous &lsaquo;</a>
         </span>
         {{/if}}
+        {{each(i, page) _.range(1, meta.total_pages)}}
+        {{if page === $data.meta.page}}
+        <span class="page current">${$data.meta.page}</span>
+        {{else}}
+        <span class="page">
+          <a href="javascript:;" onclick="interface.go('/${model.name}?page=${page}&page_size=${$data.meta.page_size}&order_by=${$data.meta.order_by}&order=${$data.meta.order}')">${page}</a>
+        </span>
+        {{/if}}
+        {{/each}}
         {{if meta.page < meta.total_pages}}
         <span class="next">
-          <a href="javascript:;" onclick="interface.go('/${model.name}?page=${meta.page+1}')&page_size=${meta.page_size}&order_by=${meta.order_by}&order=${meta.order}" rel="next">Next &rsaquo;</a>
+          <a href="javascript:;" onclick="interface.go('/${model.name}?page=${meta.page+1}&page_size=${meta.page_size}&order_by=${meta.order_by}&order=${meta.order}')" rel="next">Next &rsaquo;</a>
         </span>
         {{/if}}
         <span class="last">
