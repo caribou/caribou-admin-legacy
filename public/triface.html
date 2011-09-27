@@ -27,7 +27,7 @@
       <div id="header">
         <h1 id="site_title">Interface 3.0</h1>
         <ul class="tabbed_navigation" id="tabs"></ul>
-        <p id="utility_nav">&nbsp;</p>
+        <p id="utility_nav">justin@weareinstrument.com <a href="#">Logout</a></p>
       </div>
       
       <div id="title_bar">
@@ -174,9 +174,11 @@
     <div id="index_footer">
       Download:&nbsp;<a href="http://api.triface.local/${model.name}.csv">CSV</a>&nbsp;<a href="http://api.triface.local/${model.name}.xml">XML</a>&nbsp;<a href="http://api.triface.local/${model.name}.json">JSON</a>
       <nav class="pagination">
+        {{if meta.page > 1}}
         <span class="first">
           <a href="javascript:;" onclick="interface.go('/${model.name}?page=1&page_size=${meta.page_size}&order_by=${meta.order_by}&order=${meta.order}')">First &laquo;</a>
         </span>
+        {{/if}}
         {{if meta.page > 1}}
         <span class="previous">
           <a href="javascript:;" onclick="interface.go('/${model.name}?page=${meta.page-1}&page_size=${meta.page_size}&order_by=${meta.order_by}&order=${meta.order}')" rel="previous">Previous &lsaquo;</a>
@@ -191,14 +193,17 @@
         </span>
         {{/if}}
         {{/each}}
+        <span class="page gap">...</span>
         {{if meta.page < meta.total_pages}}
         <span class="next">
           <a href="javascript:;" onclick="interface.go('/${model.name}?page=${meta.page+1}&page_size=${meta.page_size}&order_by=${meta.order_by}&order=${meta.order}')" rel="next">Next &rsaquo;</a>
         </span>
         {{/if}}
+        {{if meta.page < meta.total_pages}}
         <span class="last">
           <a href="javascript:;" onclick="interface.go('/${model.name}?page=${meta.total_pages}&page_size=${meta.page_size}&order_by=${meta.order_by}&order=${meta.order}')">Last &raquo;</a>
         </span>
+        {{/if}}
       </nav>
     </div>
   </div>
@@ -246,7 +251,7 @@
           {{each(i, field) model.fields}}
           <tr>
             <th><label class="label">${field.name}</label></th>
-            <td>${$data.content[field.name]}</td>
+            <td>{{if $data.content[field.name] == null}}<span class="empty">Empty</span>{{else}}${$data.content[field.name]}{{/if}}</td>
           </tr>
           {{/each}}
         </table>
