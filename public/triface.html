@@ -9,6 +9,7 @@
     <script src="/js/easyXDM.js" type="text/javascript"></script>
     <script src="/js/json2.js" type="text/javascript"></script>
     <script src="/js/jquery.js" type="text/javascript"></script>
+    <script src="/js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script>
     <script src="/js/jquery.tmpl.js" type="text/javascript"></script>
     <script src="/js/underscore.js" type="text/javascript"></script>
     <script src="/js/amplify.store.js" type="text/javascript"></script>
@@ -27,11 +28,11 @@
       <div id="header">
         <h1 id="site_title">Interface 3.0</h1>
         <ul class="tabbed_navigation" id="tabs"></ul>
-        <p id="utility_nav">justin@weareinstrument.com <a href="#">Logout</a></p>
+        <p id="utility_nav"><span class="current_user">justin@weareinstrument.com</span> <a href="#">Logout</a></p>
       </div>
       
       <div id="title_bar">
-        <span class="breadcrumb"><a href="/admin">Admin</a><span class="breadcrumb_sep">/</span></span>
+        <span class="breadcrumb">&nbsp;</span>
         <h2 id="page_title">&nbsp;</h2>
         <div class="action_items">&nbsp;</div>
       </div>
@@ -60,34 +61,82 @@
 
 <script type="text/javascript">$(document).ready(interface.admin.init)</script>
 
+<!-- 
+
+HEADER TEMPLATES
+
+-->
+
 <script id="tabbedNavigation" type="text/x-jquery-tmpl">
   {{each(i, choice) choices}}
   <li id="${choice.title}" class="${chosen === choice.title ? 'current' : ''}"><a href="javascript:;" onclick="interface.admin.nav.select('${choice.title}', '${choice.url}')">${choice.title}</a></li>
   {{/each}}
+  <li id="content" class="current has_nested"><a href="">Content</a>
+    <ul>
+      <li id="pages" class="current"><a href="">Pages</a></li>
+    </ul>
+  </li>
 </script>
 
+<!-- 
+
+BREADCRUMB AND PAGE TITLE TEMPLATES
+
+-->
+
+<script id="breadcrumb" type="text/x-jquery-tmpl">
+  <a href="/">Admin</a>
+  <span class="breadcrumb_sep">/</span>
+  {{each(i, item) items}}
+  <a href="${item.url}">${item.title}</a>
+  <span class="breadcrumb_sep">/</span>
+  {{/each}}
+</script>
+
+<script id="pageTitle" type="text/x-jquery-tmpl">
+  ${title}
+</script>
+
+<!-- 
+
+FLASH TEMPLATES
+
+-->
+
 <script id="flashNotice" type="text/x-jquery-tmpl">
-  <div class="flash flash_notice"></div>
+  <div class="flash flash_notice">${message}</div>
 </script>
 
 <script id="flashError" type="text/x-jquery-tmpl">
-  <div class="flash flash_error"></div>
+  <div class="flash flash_error">${message}</div>
 </script>
 
-<script id="actionItemsForList" type="text/x-jquery-tmpl">
+<!-- 
+
+ACTION ITEM TEMPLATES
+
+-->
+
+<script id="actionItemsForGenericList" type="text/x-jquery-tmpl">
   <span class="action_item"><a href="javascript:;" onclick="interface.go('/${model.name}/new')">New ${model.name}</a></span>
 </script>
 
-<script id="actionItemsForEdit" type="text/x-jquery-tmpl">
+<script id="actionItemsForGenericEdit" type="text/x-jquery-tmpl">
   <span class="action_item"><a href="javascript:;" onclick="interface.go('/${model.name}/new')">New ${model.name}</a></span>
 </script>
 
-<script id="actionItemsForView" type="text/x-jquery-tmpl">
+<script id="actionItemsForGenericView" type="text/x-jquery-tmpl">
   <span class="action_item"><a href="javascript:;" onclick="interface.go('/${model.name}/${content.id}/edit')">Edit ${model.name}</a></span>
   <span class="action_item"><a href="/${model.name}/${content.id}" data-confirm="Are you sure you want to delete this?" data-method="delete" rel="nofollow">Delete ${model.name}</a></span>
 </script>
 
-<script id="sidebarForList" type="text/x-jquery-tmpl">
+<!-- 
+
+SIDEBAR TEMPLATES
+
+-->
+
+<script id="sidebarForGenericList" type="text/x-jquery-tmpl">
   <div class="panel sidebar_section" id="filters_sidebar_section">
     <h3>Filters</h3>
     <div class="panel_contents">
@@ -116,12 +165,58 @@
   </div> 
 </script>
 
-<script id="mainContentForRow" type="text/x-jquery-tmpl">
+<script id="sidebarForModelView" type="text/x-jquery-tmpl">
+  <div class="panel sidebar_section" id="filters_sidebar_section">
+    <h3>Model Details</h3>
+    <div class="panel_contents">
+      <div class="${model.name} attributes_table" id="attributes_table_${model.name}_${content.id}">
+        <table border="0" cellspacing="0" cellpadding="0">
+          {{each(i, field) model.fields}}
+          {{if field.name != "fields"}}
+          <tr>
+            <th>${field.name}</th>
+            <td>{{if $data.content[field.name] === null || $data.content[field.name] === ""}}<span class="empty">Empty</span>{{else}}${$data.content[field.name]}{{/if}}</td>
+          </tr>
+          {{/if}}
+          {{/each}}
+        </table>
+      </div>
+    </div>
+  </div> 
+</script>
+
+<script id="sidebarForModelEdit" type="text/x-jquery-tmpl">
+  <div class="panel sidebar_section" id="filters_sidebar_section">
+    <h3>Model Details</h3>
+    <div class="panel_contents">
+      <div class="${model.name} attributes_table" id="attributes_table_${model.name}_${content.id}">
+        <table border="0" cellspacing="0" cellpadding="0">
+          {{each(i, field) model.fields}}
+          {{if !field.editable}}
+          <tr>
+            <th>${field.name}</th>
+            <td>{{if $data.content[field.name] === null || $data.content[field.name] === ""}}<span class="empty">Empty</span>{{else}}${$data.content[field.name]}{{/if}}</td>
+          </tr>
+          {{/if}}
+          {{/each}}
+        </table>
+      </div>
+    </div>
+  </div> 
+</script>
+
+<!-- 
+
+LIST TEMPLATES
+
+-->
+
+<script id="mainContentForGenericRow" type="text/x-jquery-tmpl">
   {{each(i, field) model.fields}}
   <td>{{if i==0}}<a href="javascript:;" onclick="interface.go('/${$data.model.name}/${content.id}/view')">{{/if}}${content[field.name]}{{if i==0}}</a>{{/if}}</td>
   {{/each}}
   <td>
-    <a href="javascript:;" onclick="interface.go('/${model.name}/${content.id}/view')" class="member_link view_link">View</a>
+    <a href="javascript:;" onclick="interface.go('/${model.name}/${content.id}')" class="member_link view_link">View</a>
     <a href="javascript:;" onclick="interface.go('/${model.name}/${content.id}/edit')" class="member_link edit_link">Edit</a>
     {{if !content.locked}}
     <a href="javascript:;" onclick="interface.admin.delete('${model.slug}', ${content.id})" class="member_link delete_link" data-confirm="Are you sure you want to delete this?" data-method="delete" rel="nofollow">Delete</a>
@@ -129,7 +224,7 @@
   </td>
 </script>
 
-<script id="mainContentForList" type="text/x-jquery-tmpl">
+<script id="mainContentForGenericList" type="text/x-jquery-tmpl">
   <div class="scopes">
     <span class="scope all selected">
       <em>All</em>
@@ -163,7 +258,7 @@
             <tbody>
               {{each(i, item) content}}
               <tr id="${$data.model.name}_${item.id}" class="{{if i%2==0}}odd{{else}}even{{/if}}">
-                {{tmpl({model: $data.model, content: item}) "#mainContentForRow"}}
+                {{tmpl({model: $data.model, content: item}) "#mainContentForGenericRow"}}
               </tr>
               {{/each}}
             </tbody>
@@ -209,8 +304,13 @@
   </div>
 </script>
 
-<script id="mainContentForEdit" type="text/x-jquery-tmpl">
+<!-- 
 
+EDIT TEMPLATES
+
+-->
+
+<script id="mainContentForGenericEdit" type="text/x-jquery-tmpl">
   <form accept-charset="UTF-8" action="/${model.name}/${content.id}" class="formtastic ${model.name}" id="${model.name}_edit" method="post">
     <div style="margin:0;padding:0;display:inline">
       <input type="hidden" name="${model.name}[id]" value="${content.id}" />
@@ -242,7 +342,50 @@
   </form>
 </script>
 
-<script id="mainContentForView" type="text/x-jquery-tmpl">
+<script id="mainContentForModelEdit" type="text/x-jquery-tmpl">
+  <form accept-charset="UTF-8" action="/${model.name}/${content.id}" class="formtastic ${model.name}" id="${model.name}_edit" method="post">
+    <div style="margin:0;padding:0;display:inline">
+      <input type="hidden" name="${model.name}[id]" value="${content.id}" />
+    </div>
+    <fieldset class="inputs">
+      <legend><span>Settings</span></legend>
+      <ol>
+        {{each(i, field) model.fields}}
+        {{if field.editable}}
+        <li class="${field.type} required" id="${$data.model.name}_${field.name}_input">
+          {{tmpl({model: $data.model, content: $data.content, field: field}) "#"+field.type+"Field"}}
+        </li>
+        {{/if}}
+        {{/each}}
+      </ol>
+    </fieldset>
+    
+    <fieldset class="inputs">
+      <legend><span>Fields</span></legend>
+      <ol>
+      </ol>
+    </fieldset>
+    
+    <fieldset class="buttons">
+      <ol>
+        <li class="commit">
+          <div class="update" onclick="interface.admin.${action}('${model.name}')">${action} ${model.name}</div>
+        </li>
+        <li class="cancel">
+          <a href="/${model.name}">Cancel</a>
+        </li>
+      </ol>
+    </fieldset>
+  </form>
+</script>
+
+<!-- 
+
+VIEW TEMPLATES
+
+-->
+
+<script id="mainContentForGenericView" type="text/x-jquery-tmpl">
   <div class="panel">
     <h3>${model.name} Details</h3>
     <div class="panel_contents">
@@ -259,6 +402,36 @@
     </div>
   </div>
 </script>
+
+<script id="mainContentForModelView" type="text/x-jquery-tmpl">
+  <div class="panel">
+    <h3>Fields (${content.fields.length})</h3>
+    <div class="panel_contents">
+      <table border="0" cellspacing="0" cellpadding="0">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{each(i, field) content.fields}}
+          <tr class="{{if i%2==0}}odd{{else}}even{{/if}}">
+            <td>${field.name}</td>
+            <td>${field.type}</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</script>
+
+<!-- 
+
+FIELD TEMPLATES
+
+-->
 
 <script id="booleanField" type="text/x-jquery-tmpl">
   <label for="${model.name}_${field.name}">
@@ -293,6 +466,10 @@
 </script>
 
 <script id="collectionField" type="text/x-jquery-tmpl">
+  
+</script>
+
+<script id="collectionFieldOld" type="text/x-jquery-tmpl">
   {{tmpl({model: field.target(), content: content[field.name], meta: {}}) "#mainContentForList"}}
 </script>
 

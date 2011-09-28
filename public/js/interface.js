@@ -13,6 +13,10 @@ _.range = function(n, m) {
     return back;
 };
 
+_.capitalize = function(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 var interface = function() {
     var rpc = new easyXDM.Rpc({
         remote: "http://api.triface.local/cors/"
