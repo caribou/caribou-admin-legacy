@@ -102,7 +102,7 @@ var interface = function() {
     var models = {};
     var modelNames = [];
 
-    var fetchModels = function(success) {
+    var resetModels = function(success) {
         api.get({
             url: "/model",
             data: {include: "fields"},
@@ -156,7 +156,7 @@ var interface = function() {
 
     var init = function(success) {
         window.onstatechange = act;
-        fetchModels(act);
+        resetModels(act);
     };
 
     return {
@@ -168,6 +168,7 @@ var interface = function() {
         modelNames: modelNames,
         modelFieldTypes: modelFieldTypes,
         routing: routing,
-        formData: formData
+        formData: formData,
+        resetModels: resetModels
     };
 }();

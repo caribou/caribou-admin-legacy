@@ -23,15 +23,16 @@ interface.admin = function() {
     //
     *///////////////////////////////////////////////
     
-    var getTemplate = function(model, name) {
-      model = _.capitalize(model);
-      var specific = _.template(name, {model: model});
-      if (template[specific]) {
-        return template[specific]; 
-      } else {
-        return template[_.template(name, {model: 'Generic'})];
-      }
-    }
+    var renderTemplate = function(model, name, env) {
+        model = _.capitalize(model);
+        var specific = _.template(name, {model: model});
+        console.log(specific);
+        if (template[specific]) {
+            return template[specific](env); 
+        } else {
+            return template[_.template(name, {model: 'Generic'})](env);
+        }
+    };
     
     var nav = function() {
         var highlight = function(choice) {
@@ -158,12 +159,19 @@ interface.admin = function() {
     var contentNew = function(params, query) {
         headerNav(params.model);
         var model = interface.models[params.model];
-        var main_content = template.mainContentForGenericEdit({
+
+        var sidebar = renderTemplate(model.name, "sidebarFor<%= model %>Edit", {
+            model: model, 
+            content: {}, 
+            action: 'update'
+        });
+        $('#sidebar').html(sidebar);
+        
+        var main_content = renderTemplate(model.name, "mainContentFor<%= model %>Edit", {
             model: model, 
             content: {}, 
             action: 'create'
         });
-
         $('#main_content').html(main_content);
     };
 
@@ -189,7 +197,7 @@ interface.admin = function() {
                 setPageTitle("Edit " + model.name);
                 setActionItems(model, response.response, response.meta);
                 
-                var sidebar = getTemplate(model.name, "sidebarFor<%= model %>Edit") ({
+                var sidebar = renderTemplate(model.name, "sidebarFor<%= model %>Edit", {
                   model: model, 
                   content: response.response, 
                   meta: response.meta,
@@ -197,7 +205,7 @@ interface.admin = function() {
                 });
                 $('#sidebar').html(sidebar);
                 
-                var main_content = getTemplate(model.name, "mainContentFor<%= model %>Edit") ({
+                var main_content = renderTemplate(model.name, "mainContentFor<%= model %>Edit", {
                   model: model, 
                   content: response.response, 
                   meta: response.meta,
@@ -238,7 +246,7 @@ interface.admin = function() {
                     model: model, content: response.response, meta: response.meta});
                 $('.action_items').html(action_items);
                 
-                var sidebar = getTemplate(model.name, "sidebarFor<%= model %>View") ({
+                var sidebar = renderTemplate(model.name, "sidebarFor<%= model %>View", {
                   model: model, 
                   content: response.response, 
                   meta: response.meta,
@@ -246,7 +254,7 @@ interface.admin = function() {
                 });
                 $('#sidebar').html(sidebar);
                 
-                var main_content = getTemplate(model.name, "mainContentFor<%= model %>View") ({
+                var main_content = renderTemplate(model.name, "mainContentFor<%= model %>View", {
                   model: model, 
                   content: response.response, 
                   meta: response.meta,
@@ -266,7 +274,15 @@ interface.admin = function() {
             url: url,
             data: data,
             success: function(response) {
-                interface.go(url + '/' + response.response.id + '/edit');
+                var succeed = function() {
+                    interface.go(url + '/' + response.response.id + '/edit');
+                };
+
+                if (name === 'model') {
+                    interface.resetModels(succeed);
+                } else {
+                    succeed();
+                }
             }
         });
 
@@ -283,8 +299,16 @@ interface.admin = function() {
             url: url,
             data: data,
             success: function(response) {
-                interface.go(url + '/edit');
-                setFlashNotice(_.capitalize(name) + ' was successfully updated.');
+                var succeed = function() {
+                    interface.go(url + '/edit');
+                    setFlashNotice(_.capitalize(name) + ' was successfully updated.');
+                };
+
+                if (name === 'model') {
+                    interface.resetModels(succeed);
+                } else {
+                    succeed();
+                }
             }
         });
 
@@ -296,14 +320,22 @@ interface.admin = function() {
         interface.api.delete({
             url: url,
             success: function(response) {
-                $('#'+name+'_'+id).remove();
+                var succeed = function() {
+                    $('#'+name+'_'+id).remove();
+                };
+
+                if (name === 'model') {
+                    interface.resetModels(succeed);
+                } else {
+                    succeed();
+                }
             }
         });
     };
     
     var newModelField = function() {
-        console.log('new model field');
-        var field = template.modelFieldEdit({field: {type: 'string'}});
+        var index = $('#model_fields li').length;
+        var field = template.modelFieldEdit({field: {type: 'string'}, index: index});
         $('#model_fields').append(field);
     };
 
