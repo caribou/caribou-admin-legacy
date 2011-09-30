@@ -165,6 +165,11 @@ SIDEBAR TEMPLATES
   </div> 
 </script>
 
+<script id="sidebarForGenericView" type="text/x-jquery-tmpl">
+  <div class="panel sidebar_section" id="filters_sidebar_section">
+  </div> 
+</script>
+
 <script id="sidebarForModelView" type="text/x-jquery-tmpl">
   <div class="panel sidebar_section" id="filters_sidebar_section">
     <h3>Model Details</h3>
@@ -173,6 +178,26 @@ SIDEBAR TEMPLATES
         <table border="0" cellspacing="0" cellpadding="0">
           {{each(i, field) model.fields}}
           {{if field.name != "fields"}}
+          <tr>
+            <th>${field.name}</th>
+            <td>{{if $data.content[field.name] === null || $data.content[field.name] === ""}}<span class="empty">Empty</span>{{else}}${$data.content[field.name]}{{/if}}</td>
+          </tr>
+          {{/if}}
+          {{/each}}
+        </table>
+      </div>
+    </div>
+  </div> 
+</script>
+
+<script id="sidebarForGenericEdit" type="text/x-jquery-tmpl">
+  <div class="panel sidebar_section" id="filters_sidebar_section">
+    <h3>Model Details</h3>
+    <div class="panel_contents">
+      <div class="${model.name} attributes_table" id="attributes_table_${model.name}_${content.id}">
+        <table border="0" cellspacing="0" cellpadding="0">
+          {{each(i, field) model.fields}}
+          {{if !field.editable}}
           <tr>
             <th>${field.name}</th>
             <td>{{if $data.content[field.name] === null || $data.content[field.name] === ""}}<span class="empty">Empty</span>{{else}}${$data.content[field.name]}{{/if}}</td>
@@ -213,7 +238,7 @@ LIST TEMPLATES
 
 <script id="mainContentForGenericRow" type="text/x-jquery-tmpl">
   {{each(i, field) model.fields}}
-  <td>{{if i==0}}<a href="javascript:;" onclick="interface.go('/${$data.model.name}/${content.id}/view')">{{/if}}${content[field.name]}{{if i==0}}</a>{{/if}}</td>
+  <td>{{if i==0}}<a href="javascript:;" onclick="interface.go('/${$data.model.name}/${content.id}')">{{/if}}${content[field.name]}{{if i==0}}</a>{{/if}}</td>
   {{/each}}
   <td>
     <a href="javascript:;" onclick="interface.go('/${model.name}/${content.id}')" class="member_link view_link">View</a>
@@ -280,7 +305,7 @@ LIST TEMPLATES
           <a href="javascript:;" onclick="interface.go('/${model.name}?page=${meta.page-1}&page_size=${meta.page_size}&order_by=${meta.order_by}&order=${meta.order}')" rel="previous">Previous &lsaquo;</a>
         </span>
         {{/if}}
-        {{each(i, page) _.range(1, meta.total_pages)}}
+        {{each(i, page) _.range(1, meta.total_pages+1)}}
         {{if page === $data.meta.page}}
         <span class="page current">${$data.meta.page}</span>
         {{else}}
@@ -348,6 +373,20 @@ EDIT TEMPLATES
   </form>
 </script>
 
+<script id="modelFieldEdit" type="text/x-jquery-tmpl">
+  <li>
+    {{if field.id}}
+    <input type="hidden" name="model[fields][${index}][id]" value="${field.id}" />
+    {{/if}}
+    <input type="text" size="10" name="model[fields][${index}][name]" value="${field.name}" />
+    <select name="model[fields][${index}][type]">
+      {{each(i,type) interface.modelFieldTypes()}}
+      <option value="${type}"{{if $data.field.type === type}} selected{{/if}}>${type}</option>
+      {{/each}}
+    </select>
+  </li>
+</script>
+
 <script id="mainContentForModelEdit" type="text/x-jquery-tmpl">
   <form accept-charset="UTF-8" action="/${model.name}/${content.id}" class="formtastic ${model.name}" id="${model.name}_edit" method="post">
     <div style="margin:0;padding:0;display:inline">
@@ -368,8 +407,12 @@ EDIT TEMPLATES
     
     <fieldset class="inputs">
       <legend><span>Fields</span></legend>
-      <ol>
+      <ol id="model_fields">
+        {{each(i,field) content.fields}}
+        {{tmpl({field: field, index: i}) "#modelFieldEdit"}}
+        {{/each}}
       </ol>
+      <div onclick="interface.admin.newModelField()" class="commit">Add Field</div>
     </fieldset>
     
     <fieldset class="buttons">

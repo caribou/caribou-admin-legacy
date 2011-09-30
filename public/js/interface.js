@@ -1,18 +1,3 @@
-_.range = function(n, m) {
-    var back = [];
-    var begin = 0;
-    var end = n-1;
-    if (m){
-        begin = n;
-        end = m;
-    }
-    for (var i = begin; i <= end; i++) {
-        back.push(i);
-    }
-
-    return back;
-};
-
 _.capitalize = function(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
@@ -117,7 +102,7 @@ var interface = function() {
     var models = {};
     var modelNames = [];
 
-    var fetchModels = function(success) {
+    var resetModels = function(success) {
         api.get({
             url: "/model",
             data: {include: "fields"},
@@ -140,6 +125,10 @@ var interface = function() {
                 success();
             }
         });
+    };
+
+    var modelFieldTypes = function() {
+        return ['id', 'integer', 'string', 'slug', 'text', 'boolean', 'timestamp', 'collection', 'part'];
     };
 
     var act = function() {
@@ -167,7 +156,7 @@ var interface = function() {
 
     var init = function(success) {
         window.onstatechange = act;
-        fetchModels(act);
+        resetModels(act);
     };
 
     return {
@@ -177,7 +166,9 @@ var interface = function() {
         act: act,
         models: models,
         modelNames: modelNames,
+        modelFieldTypes: modelFieldTypes,
         routing: routing,
-        formData: formData
+        formData: formData,
+        resetModels: resetModels
     };
 }();
