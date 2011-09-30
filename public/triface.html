@@ -279,7 +279,7 @@ LIST TEMPLATES
           <a href="javascript:;" onclick="interface.go('/${model.name}?page=${meta.page-1}&page_size=${meta.page_size}&order_by=${meta.order_by}&order=${meta.order}')" rel="previous">Previous &lsaquo;</a>
         </span>
         {{/if}}
-        {{each(i, page) _.range(1, meta.total_pages)}}
+        {{each(i, page) _.range(1, meta.total_pages+1)}}
         {{if page === $data.meta.page}}
         <span class="page current">${$data.meta.page}</span>
         {{else}}
@@ -342,6 +342,20 @@ EDIT TEMPLATES
   </form>
 </script>
 
+<script id="modelFieldEdit" type="text/x-jquery-tmpl">
+  <li>
+    {{if field.id}}
+    <input type="hidden" name="model[fields][id]" value="${field.id}" />
+    {{/if}}
+    <input type="text" size="10" name="model[fields][name]" value="${field.name}" />
+    <select name="model[fields][type]">
+      {{each(i,type) interface.modelFieldTypes()}}
+      <option value="${type}"{{if $data.field.type === type}} selected{{/if}}>${type}</option>
+      {{/each}}
+    </select>
+  </li>
+</script>
+
 <script id="mainContentForModelEdit" type="text/x-jquery-tmpl">
   <form accept-charset="UTF-8" action="/${model.name}/${content.id}" class="formtastic ${model.name}" id="${model.name}_edit" method="post">
     <div style="margin:0;padding:0;display:inline">
@@ -362,8 +376,12 @@ EDIT TEMPLATES
     
     <fieldset class="inputs">
       <legend><span>Fields</span></legend>
-      <ol>
+      <ol id="model_fields">
+        {{each(i,field) content.fields}}
+        {{tmpl({field: field}) "#modelFieldEdit"}}
+        {{/each}}
       </ol>
+      <div onclick="interface.admin.newModelField()" class="commit">Add Field</div>
     </fieldset>
     
     <fieldset class="buttons">

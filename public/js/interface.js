@@ -1,18 +1,3 @@
-_.range = function(n, m) {
-    var back = [];
-    var begin = 0;
-    var end = n-1;
-    if (m){
-        begin = n;
-        end = m;
-    }
-    for (var i = begin; i <= end; i++) {
-        back.push(i);
-    }
-
-    return back;
-};
-
 _.capitalize = function(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
@@ -142,6 +127,10 @@ var interface = function() {
         });
     };
 
+    var modelFieldTypes = function() {
+        return ['id', 'integer', 'string', 'slug', 'text', 'boolean', 'timestamp', 'collection', 'part'];
+    };
+
     var act = function() {
         var action = routing.action();
         action();
@@ -177,6 +166,7 @@ var interface = function() {
         act: act,
         models: models,
         modelNames: modelNames,
+        modelFieldTypes: modelFieldTypes,
         routing: routing,
         formData: formData
     };

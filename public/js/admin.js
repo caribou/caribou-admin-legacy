@@ -301,6 +301,12 @@ interface.admin = function() {
         });
     };
     
+    var newModelField = function() {
+        console.log('new model field');
+        var field = template.modelFieldEdit({field: {type: 'string'}});
+        $('#model_fields').append(field);
+    };
+
     /*//////////////////////////////////////////////
     //
     // SETUP ROUTING
@@ -327,7 +333,8 @@ interface.admin = function() {
         nav: nav,
         create: contentCreate,
         update: contentUpdate,
-        delete: contentDelete
+        delete: contentDelete,
+        newModelField: newModelField
     };
     
 }();
