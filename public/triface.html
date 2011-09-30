@@ -225,6 +225,7 @@ LIST TEMPLATES
 </script>
 
 <script id="mainContentForGenericList" type="text/x-jquery-tmpl">
+  {{if content.length > 0}}
   <div class="scopes">
     <span class="scope all selected">
       <em>All</em>
@@ -302,6 +303,11 @@ LIST TEMPLATES
       </nav>
     </div>
   </div>
+  {{else}}
+  <div class="blank_slate_container">
+    <span class="blank_slate">There are no ${model.name} yet. <a href="">Create one</a></span>
+  </div>
+  {{/if}}
 </script>
 
 <!-- 
