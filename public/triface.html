@@ -217,7 +217,7 @@ SIDEBAR TEMPLATES
       <div class="${model.name} attributes_table" id="attributes_table_${model.name}_${content.id}">
         <table border="0" cellspacing="0" cellpadding="0">
           {{each(i, field) model.fields}}
-          {{if !field.editable}}
+          {{if !field.editable || field.name === 'position'}}
           <tr>
             <th>${field.name}</th>
             <td>{{if $data.content[field.name] === null || $data.content[field.name] === ""}}<span class="empty">Empty</span>{{else}}${$data.content[field.name]}{{/if}}</td>
@@ -227,7 +227,39 @@ SIDEBAR TEMPLATES
         </table>
       </div>
     </div>
-  </div> 
+  </div>
+  <div class="panel sidebar_section" id="fields_sidebar_section">
+    <h3>Model Builder</h3>
+    <div class="panel_contents">
+      <a href="">Text</a>
+      <a href="">Slug</a>
+      <a href="">Number</a>
+      <a href="">Choice</a>
+      <a href="">Checkbox</a>
+      <a href="">Media</a>
+      <a href="">Simple List</a>
+      <a href="">File List</a>
+      <a href="">Related Data</a>
+      <br><br>
+      <a href="">Time</a>
+      <a href="">Date</a>
+      <a href="">Duration</a>
+      <a href="">Calculation</a>
+      <a href="">Currency (int)</a>
+      <a href="">Automatic Counter</a>
+      <a href="">Rating</a>
+      <a href="">Encrypted</a>
+      <a href="">Location</a>
+      <br><br>
+      <a href="">Address</a>
+      <a href="">Phone Number (string)</a>
+      <a href="">Email Address (string)</a>
+      <a href="">URL (string)</a>
+      <a href="">IM Account (string)</a>
+      <br><br>
+      <div onclick="interface.admin.modelEdit.newModelField()" class="commit">Add Field</div>
+    </div>
+  </div>
 </script>
 
 <!-- 
@@ -393,10 +425,10 @@ EDIT TEMPLATES
       <input type="hidden" name="${model.name}[id]" value="${content.id}" />
     </div>
     <fieldset class="inputs">
-      <legend><span>Settings</span></legend>
+      <legend><span>Model Settings</span></legend>
       <ol>
         {{each(i, field) model.fields}}
-        {{if field.editable}}
+        {{if field.editable && field.name != 'position'}}
         <li class="${field.type} required" id="${$data.model.name}_${field.name}_input">
           {{tmpl({model: $data.model, content: $data.content, field: field}) "#"+field.type+"Field"}}
         </li>
@@ -405,16 +437,40 @@ EDIT TEMPLATES
       </ol>
     </fieldset>
     
-    <fieldset class="inputs">
-      <legend><span>Fields</span></legend>
+    <!--<fieldset class="inputs">
+      <legend><span>Model Fields</span></legend>
       <ol id="model_fields">
         {{each(i,field) content.fields}}
         {{tmpl({field: field, index: i}) "#modelFieldEdit"}}
         {{/each}}
       </ol>
-      <div onclick="interface.admin.newModelField()" class="commit">Add Field</div>
-    </fieldset>
+      
+    </fieldset>-->
     
+    
+    
+    <div class="panel">
+      <h3>Model Fields</h3>
+      <div class="panel_contents model_fields_edit_table">
+        <table border="0" cellspacing="0" cellpadding="0">
+          <thead>
+            <tr>
+              <th>&nbsp;</th>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Options</th>
+              <th>&nbsp;</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{each(i, field) content.fields}}
+            {{tmpl({field: field, index: i}) "#genericFieldForModelEdit"}}
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+     
     <fieldset class="buttons">
       <ol>
         <li class="commit">
@@ -478,7 +534,7 @@ VIEW TEMPLATES
 
 <!-- 
 
-FIELD TEMPLATES
+FIELD INPUT TEMPLATES
 
 -->
 
@@ -530,4 +586,74 @@ FIELD TEMPLATES
 <script id="linkField" type="text/x-jquery-tmpl">
   <label for="${$data.model.name}_${field.name}">${field.name}<abbr title="required">*</abbr></label>
   <input type="text" name="${model.name}[${field.name}]" value="${content[field.name]}" />
+</script>
+
+<!-- 
+
+FIELD CREATION TEMPLATES
+
+-->
+
+<script id="genericFieldForModelEdit" type="text/x-jquery-tmpl">
+  <tr>
+    <td>&nbsp;</td>
+    <td>{{if field.locked}}${field.name}<input type="hidden" name="model[fields][${index}][name]" value="${field.name}" />{{else}}<input type="text" name="model[fields][${index}][name]" value="${field.name}" />{{/if}}</td>
+    <td>${field.type}<input type="hidden" name="model[fields][${index}][type]" value="${field.type}" /><input type="hidden" name="model[fields][${index}][id]" value="${field.id}" /></td>
+    <td>&nbsp;</td>
+    <td>{{if !field.locked}}<a href="">Delete</a>{{else}}&nbsp;{{/if}}</td>
+  </tr>
+</script>
+
+<script id="idFieldForModelEdit" type="text/x-jquery-tmpl">
+  <tr>
+    <td>${field.name}<input type="hidden" name="model[fields][${index}][id]" value="${field.id}" /></td>
+    <td>ID <input type="hidden" name="model[fields][${index}][type]" value="${field.type}" /></td>
+    <td>&nbsp;</td>
+    <td>{{if !field.locked}}Delete {{/if}}Order</td>
+  </tr>
+</script>
+
+<script id="integerFieldForModelEdit" type="text/x-jquery-tmpl">
+  <tr>
+    <td>{{if field.locked}}${field.name}{{else}}<input type="text" name="model[fields][${index}][name]" value="${field.name}" />{{/if}}</td>
+    <td>Number <input type="hidden" name="model[fields][${index}][type]" value="${field.type}" /></td>
+    <td>&nbsp;</td>
+    <td>{{if !field.locked}}Delete {{/if}}Order</td>
+  </tr>
+</script>
+
+<script id="stringFieldForModelEdit" type="text/x-jquery-tmpl">
+  <tr>
+    <td>{{if field.locked}}${field.name}{{else}}<input type="text" name="model[fields][${index}][name]" value="${field.name}" />{{/if}}</td>
+    <td>Text <input type="hidden" name="model[fields][${index}][type]" value="${field.type}" /></td>
+    <td>&nbsp;</td>
+    <td>{{if !field.locked}}Delete {{/if}}Order</td>
+  </tr>
+</script>
+
+<script id="booleanFieldForModelEdit" type="text/x-jquery-tmpl">
+  <tr>
+    <td>{{if field.locked}}${field.name}{{else}}<input type="text" name="model[fields][${index}][name]" value="${field.name}" />{{/if}}</td>
+    <td>Checkbox <input type="hidden" name="model[fields][${index}][type]" value="${field.type}" /></td>
+    <td>&nbsp;</td>
+    <td>{{if !field.locked}}Delete {{/if}}Order</td>
+  </tr>
+</script>
+
+<script id="timestampFieldForModelEdit" type="text/x-jquery-tmpl">
+  <tr>
+    <td>{{if field.locked}}${field.name}{{else}}<input type="text" name="model[fields][${index}][name]" value="${field.name}" />{{/if}}</td>
+    <td>Date <input type="hidden" name="model[fields][${index}][type]" value="${field.type}" /></td>
+    <td><label>Format</label><input type="text" name="model[fields][${index}][format]" value="" /></td>
+    <td>{{if !field.locked}}Delete {{/if}}Order</td>
+  </tr>
+</script>
+
+<script id="slugFieldForModelEdit" type="text/x-jquery-tmpl">
+  <tr>
+    <td>{{if field.locked}}${field.name}{{else}}<input type="text" name="model[fields][${index}][name]" value="${field.name}" />{{/if}}</td>
+    <td>Slug <input type="hidden" name="model[fields][${index}][type]" value="${field.type}" /></td>
+    <td>&nbsp;</td>
+    <td>{{if !field.locked}}Delete {{/if}}Order</td>
+  </tr>
 </script>

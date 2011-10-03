@@ -1584,3 +1584,11 @@ table.dashboard {
   padding: 0; }
   .columns .column {
     float: left; }
+
+.model_fields_edit_table {
+  overflow: hidden; }
+  
+.model_fields_edit_table table td {
+  padding: 8px 12px 6px 12px;
+  vertical-align: middle;
+  border-bottom: 1px solid #e8e8e8; }

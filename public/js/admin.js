@@ -333,11 +333,17 @@ interface.admin = function() {
         });
     };
     
-    var newModelField = function() {
-        var index = $('#model_fields li').length;
-        var field = template.modelFieldEdit({field: {type: 'string'}, index: index});
-        $('#model_fields').append(field);
-    };
+    var modelEdit = function() {
+        var newModelField = function() {
+            var index = $('.model_fields_edit_table table tbody tr').length;
+            var field = template.genericFieldForModelEdit({field: {type: 'string'}, index: index});
+            $('.model_fields_edit_table table tbody').append(field);
+        };
+
+        return {
+            newModelField: newModelField
+        };
+    }();
 
     /*//////////////////////////////////////////////
     //
@@ -366,7 +372,7 @@ interface.admin = function() {
         create: contentCreate,
         update: contentUpdate,
         delete: contentDelete,
-        newModelField: newModelField
+        modelEdit: modelEdit
     };
     
 }();
