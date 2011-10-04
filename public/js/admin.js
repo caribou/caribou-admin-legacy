@@ -173,6 +173,10 @@ interface.admin = function() {
             action: 'create'
         });
         $('#main_content').html(main_content);
+
+        var upload = interface.api.upload(function(response) {
+            alert(response);
+        });
     };
 
     var contentEdit = function(params, query) {
@@ -371,6 +375,10 @@ interface.admin = function() {
         };
     }();
 
+    var showUploadForm = function() {
+        $('#upload_dialog').dialog('open');
+    }
+
     /*//////////////////////////////////////////////
     //
     // SETUP ROUTING
@@ -392,12 +400,16 @@ interface.admin = function() {
     return {
         init: function() {
             interface.init();
+            $('#upload_dialog').dialog({
+                autoOpen: false
+            });
             findTemplates();
         },
         nav: nav,
         create: contentCreate,
         update: contentUpdate,
         delete: contentDelete,
+        showUploadForm: showUploadForm,
         modelEdit: modelEdit
     };
     
