@@ -9,8 +9,11 @@
     <script src="/js/easyXDM.js" type="text/javascript"></script>
     <script src="/js/json2.js" type="text/javascript"></script>
     <script src="/js/jquery.js" type="text/javascript"></script>
-    <script src="/js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js"></script>
     <script src="/js/jquery.tmpl.js" type="text/javascript"></script>
+    <!-- <script src="/js/jquery.iframe-transport.js" type="text/javascript"></script> -->
+    <!-- <script src="/js/jquery.fileupload.js" type="text/javascript"></script> -->
+    <!-- <script src="/js/jquery.fileupload-ui.js" type="text/javascript"></script> -->
     <script src="/js/underscore.js" type="text/javascript"></script>
     <script src="/js/amplify.store.js" type="text/javascript"></script>
     <script src="/js/history.adapter.jquery.js" type="text/javascript"></script>
@@ -19,6 +22,7 @@
     <script src="/js/interface.js" type="text/javascript"></script>
     <script src="/js/admin.js" type="text/javascript"></script>
     <link href="/stylesheets/active_admin.css" rel="stylesheet" type="text/css" media="screen" />
+    <!-- <link href="/stylesheets/jquery.fileupload-ui.css" rel="stylesheet" type="text/css" media="screen" /> -->
   </head>
   
   <body class="logged_in admin_model show">
@@ -362,7 +366,7 @@ LIST TEMPLATES
   </div>
   {{else}}
   <div class="blank_slate_container">
-    <span class="blank_slate">There are no ${model.name} yet. <a href="">Create one</a></span>
+    <span class="blank_slate">There are no ${model.name} yet. <a href="/${model.slug}/new">Create one</a></span>
   </div>
   {{/if}}
 </script>
@@ -374,7 +378,7 @@ EDIT TEMPLATES
 -->
 
 <script id="mainContentForGenericEdit" type="text/x-jquery-tmpl">
-  <form accept-charset="UTF-8" action="/${model.name}/${content.id}" class="formtastic ${model.name}" id="${model.name}_edit" method="post">
+  <form accept-charset="UTF-8" action="/upload" class="formtastic ${model.name}" id="${model.name}_edit" method="post" enctype="multipart/form-data">
     <div style="margin:0;padding:0;display:inline">
       <input type="hidden" name="${model.name}[id]" value="${content.id}" />
     </div>
@@ -588,6 +592,15 @@ FIELD INPUT TEMPLATES
   <input type="text" name="${model.name}[${field.name}]" value="${content[field.name]}" />
 </script>
 
+<script id="assetField" type="text/x-jquery-tmpl">
+  <div class="fileupload-buttonbar">
+    <label for="${$data.model.name}_${field.name}" class="fileinput-button">
+      <span>${field.name}</span>
+    </label>
+    <input type="file" name="${model.name}[${field.name}]" value="${content[field.name]}" />
+  </div>
+</script>
+
 <!-- 
 
 FIELD CREATION TEMPLATES
@@ -657,3 +670,4 @@ FIELD CREATION TEMPLATES
     <td>{{if !field.locked}}Delete {{/if}}Order</td>
   </tr>
 </script>
+

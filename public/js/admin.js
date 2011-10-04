@@ -212,7 +212,33 @@ interface.admin = function() {
                   action: 'update'
                 });
                 $('#main_content').html(main_content);
-                
+
+                // $('#main_content').fileupload({
+                //     datatype: 'json',
+                //     url: '/upload',
+                //     done: function(e, data) {
+                //         console.log(e);
+                //         console.log(data);
+                //     }
+                // });
+
+                // // FILE UPLOAD
+                // $('#main_content').fileupload();
+                // $.getJSON($('#main_content form').prop('action'), function (files) {
+                //     var fu = $('#main_content').data('fileupload');
+                //     fu._adjustMaxNumberOfFiles(-files.length);
+                //     fu._renderDownload(files)
+                //         .appendTo($('#main_content .files'))
+                //         .fadeIn(function () {
+                //             $(this).show();
+                //         });
+                // });
+                // $('#main_content .files a:not([target^=_blank])').live('click', function (e) {
+                //     e.preventDefault();
+                //     $('<iframe style="display:none;"></iframe>')
+                //         .prop('src', this.href)
+                //         .appendTo('body');
+                // });
             }
         });
     };

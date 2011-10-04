@@ -151,6 +151,14 @@ var interface = function() {
             data[checks[i].name] = checks[i].checked;
         }
 
+        var files = $(selector + " input:file");
+        for (i = 0; i < files.length; i++) {
+            var file = files[i].files[0];
+            var fd = new FormData();
+            fd.append('file', file);
+            data[files[i].name] = checks[i].checked;
+        }
+
         return data;
     };
 
