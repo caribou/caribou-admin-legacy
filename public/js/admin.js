@@ -217,6 +217,10 @@ interface.admin = function() {
                 });
                 $('#main_content').html(main_content);
 
+                var upload = interface.api.upload(function(response) {
+                    alert(response);
+                });
+
                 // $('#main_content').fileupload({
                 //     datatype: 'json',
                 //     url: '/upload',
@@ -403,6 +407,7 @@ interface.admin = function() {
             $('#upload_dialog').dialog({
                 autoOpen: false
             });
+
             findTemplates();
         },
         nav: nav,
