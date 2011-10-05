@@ -293,7 +293,7 @@ interface.admin = function() {
           }), function(collection) {
               return collection.name;
           }).join(',');
-
+          
           var url = _.template('/<%= model %>/<%= id %>', params);
 
           interface.api.get({
@@ -354,6 +354,10 @@ interface.admin = function() {
             action: 'create'
           });
           $('#main_content').html(main_content);
+          
+          var upload = interface.api.upload(function(response) {
+            alert(response);
+          });
         }
       },
       
@@ -404,6 +408,10 @@ interface.admin = function() {
       
     };
     
+    var showUploadForm = function() {
+        $('#upload_dialog').dialog('open');
+    }
+    
     /*//////////////////////////////////////////////
     //
     // SETUP ROUTING
@@ -425,6 +433,9 @@ interface.admin = function() {
     return {
         init: function() {
             interface.init();
+            $('#upload_dialog').dialog({
+                autoOpen: false
+            });
             findTemplates();
         },
         nav: nav,
@@ -432,7 +443,8 @@ interface.admin = function() {
         update: contentUpdate,
         delete: contentDelete,
         genericView: genericView,
-        modelView: modelView
+        modelView: modelView,
+        showUploadForm: showUploadForm
     };
     
 }();

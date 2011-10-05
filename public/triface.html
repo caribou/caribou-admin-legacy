@@ -53,6 +53,13 @@
         <p>Powered by <a href="http://www.activeadmin.info">Active Admin</a> 0.3.1</p>
       </div>
       
+      <div id="upload_dialog">
+        <form accept-charset="UTF-8" target="upload_target" action="http://api.triface.local/upload" class="formtastic ${model.name} content_form" id="file_upload" method="post" enctype="multipart/form-data">
+          <input type="file" name="upload" />
+          <input type="submit" value="Upload File">
+        </form>
+      </div>
+
     </div>
     
   </body>
@@ -362,7 +369,7 @@ LIST TEMPLATES
   </div>
   {{else}}
   <div class="blank_slate_container">
-    <span class="blank_slate">There are no ${model.name} yet. <a href="">Create one</a></span>
+    <span class="blank_slate">There are no ${model.name} yet. <a href="/${model.slug}/new">Create one</a></span>
   </div>
   {{/if}}
 </script>
@@ -374,7 +381,7 @@ EDIT TEMPLATES
 -->
 
 <script id="mainContentForGenericEdit" type="text/x-jquery-tmpl">
-  <form accept-charset="UTF-8" action="/${model.name}/${content.id}" class="formtastic ${model.name}" id="${model.name}_edit" method="post">
+  <form accept-charset="UTF-8" target="upload_target" action="http://api.triface.local/upload" class="formtastic ${model.name} content_form" id="${model.name}_edit" method="post" enctype="multipart/form-data">
     <div style="margin:0;padding:0;display:inline">
       <input type="hidden" name="${model.name}[id]" value="${content.id}" />
     </div>
@@ -665,6 +672,16 @@ FIELD INPUT TEMPLATES
   <input type="text" name="${model.name}[${field.name}]" value="${content[field.name]}" />
 </script>
 
+<script id="assetField" type="text/x-jquery-tmpl">
+  <div>
+    <label for="${$data.model.name}_${field.name}" class="fileinput-button">
+      <span>${field.name}</span>
+    </label>
+    <input id="${field.name}_asset" name="${model.name}[${field.name}]" type="hidden" value="${content[field.name+'_id']}"/>
+    <span class="update" onclick="interface.admin.showUploadForm()">Choose Asset</span>
+  </div>
+</script>
+
 <!-- 
 
 FIELD CREATION TEMPLATES
@@ -734,3 +751,4 @@ FIELD CREATION TEMPLATES
     <td>{{if !field.locked}}Delete {{/if}}Order</td>
   </tr>
 </script>
+

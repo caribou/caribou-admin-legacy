@@ -3,13 +3,43 @@ _.capitalize = function(string) {
 }
 
 var interface = function() {
+    var REMOTE = "http://api.triface.local"
     var rpc = new easyXDM.Rpc({
-        remote: "http://api.triface.local/cors/"
+        remote: REMOTE+"/cors/"
     }, {
         remote: {
             request: {}
         }
     });
+
+    var upload = function(success) {
+        return new easyXDM.Rpc({
+            remote: REMOTE+"/upload_rpc.html",
+            swf: REMOTE+"/easyxdm.swf",
+            onReady: function(){
+                //display the upload form
+                var form = $('#file_upload')[0];
+                console.log(form);
+                if (form) {
+                    form.action = REMOTE + "/upload";
+                    // var button = document.getElementById("btnSubmit");
+                    
+                    // form.onsubmit = function(){
+                    //     button.disabled = "disabled";
+                    // };
+                }
+            }
+        }, {
+            local: {
+                returnUploadResponse: function(response) {
+                    console.log(response);
+                    if (success) {
+                        success(response);
+                    }
+                }
+            }
+        });
+    }
 
     var api = {};
     var sherpa = new Sherpa.Router();
@@ -35,6 +65,7 @@ var interface = function() {
         return {path: path, query: query};
     };
 
+    api.upload = upload;
     api.request = function(request) {
         var success = request.success || function(response) {};
         var error = request.error || function(response) {History.log(response);};
@@ -45,6 +76,8 @@ var interface = function() {
             error(response);
         });
     };
+
+    api.upload = upload;
 
     api.get = function(request) {
         request.method = 'GET';
@@ -150,6 +183,14 @@ var interface = function() {
         for (i = 0; i < checks.length; i++) {
             data[checks[i].name] = checks[i].checked;
         }
+
+        // var files = $(selector + " input:file");
+        // for (i = 0; i < files.length; i++) {
+        //     var file = files[i].files[0];
+        //     var fd = new FormData();
+        //     fd.append('file', file);
+        //     data[files[i].name] = checks[i].checked;
+        // }
 
         return data;
     };
