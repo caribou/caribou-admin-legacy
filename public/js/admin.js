@@ -17,6 +17,13 @@ interface.admin = function() {
         });
     };
     
+    var fixHelper = function(e, ui) {
+      ui.children().each(function() {
+        $(this).width($(this).width());
+      });
+      return ui;
+    };
+    
     /*//////////////////////////////////////////////
     //
     // GETTERS AND SETTERS
@@ -115,156 +122,6 @@ interface.admin = function() {
     // VIEW SPECIFIC METHODS EXPOSED THROUGH ROUTES
     //
     *///////////////////////////////////////////////
-    
-    var dashboard = function(params, query) {
-        headerNav();
-        $('#container').html('');
-    };
-
-    var contentList = function(params, query) {
-        console.log(params);
-        console.log(query);
-        interface.api.get({
-            url: _.template('/<%= model %>', params),
-            data: query,
-            success: function(response) {
-                headerNav(params.model);
-                var model = interface.models[params.model];
-                
-                var breadcrumb = template.breadcrumb({
-                    model: model, content: response.response, meta: response.meta});
-                $('.breadcrumb').html(breadcrumb);
-                
-                var page_title = template.pageTitle({
-                    title: model.name});
-                $('#page_title').html(page_title);
-                
-                var action_items = template.actionItemsForGenericList({
-                    model: model, content: response.response, meta: response.meta});
-                $('.action_items').html(action_items);
-                
-                var sidebar = template.sidebarForGenericList({
-                    model: model, content: response.response, meta: response.meta});
-                $('#sidebar').html(sidebar);
-                
-                var main_content = template.mainContentForGenericList({
-                    model: model, content: response.response, meta: response.meta});
-                $('#main_content').html(main_content);
-                
-                $(".datepicker").datepicker({dateFormat: 'yy-mm-dd'});
-            }
-        });
-    };
-
-    var contentNew = function(params, query) {
-        headerNav(params.model);
-        var model = interface.models[params.model];
-
-        var sidebar = renderTemplate(model.name, "sidebarFor<%= model %>Edit", {
-            model: model, 
-            content: {}, 
-            action: 'update'
-        });
-        $('#sidebar').html(sidebar);
-        
-        var main_content = renderTemplate(model.name, "mainContentFor<%= model %>Edit", {
-            model: model, 
-            content: {}, 
-            action: 'create'
-        });
-        $('#main_content').html(main_content);
-    };
-
-    var contentEdit = function(params, query) {
-        var model = interface.models[params.model];
-        var include = _.map(_.filter(model.fields, function(field) {
-            return field.type === 'collection';
-        }), function(collection) {
-            return collection.name;
-        }).join(',');
-
-        var url = _.template('/<%= model %>/<%= id %>', params);
-
-        interface.api.get({
-            url: url,
-            data: {include: include},
-            success: function(response) {
-                
-                headerNav(params.model);
-                
-                setBodyClass(model, 'edit');
-                setBreadcrumb([{title: params.model, url: "/" + params.model}, {title: params.id, url: "/" + params.model + "/" + params.id}]);
-                setPageTitle("Edit " + model.name);
-                setActionItems(model, response.response, response.meta);
-                
-                var sidebar = renderTemplate(model.name, "sidebarFor<%= model %>Edit", {
-                  model: model, 
-                  content: response.response, 
-                  meta: response.meta,
-                  action: 'update'
-                });
-                $('#sidebar').html(sidebar);
-                
-                var main_content = renderTemplate(model.name, "mainContentFor<%= model %>Edit", {
-                  model: model, 
-                  content: response.response, 
-                  meta: response.meta,
-                  action: 'update'
-                });
-                $('#main_content').html(main_content);
-                
-            }
-        });
-    };
-    
-    var contentView = function(params, query) {
-        var model = interface.models[params.model];
-        var include = _.map(_.filter(model.fields, function(field) {
-            return field.type === 'collection';
-        }), function(collection) {
-            return collection.name;
-        }).join(',');
-
-        var url = _.template('/<%= model %>/<%= id %>', params);
-
-        interface.api.get({
-            url: url,
-            data: {include: include},
-            success: function(response) {
-              
-                headerNav(params.model);
-                
-                var breadcrumb = template.breadcrumb({
-                    items: [{title: params.model, url: "/" + params.model}, {title: params.id, url: "/" + params.model + "/" + params.id}]});
-                $('.breadcrumb').html(breadcrumb);
-                
-                var page_title = template.pageTitle({
-                    title: "View " + model.name});
-                $('#page_title').html(page_title);
-                
-                var action_items = template.actionItemsForGenericView({
-                    model: model, content: response.response, meta: response.meta});
-                $('.action_items').html(action_items);
-                
-                var sidebar = renderTemplate(model.name, "sidebarFor<%= model %>View", {
-                  model: model, 
-                  content: response.response, 
-                  meta: response.meta,
-                  action: 'update'
-                });
-                $('#sidebar').html(sidebar);
-                
-                var main_content = renderTemplate(model.name, "mainContentFor<%= model %>View", {
-                  model: model, 
-                  content: response.response, 
-                  meta: response.meta,
-                  action: 'update'
-                });
-                $('#main_content').html(main_content);
-                
-            }
-        });
-    };
 
     var contentCreate = function(name) {
         var data = interface.formData('#'+name+'_edit');
@@ -333,29 +190,231 @@ interface.admin = function() {
         });
     };
     
-    var modelEdit = function() {
-        var newModelField = function() {
-            var index = $('.model_fields_edit_table table tbody tr').length;
-            var field = template.genericFieldForModelEdit({field: {type: 'string'}, index: index});
-            $('.model_fields_edit_table table tbody').append(field);
-        };
+    var dashboardView = {
+      init: function() {
+        headerNav();
+        $('#container').html('');
+      }
+    };
+    
+    var genericView = {
+      
+      list: {
+        init: function(params, query) {
+          interface.api.get({
+            url: _.template('/<%= model %>', params),
+            data: query,
+            success: function(response) {
+              headerNav(params.model);
+              var model = interface.models[params.model];
 
-        return {
-            newModelField: newModelField
-        };
-    }();
+              var breadcrumb = template.breadcrumb({
+                  model: model, content: response.response, meta: response.meta});
+              $('.breadcrumb').html(breadcrumb);
 
+              var page_title = template.pageTitle({
+                  title: model.name});
+              $('#page_title').html(page_title);
+
+              var action_items = template.actionItemsForGenericList({
+                  model: model, content: response.response, meta: response.meta});
+              $('.action_items').html(action_items);
+
+              var sidebar = template.sidebarForGenericList({
+                  model: model, content: response.response, meta: response.meta});
+              $('#sidebar').html(sidebar);
+
+              var main_content = template.mainContentForGenericList({
+                  model: model, content: response.response, meta: response.meta});
+              $('#main_content').html(main_content);
+
+              $(".datepicker").datepicker({dateFormat: 'yy-mm-dd'});
+            }
+          });
+        }
+      },
+      
+      view: {
+        init: function(params, query) {
+          var model = interface.models[params.model];
+          var include = _.map(_.filter(model.fields, function(field) {
+              return field.type === 'collection';
+          }), function(collection) {
+              return collection.name;
+          }).join(',');
+
+          var url = _.template('/<%= model %>/<%= id %>', params);
+
+          interface.api.get({
+            url: url,
+            data: {include: include},
+            success: function(response) {
+
+              headerNav(params.model);
+
+              var breadcrumb = template.breadcrumb({
+                  items: [{title: params.model, url: "/" + params.model}, {title: params.id, url: "/" + params.model + "/" + params.id}]});
+              $('.breadcrumb').html(breadcrumb);
+
+              var page_title = template.pageTitle({
+                  title: "View " + model.name});
+              $('#page_title').html(page_title);
+
+              var action_items = template.actionItemsForGenericView({
+                  model: model, content: response.response, meta: response.meta});
+              $('.action_items').html(action_items);
+
+              var sidebar = renderTemplate(model.name, "sidebarFor<%= model %>View", {
+                model: model, 
+                content: response.response, 
+                meta: response.meta,
+                action: 'update'
+              });
+              $('#sidebar').html(sidebar);
+
+              var main_content = renderTemplate(model.name, "mainContentFor<%= model %>View", {
+                model: model, 
+                content: response.response, 
+                meta: response.meta,
+                action: 'update'
+              });
+              $('#main_content').html(main_content);
+
+            }
+          });
+        }
+      },
+      
+      edit: {
+        init: function(params, query) {
+          var model = interface.models[params.model];
+          var include = _.map(_.filter(model.fields, function(field) {
+              return field.type === 'collection';
+          }), function(collection) {
+              return collection.name;
+          }).join(',');
+
+          var url = _.template('/<%= model %>/<%= id %>', params);
+
+          interface.api.get({
+            url: url,
+            data: {include: include},
+            success: function(response) {
+
+              headerNav(params.model);
+
+              setBodyClass(model, 'edit');
+              setBreadcrumb([{title: params.model, url: "/" + params.model}, {title: params.id, url: "/" + params.model + "/" + params.id}]);
+              setPageTitle("Edit " + model.name);
+              setActionItems(model, response.response, response.meta);
+
+              var sidebar = renderTemplate(model.name, "sidebarFor<%= model %>Edit", {
+                model: model, 
+                content: response.response, 
+                meta: response.meta,
+                action: 'update'
+              });
+              $('#sidebar').html(sidebar);
+
+              var main_content = renderTemplate(model.name, "mainContentFor<%= model %>Edit", {
+                model: model, 
+                content: response.response, 
+                meta: response.meta,
+                action: 'update'
+              });
+              $('#main_content').html(main_content);
+              
+              $('.sortable').sortable({
+                axis: 'y',
+                scroll: true,
+                handle: '.handle_link',
+                helper: fixHelper
+              }).disableSelection();
+
+            }
+          });
+        }
+      },
+      
+      new: {
+        init: function(params) {
+          headerNav(params.model);
+          var model = interface.models[params.model];
+
+          var sidebar = renderTemplate(model.name, "sidebarFor<%= model %>Edit", {
+            model: model, 
+            content: {}, 
+            action: 'update'
+          });
+          $('#sidebar').html(sidebar);
+
+          var main_content = renderTemplate(model.name, "mainContentFor<%= model %>Edit", {
+            model: model, 
+            content: {}, 
+            action: 'create'
+          });
+          $('#main_content').html(main_content);
+        }
+      },
+      
+      create: {
+        init: function() {
+          
+        }
+      },
+      
+      update: {
+        init: function() {
+          
+        }
+      },
+      
+      delete: {
+        init: function() {
+          
+        }
+      }
+      
+    };
+    
+    var modelView = {
+      
+      list: {
+        init: function() {
+          
+        }
+      },
+      
+      view: {
+        init: function() {
+          
+        }
+      },
+      
+      edit: {
+        init: function() {
+          
+        },
+        newField: function() {
+          var index = $('.model_fields_edit_table table tbody tr').length;
+          var field = template.genericFieldForModelEdit({field: {type: 'string'}, index: index});
+          $('.model_fields_edit_table table tbody').append(field);
+        }
+      }
+      
+    };
+    
     /*//////////////////////////////////////////////
     //
     // SETUP ROUTING
     //
     *///////////////////////////////////////////////
     
-    interface.routing.add('/', 'dashboard', dashboard);
-    interface.routing.add('/:model', 'contentList', contentList);
-    interface.routing.add('/:model/new', 'contentNew', contentNew);
-    interface.routing.add('/:model/:id', 'contentView', contentView);
-    interface.routing.add('/:model/:id/edit', 'contentEdit', contentEdit);
+    interface.routing.add('/', 'dashboard', dashboardView.init);
+    interface.routing.add('/:model', 'list', genericView.list.init);
+    interface.routing.add('/:model/new', 'new', genericView.new.init);
+    interface.routing.add('/:model/:id', 'view', genericView.view.init);
+    interface.routing.add('/:model/:id/edit', 'edit', genericView.edit.init);
     
     /*//////////////////////////////////////////////
     //
@@ -372,7 +431,8 @@ interface.admin = function() {
         create: contentCreate,
         update: contentUpdate,
         delete: contentDelete,
-        modelEdit: modelEdit
+        genericView: genericView,
+        modelView: modelView
     };
     
 }();
