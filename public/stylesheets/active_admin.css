@@ -1588,7 +1588,41 @@ table.dashboard {
 .model_fields_edit_table {
   overflow: hidden; }
   
-.model_fields_edit_table table td {
-  padding: 8px 12px 6px 12px;
+.model_fields_edit_table table th, .model_fields_edit_table table td {
+  background: #f4f4f4;
+  padding: 8px 12px 6px 0;
   vertical-align: middle;
   border-bottom: 1px solid #e8e8e8; }
+
+.model_fields_edit_table table td.name {width: 40%;}
+.model_fields_edit_table table td.type {width: 10%;}
+.model_fields_edit_table table td.options {width: 20%;}
+.model_fields_edit_table table td.actions {width: 10%;}
+
+.model_fields_edit_table table td.type span {
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  padding: 3px 5px 2px 5px;
+  font-size: 0.8em;
+  background: #8DAA92; }
+
+.model_fields_edit_table table td.options .field {
+  margin-bottom: 10px;
+  clear: both;
+}
+
+.model_fields_edit_table table td.options label {
+  display: block;
+  color: #5E6469;
+  font-size: 1.0em;
+
+}
+
+.model_fields_edit_table table td.options .none {
+  color: #bbb;
+  font-size: 0.8em;
+  text-transform: uppercase;
+  letter-spacing: 0.2em; 
+}
+  
