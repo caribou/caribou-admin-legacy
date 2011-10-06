@@ -331,6 +331,12 @@ interface.admin = function() {
                 helper: fixHelper
               }).disableSelection();
 
+              var upload = interface.api.upload(function(response) {
+                  var src = 'http://api.triface.local/'+response.url;
+                  $('#'+response.context+'_asset').val(response.asset_id);
+                  $('#'+response.context+'_thumbnail').append('<a target="_blank" href="'+src+'"><img src="'+src+'" height="100" /></a>');
+                  $('#upload_dialog').dialog("close");
+              });
             }
           });
         }
@@ -356,7 +362,10 @@ interface.admin = function() {
           $('#main_content').html(main_content);
           
           var upload = interface.api.upload(function(response) {
-            alert(response);
+            var src = 'http://api.triface.local/'+response.url;
+            $('#'+response.context+'_asset').val(response.asset_id);
+            $('#'+response.context+'_thumbnail').append('<a target="_blank" href="'+src+'"><img src="'+src+'" height="100" /></a>');
+            $('#upload_dialog').dialog("close");
           });
         }
       },
@@ -408,7 +417,8 @@ interface.admin = function() {
       
     };
     
-    var showUploadForm = function() {
+    var showUploadForm = function(context) {
+        $('#upload_context').val(context);
         $('#upload_dialog').dialog('open');
     };
     

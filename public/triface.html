@@ -55,6 +55,7 @@
       
       <div id="upload_dialog">
         <form accept-charset="UTF-8" target="upload_target" action="http://api.triface.local/upload" class="formtastic ${model.name} content_form" id="file_upload" method="post" enctype="multipart/form-data">
+          <input type="hidden" id="upload_context" name="context" value="" />
           <input type="file" name="upload" />
           <input type="submit" value="Upload File">
         </form>
@@ -677,8 +678,9 @@ FIELD INPUT TEMPLATES
     <label for="${$data.model.name}_${field.name}" class="fileinput-button">
       <span>${field.name}</span>
     </label>
-    <input id="${field.name}_asset" name="${model.name}[${field.name}]" type="hidden" value="${content[field.name+'_id']}"/>
-    <span class="update" onclick="interface.admin.showUploadForm()">Choose Asset</span>
+    <input id="${field.name}_asset" name="${model.name}[${field.name}_id]" type="hidden" value="${content[field.name+'_id']}"/>
+    <span class="update" onclick="interface.admin.showUploadForm('${field.name}')">Choose Asset</span>
+    <span id="${field.name}_thumbnail"></span>
   </div>
 </script>
 
