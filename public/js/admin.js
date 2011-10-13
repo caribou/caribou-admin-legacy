@@ -444,7 +444,13 @@ interface.admin = function() {
         init: function() {
             interface.init();
             $('#upload_dialog').dialog({
-                autoOpen: false
+                autoOpen: false,
+                modal: true,
+                draggable: false,
+                resizeable: false,
+                width: 640,
+                height: 480,
+                title: 'File upload'
             });
 
             findTemplates();

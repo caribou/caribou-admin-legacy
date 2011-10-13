@@ -354,7 +354,7 @@ LIST TEMPLATES
         </span>
         {{/if}}
         {{/each}}
-        <span class="page gap">...</span>
+        <!--<span class="page gap">...</span>-->
         {{if meta.page < meta.total_pages}}
         <span class="next">
           <a href="javascript:;" onclick="interface.go('/${model.name}?page=${meta.page+1}&page_size=${meta.page_size}&order_by=${meta.order_by}&order=${meta.order}')" rel="next">Next &rsaquo;</a>
@@ -491,12 +491,18 @@ EDIT TEMPLATES
               <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td>
             </tr>
             <tr>
-              <td class="name"><input type="text" name="model[fields][${index}][name]" value="Assets" /></td>
+              <td class="name"><select><option>Product Variation</option></select></td>
               <td class="type"><span>Related Data</span></td>
               <td class="options">
-                <div class="field"><label for="">Data source</label><select><option>Assets</option></select></div>
+                <div class="field">Product > Product Variation</div>
+                <div class="field"><label for="">Name</label><input type="text" name="model[fields][${index}][name]" value="Product Variation" /></div>
+                <div class="field"><label for="">Type</label><select><option>Has one</option><option selected>Has many</option></select></div>
               </td>
-              <td class="options">&nbsp;</td>
+              <td class="options">
+                <div class="field">Product Variation > Product</div>
+                <div class="field"><label for="">Name</label><input type="text" name="model[fields][${index}][name]" value="Product" /></div>
+                <div class="field"><label for="">Type</label><select><option selected>Has one</option><option>Has many</option></select></div>
+              </td>
               <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td>
             </tr>
             
@@ -525,6 +531,16 @@ EDIT TEMPLATES
               <td class="name"><input type="text" name="model[fields][${index}][name]" value="Encrypted" /></td>
               <td class="type"><span>Encrypted</span></td>
               <td class="options">&nbsp;</td>
+              <td class="options"><label><input type="checkbox"> Required field?</label></td>
+              <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td>
+            </tr>
+            
+            <tr>
+              <td class="name"><input type="text" name="model[fields][${index}][name]" value="Drop Down" /></td>
+              <td class="type"><span>Drop Down</span></td>
+              <td class="options">
+                <div class="field"><label for="">Choices (One per line / Mark default with a *)</label><input type="text" name="model[fields][${index}][number_of_next_record]" value="" /></div>
+              </td>
               <td class="options"><label><input type="checkbox"> Required field?</label></td>
               <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td>
             </tr>
