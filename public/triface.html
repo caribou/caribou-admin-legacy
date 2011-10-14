@@ -894,6 +894,16 @@ FIELD INPUT TEMPLATES
   <input type="text" name="${model.name}[${field.name}]" value="${content[field.name]}" />
 </script>
 
+<script id="addressField" type="text/x-jquery-tmpl">
+  <label for="${$data.model.name}_${field.name}">${field.name}<abbr title="required">*</abbr></label>
+  <input type="text" name="${model.name}[${field.name}][address]" value="{{if content[field.name]}}${content[field.name].address}{{/if}}" />
+  <input type="text" name="${model.name}[${field.name}][address_two]" value="{{if content[field.name]}}${content[field.name].address_two}{{/if}}" />
+  <input type="text" name="${model.name}[${field.name}][city]" value="{{if content[field.name]}}${content[field.name].city}{{/if}}" />
+  <input type="text" name="${model.name}[${field.name}][state]" value="{{if content[field.name]}}${content[field.name].state}{{/if}}" />
+  <input type="text" name="${model.name}[${field.name}][postal_code]" value="{{if content[field.name]}}${content[field.name].postal_code}{{/if}}" />
+  <input type="text" name="${model.name}[${field.name}][country]" value="{{if content[field.name]}}${content[field.name].country}{{/if}}" />
+</script>
+
 <script id="collectionField" type="text/x-jquery-tmpl">
   
 </script>
