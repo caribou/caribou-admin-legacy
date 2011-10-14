@@ -161,7 +161,7 @@ var interface = function() {
     };
 
     var modelFieldTypes = function() {
-        return ['id', 'integer', 'string', 'slug', 'text', 'boolean', 'timestamp', 'collection', 'part'];
+        return ['id', 'integer', 'string', 'slug', 'text', 'boolean', 'timestamp', 'asset', 'collection', 'part'];
     };
 
     var act = function() {

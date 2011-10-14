@@ -239,32 +239,35 @@ SIDEBAR TEMPLATES
   <div class="panel sidebar_section" id="fields_sidebar_section">
     <h3>Model Builder</h3>
     <div class="panel_contents">
-      <a href="">Text</a>
-      <a href="">Slug</a>
-      <a href="">Number</a>
-      <a href="">Choice</a>
-      <a href="">Checkbox</a>
-      <a href="">Media</a>
-      <a href="">Simple List</a>
-      <a href="">File List</a>
-      <a href="">Related Data</a>
-      <br><br>
-      <a href="">Time</a>
-      <a href="">Date</a>
-      <a href="">Duration</a>
-      <a href="">Calculation</a>
-      <a href="">Currency (int)</a>
-      <a href="">Automatic Counter</a>
-      <a href="">Rating</a>
-      <a href="">Encrypted</a>
-      <a href="">Location</a>
-      <br><br>
-      <a href="">Address</a>
-      <a href="">Phone Number (string)</a>
-      <a href="">Email Address (string)</a>
-      <a href="">URL (string)</a>
-      <a href="">IM Account (string)</a>
-      <br><br>
+      {{each(i, type) fieldTypes}}
+      <div onclick="interface.admin.modelView.edit.newField('${type}')" class="type">${type}</div>
+      {{/each}}
+      <!-- <a href="">Text</a> -->
+      <!-- <a href="">Slug</a> -->
+      <!-- <a href="">Number</a> -->
+      <!-- <a href="">Choice</a> -->
+      <!-- <a href="">Checkbox</a> -->
+      <!-- <a href="">Media</a> -->
+      <!-- <a href="">Simple List</a> -->
+      <!-- <a href="">File List</a> -->
+      <!-- <a href="">Related Data</a> -->
+      <!-- <br><br> -->
+      <!-- <a href="">Time</a> -->
+      <!-- <a href="">Date</a> -->
+      <!-- <a href="">Duration</a> -->
+      <!-- <a href="">Calculation</a> -->
+      <!-- <a href="">Currency (int)</a> -->
+      <!-- <a href="">Automatic Counter</a> -->
+      <!-- <a href="">Rating</a> -->
+      <!-- <a href="">Encrypted</a> -->
+      <!-- <a href="">Location</a> -->
+      <!-- <br><br> -->
+      <!-- <a href="">Address</a> -->
+      <!-- <a href="">Phone Number (string)</a> -->
+      <!-- <a href="">Email Address (string)</a> -->
+      <!-- <a href="">URL (string)</a> -->
+      <!-- <a href="">IM Account (string)</a> -->
+      <!-- <br><br> -->
       <div onclick="interface.admin.modelView.edit.newField()" class="commit">Add Field</div>
     </div>
   </div>
@@ -445,133 +448,115 @@ EDIT TEMPLATES
             </tr>
           </thead>
           <tbody class="sortable">
-            <tr>
-              <td class="name"><input type="text" name="model[fields][${index}][name]" value="Single Line Text" /></td>
-              <td class="type"><span>Single Line Text</span></td>
-              <td class="options">
-                <div class="field"><label for="">Default value</label><input type="text" name="model[fields][${index}][default_value]" value="" /></div>
-              </td>
-              <td class="options"><label><input type="checkbox"> Required field?</label></td>
-              <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td>
-            </tr>
-            <tr>
-              <td class="name"><input type="text" name="model[fields][${index}][name]" value="Paragraph Text" /></td>
-              <td class="type"><span>Paragraph Text</span></td>
-              <td class="options">
-                <div class="field"><label for="">Default value</label><input type="text" name="model[fields][${index}][default_value]" value="" /></div>
-              </td>
-              <td class="options"><label><input type="checkbox"> Required field?</label></td>
-              <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td>
-            </tr>
-            <tr>
-              <td class="name"><input type="text" name="model[fields][${index}][name]" value="Slug" /></td>
-              <td class="type"><span>Slug</span></td>
-              <td class="options">
-                <div class="field"><label for="">Linked field</label><select><option>Color</option></select></div>
-              </td>
-              <td class="options"><label><input type="checkbox"> Required field?</label></td>
-              <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td>
-            </tr>
-            <tr>
-              <td class="name"><input type="text" name="model[fields][${index}][name]" value="Locked" /></td>
-              <td class="type"><span>Boolean</span></td>
-              <td class="options">
-                <div class="field"><label for="">Default value</label><select><option>True</option><option>False</option></select></div>
-              </td>
-              <td class="options"><label><input type="checkbox"> Required field?</label></td>
-              <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td>
-            </tr>
-            <tr>
-              <td class="name"><input type="text" name="model[fields][${index}][name]" value="Address" /></td>
-              <td class="type"><span>Address</span></td>
-              <td class="options">
-                <div class="field"><label for="">Default country</label><select><option>United States</option></select></div>
-              </td>
-              <td class="options"><label><input type="checkbox"> Required field?</label></td>
-              <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td>
-            </tr>
-            <tr>
-              <td class="name"><select><option>Product Variation</option></select></td>
-              <td class="type"><span>Related Data</span></td>
-              <td class="options">
-                <div class="field">Product > Product Variation</div>
-                <div class="field"><label for="">Name</label><input type="text" name="model[fields][${index}][name]" value="Product Variation" /></div>
-                <div class="field"><label for="">Type</label><select><option>Has one</option><option selected>Has many</option></select></div>
-              </td>
-              <td class="options">
-                <div class="field">Product Variation > Product</div>
-                <div class="field"><label for="">Name</label><input type="text" name="model[fields][${index}][name]" value="Product" /></div>
-                <div class="field"><label for="">Type</label><select><option selected>Has one</option><option>Has many</option></select></div>
-              </td>
-              <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td>
-            </tr>
+            {{each(i, field) content.fields}}
+            {{tmpl({field: field, index: i}) "#"+field.type+"FieldForModelEdit"}}
+            {{/each}}
+
+            <!-- <tr> -->
+            <!--   <td class="name"><input type="text" name="model[fields][${index}][name]" value="Single Line Text" /></td> -->
+            <!--   <td class="type"><span>Single Line Text</span></td> -->
+            <!--   <td class="options"> -->
+            <!--     <div class="field"><label for="">Default value</label><input type="text" name="model[fields][${index}][default_value]" value="" /></div> -->
+            <!--   </td> -->
+            <!--   <td class="options"><label><input type="checkbox"> Required field?</label></td> -->
+            <!--   <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td> -->
+            <!-- </tr> -->
+            <!-- <tr> -->
+            <!--   <td class="name"><input type="text" name="model[fields][${index}][name]" value="Paragraph Text" /></td> -->
+            <!--   <td class="type"><span>Paragraph Text</span></td> -->
+            <!--   <td class="options"> -->
+            <!--     <div class="field"><label for="">Default value</label><input type="text" name="model[fields][${index}][default_value]" value="" /></div> -->
+            <!--   </td> -->
+            <!--   <td class="options"><label><input type="checkbox"> Required field?</label></td> -->
+            <!--   <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td> -->
+            <!-- </tr> -->
+            <!-- <tr> -->
+            <!--   <td class="name"><input type="text" name="model[fields][${index}][name]" value="Slug" /></td> -->
+            <!--   <td class="type"><span>Slug</span></td> -->
+            <!--   <td class="options"> -->
+            <!--     <div class="field"><label for="">Linked field</label><select><option>Color</option></select></div> -->
+            <!--   </td> -->
+            <!--   <td class="options"><label><input type="checkbox"> Required field?</label></td> -->
+            <!--   <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td> -->
+            <!-- </tr> -->
+            <!-- <tr> -->
+            <!--   <td class="name"><input type="text" name="model[fields][${index}][name]" value="Locked" /></td> -->
+            <!--   <td class="type"><span>Boolean</span></td> -->
+            <!--   <td class="options"> -->
+            <!--     <div class="field"><label for="">Default value</label><select><option>True</option><option>False</option></select></div> -->
+            <!--   </td> -->
+            <!--   <td class="options"><label><input type="checkbox"> Required field?</label></td> -->
+            <!--   <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td> -->
+            <!-- </tr> -->
+            <!-- <tr> -->
+            <!--   <td class="name"><input type="text" name="model[fields][${index}][name]" value="Address" /></td> -->
+            <!--   <td class="type"><span>Address</span></td> -->
+            <!--   <td class="options"> -->
+            <!--     <div class="field"><label for="">Default country</label><select><option>United States</option></select></div> -->
+            <!--   </td> -->
+            <!--   <td class="options"><label><input type="checkbox"> Required field?</label></td> -->
+            <!--   <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td> -->
+            <!-- </tr> -->
+            <!-- <tr> -->
+            <!--   <td class="name"><select><option>Product Variation</option></select></td> -->
+            <!--   <td class="type"><span>Related Data</span></td> -->
+            <!--   <td class="options"> -->
+            <!--     <div class="field">Product > Product Variation</div> -->
+            <!--     <div class="field"><label for="">Name</label><input type="text" name="model[fields][${index}][name]" value="Product Variation" /></div> -->
+            <!--     <div class="field"><label for="">Type</label><select><option>Has one</option><option selected>Has many</option></select></div> -->
+            <!--   </td> -->
+            <!--   <td class="options"> -->
+            <!--     <div class="field">Product Variation > Product</div> -->
+            <!--     <div class="field"><label for="">Name</label><input type="text" name="model[fields][${index}][name]" value="Product" /></div> -->
+            <!--     <div class="field"><label for="">Type</label><select><option selected>Has one</option><option>Has many</option></select></div> -->
+            <!--   </td> -->
+            <!--   <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td> -->
+            <!-- </tr> -->
             
-            <tr>
-              <td class="name"><input type="text" name="model[fields][${index}][name]" value="Automatic Counter" /></td>
-              <td class="type"><span>Automatic Counter</span></td>
-              <td class="options">
-                <div class="field"><label for="">Number of next record</label><input type="text" name="model[fields][${index}][number_of_next_record]" value="1" /></div>
-                <div class="field"><label for="">Increment each record by</label><input type="text" name="model[fields][${index}][number_of_next_record]" value="1" /></div>
-              </td>
-              <td class="options"><label><input type="checkbox"> Required field?</label></td>
-              <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td>
-            </tr>
+            <!-- <tr> -->
+            <!--   <td class="name"><input type="text" name="model[fields][${index}][name]" value="Automatic Counter" /></td> -->
+            <!--   <td class="type"><span>Automatic Counter</span></td> -->
+            <!--   <td class="options"> -->
+            <!--     <div class="field"><label for="">Number of next record</label><input type="text" name="model[fields][${index}][number_of_next_record]" value="1" /></div> -->
+            <!--     <div class="field"><label for="">Increment each record by</label><input type="text" name="model[fields][${index}][number_of_next_record]" value="1" /></div> -->
+            <!--   </td> -->
+            <!--   <td class="options"><label><input type="checkbox"> Required field?</label></td> -->
+            <!--   <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td> -->
+            <!-- </tr> -->
             
-            <tr>
-              <td class="name"><input type="text" name="model[fields][${index}][name]" value="Rating" /></td>
-              <td class="type"><span>Rating</span></td>
-              <td class="options">
-                <div class="field"><label for="">Maxium value</label><select><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></div>
-              </td>
-              <td class="options"><label><input type="checkbox"> Required field?</label></td>
-              <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td>
-            </tr>
+            <!-- <tr> -->
+            <!--   <td class="name"><input type="text" name="model[fields][${index}][name]" value="Rating" /></td> -->
+            <!--   <td class="type"><span>Rating</span></td> -->
+            <!--   <td class="options"> -->
+            <!--     <div class="field"><label for="">Maxium value</label><select><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></div> -->
+            <!--   </td> -->
+            <!--   <td class="options"><label><input type="checkbox"> Required field?</label></td> -->
+            <!--   <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td> -->
+            <!-- </tr> -->
             
-            <tr>
-              <td class="name"><input type="text" name="model[fields][${index}][name]" value="Encrypted" /></td>
-              <td class="type"><span>Encrypted</span></td>
-              <td class="options">&nbsp;</td>
-              <td class="options"><label><input type="checkbox"> Required field?</label></td>
-              <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td>
-            </tr>
+            <!-- <tr> -->
+            <!--   <td class="name"><input type="text" name="model[fields][${index}][name]" value="Encrypted" /></td> -->
+            <!--   <td class="type"><span>Encrypted</span></td> -->
+            <!--   <td class="options">&nbsp;</td> -->
+            <!--   <td class="options"><label><input type="checkbox"> Required field?</label></td> -->
+            <!--   <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td> -->
+            <!-- </tr> -->
             
-            <tr>
-              <td class="name"><input type="text" name="model[fields][${index}][name]" value="Drop Down" /></td>
-              <td class="type"><span>Drop Down</span></td>
-              <td class="options">
-                <div class="field"><label for="">Choices (One per line / Mark default with a *)</label><input type="text" name="model[fields][${index}][number_of_next_record]" value="" /></div>
-              </td>
-              <td class="options"><label><input type="checkbox"> Required field?</label></td>
-              <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td>
-            </tr>
-            
+            <!-- <tr> -->
+            <!--   <td class="name"><input type="text" name="model[fields][${index}][name]" value="Drop Down" /></td> -->
+            <!--   <td class="type"><span>Drop Down</span></td> -->
+            <!--   <td class="options"> -->
+            <!--     <div class="field"><label for="">Choices (One per line / Mark default with a *)</label><input type="text" name="model[fields][${index}][number_of_next_record]" value="" /></div> -->
+            <!--   </td> -->
+            <!--   <td class="options"><label><input type="checkbox"> Required field?</label></td> -->
+            <!--   <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td> -->
+            <!-- </tr> -->
+
           </tbody>
         </table>
       </div>
     </div>
     
-    <div class="panel">
-      <h3>Model Fields</h3>
-      <div class="panel_contents model_fields_edit_table">
-        <table border="0" cellspacing="0" cellpadding="0">
-          <thead>
-            <tr>
-              <th>&nbsp;</th>
-              <th>Name</th>
-              <th>Type</th>
-              <th>Options</th>
-              <th>&nbsp;</th>
-            </tr>
-          </thead>
-          <tbody>
-            {{each(i, field) content.fields}}
-            {{tmpl({field: field, index: i}) "#genericFieldForModelEdit"}}
-            {{/each}}
-          </tbody>
-        </table>
-      </div>
-    </div>
-     
     <fieldset class="buttons">
       <ol>
         <li class="commit">
@@ -584,6 +569,244 @@ EDIT TEMPLATES
     </fieldset>
   </form>
 </script>
+
+<!-- 
+
+MODEL FIELD FORM TEMPLATES
+
+-->
+
+<script id="stringFieldForModelEdit" type="text/x-jquery-tmpl">
+  <tr>
+    <td class="name"><input type="text" name="model[fields][${index}][name]" value="${field.name}" /></td>
+    <td class="type"><span>Single Line Text</span></td>
+    <td class="options">
+      <input type="hidden" name="model[fields][${index}][type]" value="${field.type}" />
+      <div class="field"><label for="">Default value</label><input type="text" name="model[fields][${index}][default_value]" value="" /></div>
+    </td>
+    <td class="options"><label><input type="checkbox"> Required field?</label></td>
+    <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td>
+  </tr>
+</script>
+
+<script id="assetFieldForModelEdit" type="text/x-jquery-tmpl">
+  <tr>
+    <td class="name"><input type="text" name="model[fields][${index}][name]" value="${field.name}" /></td>
+    <td class="type">
+      <input type="hidden" name="model[fields][${index}][type]" value="${field.type}" />
+      <span>Asset</span>
+    </td>
+    <td class="options"></td>
+    <td class="options"><label><input type="checkbox"> Required field?</label></td>
+    <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td>
+  </tr>
+</script>
+
+<script id="idFieldForModelEdit" type="text/x-jquery-tmpl">
+  <tr>
+    <td class="name"><input type="text" name="model[fields][${index}][name]" value="${field.name}" /></td>
+    <td class="type">
+      <input type="hidden" name="model[fields][${index}][type]" value="${field.type}" />
+      <span>ID</span>
+    </td>
+    <td class="options"></td>
+    <td class="options"><label><input type="checkbox"> Required field?</label></td>
+    <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td>
+  </tr>
+</script>
+
+<script id="integerFieldForModelEdit" type="text/x-jquery-tmpl">
+  <tr>
+    <td class="name"><input type="text" name="model[fields][${index}][name]" value="${field.name}" /></td>
+    <td class="type">    
+      <input type="hidden" name="model[fields][${index}][type]" value="${field.type}" />
+      <span>Integer</span>
+    </td>
+    <td class="options"></td>
+    <td class="options"><label><input type="checkbox"> Required field?</label></td>
+    <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td>
+  </tr>
+</script>
+
+<script id="timestampFieldForModelEdit" type="text/x-jquery-tmpl">
+  <tr>
+    <td class="name"><input type="text" name="model[fields][${index}][name]" value="${field.name}" /></td>
+    <td class="type">
+      <input type="hidden" name="model[fields][${index}][type]" value="${field.type}" />
+      <span>Timestamp</span>
+    </td>
+    <td class="options"></td>
+    <td class="options"><label><input type="checkbox"> Required field?</label></td>
+    <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td>
+  </tr>
+</script>
+
+<script id="collectionFieldForModelEdit" type="text/x-jquery-tmpl">
+  <tr>
+    <td class="name"><input type="text" name="model[fields][${index}][name]" value="${field.name}" /></td>
+    <td class="type">
+      <input type="hidden" name="model[fields][${index}][type]" value="${field.type}" />
+      <span>Collection</span>
+    </td>
+    <td class="options"></td>
+    <td class="options"><label><input type="checkbox"> Required field?</label></td>
+    <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td>
+  </tr>
+</script>
+
+<script id="partFieldForModelEdit" type="text/x-jquery-tmpl">
+  <tr>
+    <td class="name"><input type="text" name="model[fields][${index}][name]" value="${field.name}" /></td>
+    <td class="type">
+      <input type="hidden" name="model[fields][${index}][type]" value="${field.type}" />
+      <span>Part</span>
+    </td>
+    <td class="options"></td>
+    <td class="options"><label><input type="checkbox"> Required field?</label></td>
+    <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td>
+  </tr>
+</script>
+
+<script id="textFieldForModelEdit" type="text/x-jquery-tmpl">
+  <tr>
+    <td class="name"><input type="text" name="model[fields][${index}][name]" value="${field.name}" /></td>
+    <td class="type">
+      <input type="hidden" name="model[fields][${index}][type]" value="${field.type}" />
+      <span>Paragraph Text</span>
+    </td>
+    <td class="options">
+      <div class="field"><label for="">Default value</label><input type="text" name="model[fields][${index}][default_value]" value="" /></div>
+    </td>
+    <td class="options"><label><input type="checkbox"> Required field?</label></td>
+    <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td>
+  </tr>
+</script>
+
+<script id="slugFieldForModelEdit" type="text/x-jquery-tmpl">
+  <tr>
+    <td class="name"><input type="text" name="model[fields][${index}][name]" value="${field.name}" /></td>
+    <td class="type">
+      <input type="hidden" name="model[fields][${index}][type]" value="${field.type}" />
+      <span>Slug</span>
+    </td>
+    <td class="options">
+      <div class="field"><label for="">Linked field</label><select><option>Color</option></select></div>
+    </td>
+    <td class="options"><label><input type="checkbox"> Required field?</label></td>
+    <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td>
+  </tr>
+</script>
+
+<script id="booleanFieldForModelEdit" type="text/x-jquery-tmpl">
+  <tr>
+    <td class="name"><input type="text" name="model[fields][${index}][name]" value="${field.name}" /></td>
+    <td class="type">
+      <input type="hidden" name="model[fields][${index}][type]" value="${field.type}" />
+      <span>Boolean</span>
+    </td>
+    <td class="options">
+      <div class="field"><label for="">Default value</label><select><option>True</option><option>False</option></select></div>
+    </td>
+    <td class="options"><label><input type="checkbox"> Required field?</label></td>
+    <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td>
+  </tr>
+</script>
+
+<script id="addressFieldForModelEdit" type="text/x-jquery-tmpl">
+  <tr>
+    <td class="name"><input type="text" name="model[fields][${index}][name]" value="${field.name}" /></td>
+    <td class="type">
+      <input type="hidden" name="model[fields][${index}][type]" value="${field.type}" />
+      <span>Address</span>
+    </td>
+    <td class="options">
+      <div class="field"><label for="">Default country</label><select><option>United States</option></select></div>
+    </td>
+    <td class="options"><label><input type="checkbox"> Required field?</label></td>
+    <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td>
+  </tr>
+</script>
+
+<script id="relationFieldForModelEdit" type="text/x-jquery-tmpl">
+  <tr>
+    <td class="name"><select><option>Product Variation</option></select></td>
+    <td class="type">
+      <input type="hidden" name="model[fields][${index}][type]" value="${field.type}" />
+      <span>Related Data</span>
+    </td>
+    <td class="options">
+      <div class="field">Product > Product Variation</div>
+      <div class="field"><label for="">Name</label><input type="text" name="model[fields][${index}][name]" value="${field.name}" /></div>
+      <div class="field"><label for="">Type</label><select><option>Has one</option><option selected>Has many</option></select></div>
+    </td>
+    <td class="options">
+      <div class="field">Product Variation > Product</div>
+      <div class="field"><label for="">Name</label><input type="text" name="model[fields][${index}][name]" value="Product" /></div>
+      <div class="field"><label for="">Type</label><select><option selected>Has one</option><option>Has many</option></select></div>
+    </td>
+    <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td>
+  </tr>
+</script>
+
+<script id="counterFieldForModelEdit" type="text/x-jquery-tmpl">
+  <tr>
+    <td class="name"><input type="text" name="model[fields][${index}][name]" value="${field.name}" /></td>
+    <td class="type">
+      <input type="hidden" name="model[fields][${index}][type]" value="${field.type}" />
+      <span>Automatic Counter</span>
+    </td>
+    <td class="options">
+      <div class="field"><label for="">Number of next record</label><input type="text" name="model[fields][${index}][number_of_next_record]" value="1" /></div>
+      <div class="field"><label for="">Increment each record by</label><input type="text" name="model[fields][${index}][number_of_next_record]" value="1" /></div>
+    </td>
+    <td class="options"><label><input type="checkbox"> Required field?</label></td>
+    <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td>
+  </tr>
+</script>
+
+<script id="ratingFieldForModelEdit" type="text/x-jquery-tmpl">
+  <tr>
+    <td class="name"><input type="text" name="model[fields][${index}][name]" value="${field.name}" /></td>
+    <td class="type">
+      <input type="hidden" name="model[fields][${index}][type]" value="${field.type}" />
+      <span>Rating</span>
+    </td>
+    <td class="options">
+      <div class="field"><label for="">Maxium value</label><select><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></div>
+    </td>
+    <td class="options"><label><input type="checkbox"> Required field?</label></td>
+    <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td>
+  </tr>
+</script>
+
+<script id="encryptedFieldForModelEdit" type="text/x-jquery-tmpl">
+  <tr>
+    <td class="name"><input type="text" name="model[fields][${index}][name]" value="${field.name}" /></td>
+    <td class="type">
+      <input type="hidden" name="model[fields][${index}][type]" value="${field.type}" />
+      <span>Encrypted</span>
+    </td>
+    <td class="options">&nbsp;</td>
+    <td class="options"><label><input type="checkbox"> Required field?</label></td>
+    <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td>
+  </tr>
+</script>
+
+<script id="enumFieldForModelEdit" type="text/x-jquery-tmpl">
+  <tr>
+    <td class="name"><input type="text" name="model[fields][${index}][name]" value="${field.name}" /></td>
+    <td class="type">
+      <input type="hidden" name="model[fields][${index}][type]" value="${field.type}" />
+      <span>Drop Down</span>
+    </td>
+    <td class="options">
+      <div class="field"><label for="">Choices (One per line / Mark default with a *)</label><input type="text" name="model[fields][${index}][number_of_next_record]" value="" /></div>
+    </td>
+    <td class="options"><label><input type="checkbox"> Required field?</label></td>
+    <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td>
+  </tr>
+</script>
+            
 
 <!-- 
 
@@ -697,7 +920,7 @@ FIELD INPUT TEMPLATES
     <input id="${field.name}_asset" name="${model.name}[${field.name}_id]" type="hidden" value="${content[field.name+'_id']}"/>
     <span class="update" onclick="interface.admin.showUploadForm('${field.name}')">Choose Asset</span>
     <span id="${field.name}_thumbnail">
-      {{if content[field.name].path}}
+      {{if content[field.name]}}
       <a target="_blank" href="http://api.triface.local/${content[field.name].path}"><img src="http://api.triface.local/${content[field.name].path}" height="100" /></a>
       {{/if}}
     </span>

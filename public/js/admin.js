@@ -31,6 +31,7 @@ interface.admin = function() {
     *///////////////////////////////////////////////
     
     var renderTemplate = function(model, name, env) {
+        env.fieldTypes = interface.modelFieldTypes;
         model = _.capitalize(model);
         var specific = _.template(name, {model: model});
         console.log(specific);
@@ -408,9 +409,9 @@ interface.admin = function() {
         init: function() {
           
         },
-        newField: function() {
+        newField: function(type) {
           var index = $('.model_fields_edit_table table tbody tr').length;
-          var field = template.genericFieldForModelEdit({field: {type: 'string'}, index: index});
+          var field = template[type+'FieldForModelEdit']({field: {type: type}, index: index});
           $('.model_fields_edit_table table tbody').append(field);
         }
       }
