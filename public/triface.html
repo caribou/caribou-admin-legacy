@@ -696,7 +696,11 @@ FIELD INPUT TEMPLATES
     </label>
     <input id="${field.name}_asset" name="${model.name}[${field.name}_id]" type="hidden" value="${content[field.name+'_id']}"/>
     <span class="update" onclick="interface.admin.showUploadForm('${field.name}')">Choose Asset</span>
-    <span id="${field.name}_thumbnail"></span>
+    <span id="${field.name}_thumbnail">
+      {{if content[field.name].path}}
+      <a target="_blank" href="http://api.triface.local/${content[field.name].path}"><img src="http://api.triface.local/${content[field.name].path}" height="100" /></a>
+      {{/if}}
+    </span>
   </div>
 </script>
 
