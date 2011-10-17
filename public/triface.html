@@ -628,6 +628,19 @@ MODEL FIELD FORM TEMPLATES
   </tr>
 </script>
 
+<script id="decimalFieldForModelEdit" type="text/x-jquery-tmpl">
+  <tr>
+    <td class="name"><input type="text" name="model[fields][${index}][name]" value="${field.name}" /></td>
+    <td class="type">    
+      <input type="hidden" name="model[fields][${index}][type]" value="${field.type}" />
+      <span>Decimal</span>
+    </td>
+    <td class="options"></td>
+    <td class="options"><label><input type="checkbox"> Required field?</label></td>
+    <td class="actions"><a href="" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td>
+  </tr>
+</script>
+
 <script id="timestampFieldForModelEdit" type="text/x-jquery-tmpl">
   <tr>
     <td class="name"><input type="text" name="model[fields][${index}][name]" value="${field.name}" /></td>
@@ -884,6 +897,11 @@ FIELD INPUT TEMPLATES
   <input type="text" name="${model.name}[${field.name}]" value="${content[field.name]}" />
 </script>
 
+<script id="decimalField" type="text/x-jquery-tmpl">
+  <label for="${$data.model.name}_${field.name}">${field.name}<abbr title="required">*</abbr></label>
+  <input type="text" name="${model.name}[${field.name}]" value="${content[field.name]}" />
+</script>
+
 <script id="textField" type="text/x-jquery-tmpl">
   <label for="${$data.model.name}_${field.name}">${field.name}<abbr title="required">*</abbr></label>
   <textarea name="${model.name}[${field.name}]">${content[field.name]}</textarea>
@@ -895,6 +913,7 @@ FIELD INPUT TEMPLATES
 </script>
 
 <script id="addressField" type="text/x-jquery-tmpl">
+  <input type="hidden" name="${model.name}[${field.name}_id]" value="{{if content[field.name+'_id']}}${content[field.name+'_id']}{{/if}}" />
   <label for="${$data.model.name}_${field.name}">${field.name}<abbr title="required">*</abbr></label>
   <input type="text" name="${model.name}[${field.name}][address]" value="{{if content[field.name]}}${content[field.name].address}{{/if}}" />
   <input type="text" name="${model.name}[${field.name}][address_two]" value="{{if content[field.name]}}${content[field.name].address_two}{{/if}}" />
@@ -966,6 +985,15 @@ FIELD CREATION TEMPLATES
   <tr>
     <td>{{if field.locked}}${field.name}{{else}}<input type="text" name="model[fields][${index}][name]" value="${field.name}" />{{/if}}</td>
     <td>Number <input type="hidden" name="model[fields][${index}][type]" value="${field.type}" /></td>
+    <td>&nbsp;</td>
+    <td>{{if !field.locked}}Delete {{/if}}Order</td>
+  </tr>
+</script>
+
+<script id="decimalFieldForModelEdit" type="text/x-jquery-tmpl">
+  <tr>
+    <td>{{if field.locked}}${field.name}{{else}}<input type="text" name="model[fields][${index}][name]" value="${field.name}" />{{/if}}</td>
+    <td>Decimal <input type="hidden" name="model[fields][${index}][type]" value="${field.type}" /></td>
     <td>&nbsp;</td>
     <td>{{if !field.locked}}Delete {{/if}}Order</td>
   </tr>
