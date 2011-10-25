@@ -240,7 +240,7 @@ SIDEBAR TEMPLATES
     <h3>Model Builder</h3>
     <div class="panel_contents">
       {{each(i, type) fieldTypes}}
-      <div onclick="interface.admin.modelView.edit.newField('${type}')" class="type">${type}</div>
+      <div onclick="interface.admin.modelView.edit.newField('${$data.content.slug}', '${type}')" class="type">${type}</div>
       {{/each}}
       <!-- <a href="">Text</a> -->
       <!-- <a href="">Slug</a> -->
@@ -449,7 +449,7 @@ EDIT TEMPLATES
           </thead>
           <tbody class="sortable">
             {{each(i, field) content.fields}}
-            {{tmpl({model: $data.model, field: field, index: i}) "#"+field.type+"FieldForModelEdit"}}
+            {{tmpl({model: $data.model, content: $data.content, field: field, index: i}) "#"+field.type+"FieldForModelEdit"}}
             {{/each}}
           </tbody>
         </table>
@@ -624,7 +624,7 @@ MODEL FIELD FORM TEMPLATES
     <td class="options">
       <div class="field">
         <label for="">Linked field</label>
-        <select name="model[fields][${index}][link_slug]" class="slug_options">{{html interface.admin.slugOptions(model, field.link)}}</select>
+        <select name="model[fields][${index}][link_slug]" class="slug_options">{{html interface.admin.slugOptions(content, field.link)}}</select>
       </div>
     </td>
     <td class="options"><label><input type="checkbox"> Required field?</label></td>

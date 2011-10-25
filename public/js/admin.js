@@ -446,9 +446,9 @@ interface.admin = function() {
       init: function() {
         
       },
-      newField: function(type) {
+      newField: function(slug, type) {
         var index = $('.model_fields_edit_table table tbody tr').length;
-        var field = template[type+'FieldForModelEdit']({field: {type: type, model_position: index}, index: index});
+        var field = template[type+'FieldForModelEdit']({model: interface.models[slug], field: {type: type, model_position: index}, index: index});
         $('.model_fields_edit_table table tbody').append(field);
         // $('.slug_options').append('<option>'+  +'</option>')
         // buildSlugOptions();
