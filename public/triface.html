@@ -268,7 +268,6 @@ SIDEBAR TEMPLATES
       <!-- <a href="">URL (string)</a> -->
       <!-- <a href="">IM Account (string)</a> -->
       <!-- <br><br> -->
-      <div onclick="interface.admin.modelView.edit.newField()" class="commit">Add Field</div>
     </div>
   </div>
 </script>
@@ -450,7 +449,7 @@ EDIT TEMPLATES
           </thead>
           <tbody class="sortable">
             {{each(i, field) content.fields}}
-            {{tmpl({field: field, index: i}) "#"+field.type+"FieldForModelEdit"}}
+            {{tmpl({model: $data.model, field: field, index: i}) "#"+field.type+"FieldForModelEdit"}}
             {{/each}}
           </tbody>
         </table>
@@ -478,7 +477,7 @@ MODEL FIELD FORM TEMPLATES
 
 <script id="stringFieldForModelEdit" type="text/x-jquery-tmpl">
   <tr>
-    <td class="name"><input type="text" name="model[fields][${index}][name]" value="${field.name}" /></td>
+    <td class="name"><input type="text" class="string_field" name="model[fields][${index}][name]" value="${field.name}" /></td>
     <td class="type"><span>Single Line Text</span></td>
     <td class="options">
       <input type="hidden" name="model[fields][${index}][type]" value="${field.type}" />
@@ -623,7 +622,10 @@ MODEL FIELD FORM TEMPLATES
       <span>Slug</span>
     </td>
     <td class="options">
-      <div class="field"><label for="">Linked field</label><select><option>Color</option></select></div>
+      <div class="field">
+        <label for="">Linked field</label>
+        <select name="model[fields][${index}][link_slug]" class="slug_options">{{html interface.admin.slugOptions(model, field.link)}}</select>
+      </div>
     </td>
     <td class="options"><label><input type="checkbox"> Required field?</label></td>
     <td class="actions"><a href="javascript:;" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td>

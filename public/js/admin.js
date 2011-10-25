@@ -24,6 +24,28 @@ interface.admin = function() {
     return ui;
   };
   
+  var slugOptions = function(model, link) {
+    stringFields = _.filter(model.fields, function(field) {
+      return field.type === 'string';
+    });
+
+    var options = _.map(stringFields, function(field) {
+      var val = field.name;
+      var select = link && (link.name === val) ? ' selected="selected"' : '';
+      return '<option'+select+'>'+val+'</option>';
+    }).join('');
+
+    return ''+options;
+  };
+
+  var buildSlugOptions = function() {
+    var slug_options = _.map($('.string_field'), function(string) {
+      return '<option>'+$(string).val()+'</option>';
+    }).join('');
+
+    $('.slug_options').html(slug_options);
+  };
+
   /*//////////////////////////////////////////////
   //
   // GETTERS AND SETTERS
@@ -34,7 +56,6 @@ interface.admin = function() {
     env.fieldTypes = interface.modelFieldTypes;
     model = _.capitalize(model);
     var specific = _.template(name, {model: model});
-    console.log(specific);
     if (template[specific]) {
       return template[specific](env); 
     } else {
@@ -283,7 +304,11 @@ interface.admin = function() {
         var include = _.map(_.filter(model.fields, function(field) {
           return field.type === 'collection';
         }), function(collection) {
-          return collection.name;
+          if (model.slug === 'model' && collection.slug === 'fields') {
+            return collection.slug + '.link';
+          } else {
+            return collection.slug;
+          }
         }).join(',');
         
         var url = _.template('/<%= model %>/<%= id %>', params);
@@ -341,6 +366,8 @@ interface.admin = function() {
 
               $(tr).remove();
             });
+
+            // buildSlugOptions();
 
             var upload = interface.api.upload(function(response) {
               var src = 'http://api.triface.local/'+response.url;
@@ -421,11 +448,12 @@ interface.admin = function() {
       },
       newField: function(type) {
         var index = $('.model_fields_edit_table table tbody tr').length;
-        var field = template[type+'FieldForModelEdit']({field: {type: type}, index: index});
+        var field = template[type+'FieldForModelEdit']({field: {type: type, model_position: index}, index: index});
         $('.model_fields_edit_table table tbody').append(field);
+        // $('.slug_options').append('<option>'+  +'</option>')
+        // buildSlugOptions();
       }
     }
-    
   };
   
   var showUploadForm = function(context) {
@@ -472,6 +500,7 @@ interface.admin = function() {
     delete: contentDelete,
     genericView: genericView,
     modelView: modelView,
+    slugOptions: slugOptions,
     showUploadForm: showUploadForm
   };
   

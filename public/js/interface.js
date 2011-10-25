@@ -138,7 +138,7 @@ var interface = function() {
     var resetModels = function(success) {
         api.get({
             url: "/model",
-            data: {include: "fields"},
+            data: {include: "fields.link"},
             success: function(response) {
                 _.each(response.response, function(model) {
                     for (var i = 0; i < model.fields.length; i++) {
@@ -161,7 +161,7 @@ var interface = function() {
     };
 
     var modelFieldTypes = function() {
-        return ['id', 'integer', 'decimal', 'string', 'slug', 'text', 'boolean', 'timestamp', 'asset', 'address', 'collection', 'part'];
+        return ['id', 'integer', 'decimal', 'string', 'slug', 'text', 'boolean', 'timestamp', 'asset', 'address', 'collection', 'part', 'tie'];
     };
 
     var act = function() {
