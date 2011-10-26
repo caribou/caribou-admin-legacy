@@ -1,228 +1,242 @@
 _.capitalize = function(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
+  var bits = string.split(/[_ ]+/);
+  var shaped = _.map(bits, function(bit) {
+    var low = bit.toLowerCase();
+    return low.charAt(0).toUpperCase() + low.slice(1);
+  });
+  return shaped.join(' ');
+};
+
+_.slugify = function(string) {
+  var bits = string.split(/[^a-zA-Z]+/);
+  var shaped = _.map(bits, function(bit) {
+    return bit.toLowerCase();
+  });
+  return shaped.join('_');
 }
 
 var interface = function() {
-    var REMOTE = "http://api.triface.local"
-    var rpc = new easyXDM.Rpc({
-        remote: REMOTE+"/cors/"
-    }, {
-        remote: {
-            request: {}
-        }
-    });
+  var REMOTE = "http://api.triface.local";
+  var rpc = new easyXDM.Rpc({
+    remote: REMOTE+"/cors/"
+  }, {
+    remote: {
+      request: {}
+    }
+  });
 
-    var upload = function(success) {
-        return new easyXDM.Rpc({
-            remote: REMOTE+"/upload_rpc.html",
-            swf: REMOTE+"/easyxdm.swf",
-            onReady: function(){
-                //display the upload form
-                var form = $('#file_upload')[0];
-                console.log(form);
-                if (form) {
-                    form.action = REMOTE + "/upload";
-                    // var button = document.getElementById("btnSubmit");
-                    
-                    // form.onsubmit = function(){
-                    //     button.disabled = "disabled";
-                    // };
-                }
-            }
-        }, {
-            local: {
-                returnUploadResponse: function(response) {
-                    console.log(response);
-                    if (success) {
-                        success(response);
-                    }
-                }
-            }
-        });
+  var upload = function(success) {
+    return new easyXDM.Rpc({
+      remote: REMOTE+"/upload_rpc.html",
+      swf: REMOTE+"/easyxdm.swf",
+      onReady: function() {
+        //display the upload form
+        var form = $('#file_upload')[0];
+        console.log(form);
+        if (form) {
+          form.action = REMOTE + "/upload";
+          // var button = document.getElementById("btnSubmit");
+          
+          // form.onsubmit = function(){
+          //     button.disabled = "disabled";
+          // };
+        }
+      }
+    }, {
+      local: {
+        returnUploadResponse: function(response) {
+          console.log(response);
+          if (success) {
+            success(response);
+          }
+        }
+      }
+    });
+  }
+
+  var api = {};
+  var sherpa = new Sherpa.Router();
+
+  var getPath = function() {
+    var state = History.getState().hash.split('?');
+    var path = state[0];
+    var query = {};
+
+    if (state[1]) {
+      var params = state[1].split('&');
+      if (params[0] === '') {
+        params = params.slice(1);
+      }
+
+      query = _.reduce(params, function(args, param) {
+        var parts = param.split('=');
+        args[parts[0]] = parts[1];
+        return args;
+      }, {});
     }
 
-    var api = {};
-    var sherpa = new Sherpa.Router();
+    return {path: path, query: query};
+  };
 
-    var getPath = function() {
-        var state = History.getState().hash.split('?');
-        var path = state[0];
-        var query = {};
+  api.upload = upload;
+  api.request = function(request) {
+    var success = request.success || function(response) {};
+    var error = request.error || function(response) {History.log(response);};
 
-        if (state[1]) {
-            var params = state[1].split('&');
-            if (params[0] === '') {
-                params = params.slice(1);
-            }
+    rpc.request(request, function(response) {
+      success(JSON.parse(response.data));
+    }, function(response) {
+      error(response);
+    });
+  };
 
-            query = _.reduce(params, function(args, param) {
-                var parts = param.split('=');
-                args[parts[0]] = parts[1];
-                return args;
-            }, {});
-        }
+  api.upload = upload;
 
-        return {path: path, query: query};
-    };
+  api.get = function(request) {
+    request.method = 'GET';
+    api.request(request);
+  };
 
-    api.upload = upload;
-    api.request = function(request) {
-        var success = request.success || function(response) {};
-        var error = request.error || function(response) {History.log(response);};
+  api.post = function(request) {
+    request.method = 'POST';
+    api.request(request);
+  };
 
-        rpc.request(request, function(response) {
-            success(JSON.parse(response.data));
-        }, function(response) {
-            error(response);
+  api.put = function(request) {
+    request.method = 'PUT';
+    api.request(request);
+  };
+
+  api.delete = function(request) {
+    request.method = 'DELETE';
+    api.request(request);
+  };
+
+  var go = function(path) {
+    var state = History.getState();
+    var trodden = _.last(state.cleanUrl.match(/http:\/\/[^\/]+(.*)/));
+
+    if (path === trodden) {
+      act();
+    } else {
+      History.pushState(path, path, path);
+    }
+  };
+
+  var routing = {
+    actions: {},
+
+    add: function(path, name, action) {
+      sherpa.add(path).to(name);
+      this.actions[name] = action;
+    },
+
+    match: function(path, query) {
+      var match = sherpa.recognize(path);
+      var action = this.actions[match.destination];
+      return function() {
+        return action(match.params, query);
+      };
+    },
+
+    action: function() {
+      var match = getPath();
+      return this.match(match.path, match.query);
+    }
+  };
+
+  var models = {};
+  var modelNames = [];
+
+  var resetModels = function(success) {
+    api.get({
+      url: "/model",
+      data: {include: "fields.link"},
+      success: function(response) {
+        _.each(response.response, function(model) {
+          for (var i = 0; i < model.fields.length; i++) {
+            var target_id = model.fields[i].target_id;
+            model.fields[i].target = target_id ? function(target_id) {
+              return function() {
+                return models[target_id];
+              };
+            }(target_id) : function() {};
+          }
+
+          models[model.id] = model;
+          models[model.name] = model;
+          modelNames.push(model.name);
         });
-    };
 
-    api.upload = upload;
+        success();
+      }
+    });
+  };
 
-    api.get = function(request) {
-        request.method = 'GET';
-        api.request(request);
-    };
+  var modelFieldTypes = function() {
+    return [
+      {name:'ID', slug:'id'},
+      {name:'Integer', slug:'integer'},
+      {name:'Decimal', slug:'decimal'},
+      {name:'Single Line Text', slug:'string'},
+      {name:'Paragraph Text', slug:'text'},
+      {name:'Boolean', slug:'boolean'},
+      {name:'Slug', slug:'slug'},
+      {name:'Timestamp', slug:'timestamp'},
+      {name:'Asset', slug:'asset'},
+      {name:'Address', slug:'address'},
+      {name:'Collection', slug:'collection'},
+      {name:'Part', slug:'part'},
+      {name:'Tie', slug:'tie'}
+    ];
+  };
 
-    api.post = function(request) {
-        request.method = 'POST';
-        api.request(request);
-    };
+  var act = function() {
+    var action = routing.action();
+    action();
+  };
 
-    api.put = function(request) {
-        request.method = 'PUT';
-        api.request(request);
-    };
+  var formData = function(selector) {
+    var data = {};
+    var verbose = $(selector).serializeArray();
 
-    api.delete = function(request) {
-        request.method = 'DELETE';
-        api.request(request);
-    };
+    for (var i = 0; i < verbose.length; i++) {
+      if (verbose[i].value && !(verbose[i].value === '')) {
+        data[verbose[i].name] = verbose[i].value;
+      }
+    }
 
-    var go = function(path) {
-        var state = History.getState();
-        var trodden = _.last(state.cleanUrl.match(/http:\/\/[^\/]+(.*)/));
+    var checks = $(selector + " input:checkbox");
+    for (i = 0; i < checks.length; i++) {
+      data[checks[i].name] = checks[i].checked;
+    }
 
-        if (path === trodden) {
-            act();
-        } else {
-            History.pushState(path, path, path);
-        }
-    };
+    // var files = $(selector + " input:file");
+    // for (i = 0; i < files.length; i++) {
+    //     var file = files[i].files[0];
+    //     var fd = new FormData();
+    //     fd.append('file', file);
+    //     data[files[i].name] = checks[i].checked;
+    // }
 
-    var routing = {
-        actions: {},
+    return data;
+  };
 
-        add: function(path, name, action) {
-            sherpa.add(path).to(name);
-            this.actions[name] = action;
-        },
+  var init = function(success) {
+    window.onstatechange = act;
+    resetModels(act);
+  };
 
-        match: function(path, query) {
-            var match = sherpa.recognize(path);
-            var action = this.actions[match.destination];
-            return function() {
-                return action(match.params, query);
-            };
-        },
-
-        action: function() {
-            var match = getPath();
-            return this.match(match.path, match.query);
-        }
-    };
-
-    var models = {};
-    var modelNames = [];
-
-    var resetModels = function(success) {
-        api.get({
-            url: "/model",
-            data: {include: "fields.link"},
-            success: function(response) {
-                _.each(response.response, function(model) {
-                    for (var i = 0; i < model.fields.length; i++) {
-                        var target_id = model.fields[i].target_id;
-                        model.fields[i].target = target_id ? function(target_id) {
-                            return function() {
-                                return models[target_id];
-                            };
-                        }(target_id) : function() {};
-                    }
-
-                    models[model.id] = model;
-                    models[model.name] = model;
-                    modelNames.push(model.name);
-                });
-
-                success();
-            }
-        });
-    };
-
-    var modelFieldTypes = function() {
-      return [
-        {name:'ID', slug:'id'},
-        {name:'Integer', slug:'integer'},
-        {name:'Decimal', slug:'decimal'},
-        {name:'Single Line Text', slug:'string'},
-        {name:'Paragraph Text', slug:'text'},
-        {name:'Boolean', slug:'boolean'},
-        {name:'Timestamp', slug:'timestamp'},
-        {name:'Asset', slug:'asset'},
-        {name:'Address', slug:'address'},
-        {name:'Collection', slug:'collection'},
-        {name:'Part', slug:'part'},
-        {name:'Tie', slug:'tie'}
-      ];
-    };
-
-    var act = function() {
-        var action = routing.action();
-        action();
-    };
-
-    var formData = function(selector) {
-        var data = {};
-        var verbose = $(selector).serializeArray();
-
-        for (var i = 0; i < verbose.length; i++) {
-            if (verbose[i].value && !(verbose[i].value === '')) {
-                data[verbose[i].name] = verbose[i].value;
-            }
-        }
-
-        var checks = $(selector + " input:checkbox");
-        for (i = 0; i < checks.length; i++) {
-            data[checks[i].name] = checks[i].checked;
-        }
-
-        // var files = $(selector + " input:file");
-        // for (i = 0; i < files.length; i++) {
-        //     var file = files[i].files[0];
-        //     var fd = new FormData();
-        //     fd.append('file', file);
-        //     data[files[i].name] = checks[i].checked;
-        // }
-
-        return data;
-    };
-
-    var init = function(success) {
-        window.onstatechange = act;
-        resetModels(act);
-    };
-
-    return {
-        init: init,
-        api: api,
-        go: go,
-        act: act,
-        models: models,
-        modelNames: modelNames,
-        modelFieldTypes: modelFieldTypes,
-        routing: routing,
-        formData: formData,
-        resetModels: resetModels
-    };
+  return {
+    init: init,
+    api: api,
+    go: go,
+    act: act,
+    models: models,
+    modelNames: modelNames,
+    modelFieldTypes: modelFieldTypes,
+    routing: routing,
+    formData: formData,
+    resetModels: resetModels
+  };
 }();

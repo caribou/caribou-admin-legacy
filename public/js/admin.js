@@ -25,17 +25,30 @@ interface.admin = function() {
   };
   
   var slugOptions = function(model, link) {
-    stringFields = _.filter(model.fields, function(field) {
+    var stringFields = _.filter(model.fields, function(field) {
       return field.type === 'string';
     });
+    var fieldNames = _.map(stringFields, function(field) {
+      return field.name;
+    });
 
-    var options = _.map(stringFields, function(field) {
-      var val = field.name;
-      var select = link && (link.name === val) ? ' selected="selected"' : '';
-      return '<option value="'+field.slug+'"'+select+'>'+val+'</option>';
-    }).join('');
+    var stringInputs = _.map($('.string_field'), function(string) {
+      return $(string).val();
+    });
+    stringInputs = _.difference(stringInputs, fieldNames);
 
-    return ''+options;
+    var inputOptions = _.map(stringInputs, function(input) {
+      return '<option value="'+input+'">'+input+'</option>';
+    });
+
+    var fieldOptions = _.map(stringFields, function(field) {
+      var select = link && (link.name === field.name) ? ' selected="selected"' : '';
+      return '<option value="'+field.slug+'"'+select+'>'+field.name+'</option>';
+    });
+
+    console.log(inputOptions);
+
+    return fieldOptions.concat(inputOptions);
   };
 
   var buildSlugOptions = function() {
