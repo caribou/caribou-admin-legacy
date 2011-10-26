@@ -126,15 +126,15 @@ ACTION ITEM TEMPLATES
 -->
 
 <script id="actionItemsForGenericList" type="text/x-jquery-tmpl">
-  <span class="action_item"><a href="javascript:;" onclick="interface.go('/${model.name}/new')">New ${model.name}</a></span>
+  <span class="action_item"><a href="javascript:;" onclick="interface.go('/${model.slug}/new')">New ${model.name}</a></span>
 </script>
 
 <script id="actionItemsForGenericEdit" type="text/x-jquery-tmpl">
-  <span class="action_item"><a href="javascript:;" onclick="interface.go('/${model.name}/new')">New ${model.name}</a></span>
+  <span class="action_item"><a href="javascript:;" onclick="interface.go('/${model.slug}/new')">New ${model.name}</a></span>
 </script>
 
 <script id="actionItemsForGenericView" type="text/x-jquery-tmpl">
-  <span class="action_item"><a href="javascript:;" onclick="interface.go('/${model.name}/${content.id}/edit')">Edit ${model.name}</a></span>
+  <span class="action_item"><a href="javascript:;" onclick="interface.go('/${model.slug}/${content.id}/edit')">Edit ${model.name}</a></span>
   <span class="action_item"><a href="/${model.name}/${content.id}" data-confirm="Are you sure you want to delete this?" data-method="delete" rel="nofollow">Delete ${model.name}</a></span>
 </script>
 
@@ -240,7 +240,7 @@ SIDEBAR TEMPLATES
     <h3>Model Builder</h3>
     <div class="panel_contents">
       {{each(i, type) fieldTypes}}
-      <div onclick="interface.admin.modelView.edit.newField('${$data.content.slug}', '${type}')" class="type">${type}</div>
+      <div onclick="interface.admin.modelView.edit.newField('${$data.content.slug}', '${type.slug}')" class="type">${type.name}</div>
       {{/each}}
       <!-- <a href="">Text</a> -->
       <!-- <a href="">Slug</a> -->
@@ -280,11 +280,11 @@ LIST TEMPLATES
 
 <script id="mainContentForGenericRow" type="text/x-jquery-tmpl">
   {{each(i, field) model.fields}}
-  <td>{{if i==0}}<a href="javascript:;" onclick="interface.go('/${$data.model.name}/${content.id}')">{{/if}}${content[field.name]}{{if i==0}}</a>{{/if}}</td>
+  <td>{{if i==0}}<a href="javascript:;" onclick="interface.go('/${$data.model.slug}/${content.id}')">{{/if}}${content[field.name]}{{if i==0}}</a>{{/if}}</td>
   {{/each}}
   <td>
-    <a href="javascript:;" onclick="interface.go('/${model.name}/${content.id}')" class="member_link view_link">View</a>
-    <a href="javascript:;" onclick="interface.go('/${model.name}/${content.id}/edit')" class="member_link edit_link">Edit</a>
+    <a href="javascript:;" onclick="interface.go('/${model.slug}/${content.id}')" class="member_link view_link">View</a>
+    <a href="javascript:;" onclick="interface.go('/${model.slug}/${content.id}/edit')" class="member_link edit_link">Edit</a>
     {{if !content.locked}}
     <a href="javascript:;" onclick="interface.admin.delete('${model.slug}', ${content.id})" class="member_link delete_link" data-confirm="Are you sure you want to delete this?" data-method="delete" rel="nofollow">Delete</a>
     {{/if}}
@@ -317,7 +317,7 @@ LIST TEMPLATES
               <tr>
                 {{each(i, field) model.fields}}
                 <th class="{{if field.slug === meta.order_by}}sorted-${meta.order}{{/if}} sortable">
-                  <a href="javascript:;" onclick="interface.go('/${$data.model.name}?page=${meta.page}&page_size=${meta.page_size}&order_by=${field.name}&order=${meta.order === 'asc' ? 'desc' : 'asc'}')">${field.name}</a>
+                  <a href="javascript:;" onclick="interface.go('/${$data.model.slug}?page=${meta.page}&page_size=${meta.page_size}&order_by=${field.name}&order=${meta.order === 'asc' ? 'desc' : 'asc'}')">${field.name}</a>
                 </th>
                 {{/each}}
                 <th>&nbsp;</th>
@@ -335,16 +335,16 @@ LIST TEMPLATES
       </div>
     </div>
     <div id="index_footer">
-      Download:&nbsp;<a href="http://api.triface.local/${model.name}.csv">CSV</a>&nbsp;<a href="http://api.triface.local/${model.name}.xml">XML</a>&nbsp;<a href="http://api.triface.local/${model.name}.json">JSON</a>
+      Download:&nbsp;<a href="http://api.triface.local/${model.slug}.csv">CSV</a>&nbsp;<a href="http://api.triface.local/${model.slug}.xml">XML</a>&nbsp;<a href="http://api.triface.local/${model.slug}.json">JSON</a>
       <nav class="pagination">
         {{if meta.page > 1}}
         <span class="first">
-          <a href="javascript:;" onclick="interface.go('/${model.name}?page=1&page_size=${meta.page_size}&order_by=${meta.order_by}&order=${meta.order}')">First &laquo;</a>
+          <a href="javascript:;" onclick="interface.go('/${model.slug}?page=1&page_size=${meta.page_size}&order_by=${meta.order_by}&order=${meta.order}')">First &laquo;</a>
         </span>
         {{/if}}
         {{if meta.page > 1}}
         <span class="previous">
-          <a href="javascript:;" onclick="interface.go('/${model.name}?page=${meta.page-1}&page_size=${meta.page_size}&order_by=${meta.order_by}&order=${meta.order}')" rel="previous">Previous &lsaquo;</a>
+          <a href="javascript:;" onclick="interface.go('/${model.slug}?page=${meta.page-1}&page_size=${meta.page_size}&order_by=${meta.order_by}&order=${meta.order}')" rel="previous">Previous &lsaquo;</a>
         </span>
         {{/if}}
         {{each(i, page) _.range(1, meta.total_pages+1)}}
@@ -352,19 +352,19 @@ LIST TEMPLATES
         <span class="page current">${$data.meta.page}</span>
         {{else}}
         <span class="page">
-          <a href="javascript:;" onclick="interface.go('/${model.name}?page=${page}&page_size=${$data.meta.page_size}&order_by=${$data.meta.order_by}&order=${$data.meta.order}')">${page}</a>
+          <a href="javascript:;" onclick="interface.go('/${model.slug}?page=${page}&page_size=${$data.meta.page_size}&order_by=${$data.meta.order_by}&order=${$data.meta.order}')">${page}</a>
         </span>
         {{/if}}
         {{/each}}
         <!--<span class="page gap">...</span>-->
         {{if meta.page < meta.total_pages}}
         <span class="next">
-          <a href="javascript:;" onclick="interface.go('/${model.name}?page=${meta.page+1}&page_size=${meta.page_size}&order_by=${meta.order_by}&order=${meta.order}')" rel="next">Next &rsaquo;</a>
+          <a href="javascript:;" onclick="interface.go('/${model.slug}?page=${meta.page+1}&page_size=${meta.page_size}&order_by=${meta.order_by}&order=${meta.order}')" rel="next">Next &rsaquo;</a>
         </span>
         {{/if}}
         {{if meta.page < meta.total_pages}}
         <span class="last">
-          <a href="javascript:;" onclick="interface.go('/${model.name}?page=${meta.total_pages}&page_size=${meta.page_size}&order_by=${meta.order_by}&order=${meta.order}')">Last &raquo;</a>
+          <a href="javascript:;" onclick="interface.go('/${model.slug}?page=${meta.total_pages}&page_size=${meta.page_size}&order_by=${meta.order_by}&order=${meta.order}')">Last &raquo;</a>
         </span>
         {{/if}}
       </nav>

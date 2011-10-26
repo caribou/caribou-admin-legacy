@@ -161,7 +161,20 @@ var interface = function() {
     };
 
     var modelFieldTypes = function() {
-        return ['id', 'integer', 'decimal', 'string', 'slug', 'text', 'boolean', 'timestamp', 'asset', 'address', 'collection', 'part', 'tie'];
+      return [
+        {name:'ID', slug:'id'},
+        {name:'Integer', slug:'integer'},
+        {name:'Decimal', slug:'decimal'},
+        {name:'Single Line Text', slug:'string'},
+        {name:'Paragraph Text', slug:'text'},
+        {name:'Boolean', slug:'boolean'},
+        {name:'Timestamp', slug:'timestamp'},
+        {name:'Asset', slug:'asset'},
+        {name:'Address', slug:'address'},
+        {name:'Collection', slug:'collection'},
+        {name:'Part', slug:'part'},
+        {name:'Tie', slug:'tie'}
+      ];
     };
 
     var act = function() {
