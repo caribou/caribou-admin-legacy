@@ -32,7 +32,7 @@ interface.admin = function() {
     var options = _.map(stringFields, function(field) {
       var val = field.name;
       var select = link && (link.name === val) ? ' selected="selected"' : '';
-      return '<option'+select+'>'+val+'</option>';
+      return '<option value="'+field.slug+'"'+select+'>'+val+'</option>';
     }).join('');
 
     return ''+options;
