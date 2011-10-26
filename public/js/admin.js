@@ -38,7 +38,7 @@ interface.admin = function() {
     stringInputs = _.difference(stringInputs, fieldNames);
 
     var inputOptions = _.map(stringInputs, function(input) {
-      return '<option value="'+input+'">'+input+'</option>';
+      return '<option value="'+_.slugify(input)+'">'+input+'</option>';
     });
 
     var fieldOptions = _.map(stringFields, function(field) {
