@@ -754,6 +754,21 @@ MODEL FIELD FORM TEMPLATES
   </tr>
 </script>
             
+<script id="tieFieldForModelEdit" type="text/x-jquery-tmpl">
+  <tr>
+    <td class="name"><input type="text" name="model[fields][${index}][name]" value="${field.name}" /></td>
+    <td class="type">
+      <input type="hidden" name="model[fields][${index}][type]" value="${field.type}" />
+      <input class="model_id" type="hidden" name="model[fields][${index}][id]" value="${field.id}" />
+      <input class="model_position" type="hidden" name="model[fields][${index}][model_position]" value="${field.model_position}" />
+      <span>Tie</span>
+    </td>
+    <td class="options">
+    </td>
+    <td class="options"><label><input type="checkbox"> Required field?</label></td>
+    <td class="actions"><a href="javascript:;" class="member_link delete_link">Delete</a> <a href="javascript:;" class="member_link handle_link">Drag</a></td>
+  </tr>
+</script>
 
 <!-- 
 
