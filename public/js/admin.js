@@ -46,8 +46,6 @@ interface.admin = function() {
       return '<option value="'+field.slug+'"'+select+'>'+field.name+'</option>';
     });
 
-    console.log(inputOptions);
-
     return fieldOptions.concat(inputOptions);
   };
 
@@ -217,6 +215,20 @@ interface.admin = function() {
     });
   };
   
+  fieldDeleteLink = function(e){
+    var tr = $(this).parents('tr');
+    var name = $(tr).find('input')[0].name.match(/\[([^\]]+)\]/)[1];
+    var id = $(tr).find('.model_id').val();
+    var removed = $('#removed_'+name);
+    var sofar = removed.val();
+
+    if (id) {
+      removed.val(sofar ? sofar + ',' + id : id);
+    }
+
+    $(tr).remove();
+  };
+
   var dashboardView = {
     init: function() {
       headerNav();
@@ -366,19 +378,20 @@ interface.admin = function() {
               }
             }).disableSelection();
 
-            $('.delete_link').click(function(e){
-              var tr = $(this).parents('tr');
-              var name = $(tr).find('input')[0].name.match(/\[([^\]]+)\]/)[1];
-              var id = $(tr).find('.model_id').val();
-              var removed = $('#removed_'+name);
-              var sofar = removed.val();
+            $('.delete_link').click(fieldDeleteLink);
+            // $('.delete_link').click(function(e){
+            //   var tr = $(this).parents('tr');
+            //   var name = $(tr).find('input')[0].name.match(/\[([^\]]+)\]/)[1];
+            //   var id = $(tr).find('.model_id').val();
+            //   var removed = $('#removed_'+name);
+            //   var sofar = removed.val();
 
-              if (id) {
-                removed.val(sofar ? sofar + ',' + id : id);
-              }
+            //   if (id) {
+            //     removed.val(sofar ? sofar + ',' + id : id);
+            //   }
 
-              $(tr).remove();
-            });
+            //   $(tr).remove();
+            // });
 
             // buildSlugOptions();
 
@@ -463,8 +476,7 @@ interface.admin = function() {
         var index = $('.model_fields_edit_table table tbody tr').length;
         var field = template[type+'FieldForModelEdit']({model: interface.models[slug], field: {type: type, model_position: index}, index: index});
         $('.model_fields_edit_table table tbody').append(field);
-        // $('.slug_options').append('<option>'+  +'</option>')
-        // buildSlugOptions();
+        $('.delete_link').click(fieldDeleteLink);
       }
     }
   };
