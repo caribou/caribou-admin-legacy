@@ -384,7 +384,9 @@ EDIT TEMPLATES
 <script id="mainContentForGenericEdit" type="text/x-jquery-tmpl">
   <form accept-charset="UTF-8" target="upload_target" action="http://api.triface.local/upload" class="formtastic ${model.slug} content_form" id="${model.slug}_edit" method="post" enctype="multipart/form-data">
     <div style="margin:0;padding:0;display:inline">
+      {{if !content.id}}
       <input type="hidden" name="${model.slug}[id]" value="${content.id}" />
+      {{/if}}
     </div>
     <fieldset class="inputs">
       <ol>
