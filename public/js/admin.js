@@ -38,7 +38,7 @@ interface.admin = function() {
     stringInputs = _.difference(stringInputs, fieldNames);
 
     var inputOptions = _.map(stringInputs, function(input) {
-      return '<option value="'+_.slugify(input)+'">'+input+'</option>';
+      return '<option value="'+_.slugify(input)+'">'+_.capitalize(input)+'</option>';
     });
 
     var fieldOptions = _.map(stringFields, function(field) {
@@ -97,7 +97,7 @@ interface.admin = function() {
     if ($('#tabs').html() == '') {
       var choices = _.map(interface.modelNames, function(modelName) {
         var model = interface.models[modelName];
-        return {url: _.template('/<%= name %>', model), title: model.name};
+        return {url: _.template('/<%= slug %>', model), title: model.name};
       });
       var tabs = template.tabbedNavigation({chosen: modelname, choices: choices});
       $('#tabs').html(tabs);

@@ -495,7 +495,10 @@ MODEL FIELD FORM TEMPLATES
       </td>
       {{else field.type == 'slug'}}
         <td class="options">
-          <div class="field"><label for="">Linked field</label><select><option>name</option><option>type</option></select></div>
+          <div class="field">
+            <label for="">Linked field</label>
+            <select name="model[fields][${index}][link_slug]" class="slug_options">{{html interface.admin.slugOptions(content, field.link)}}</select>
+          </div>
         </td>
       {{else field.type == 'text' || field.type == 'string'}}  
         <td class="options">
@@ -523,12 +526,12 @@ VIEW TEMPLATES
   <div class="panel">
     <h3>${model.name} Details</h3>
     <div class="panel_contents">
-      <div class="${model.name} attributes_table" id="attributes_table_${model.name}_${content.id}">
+      <div class="${model.slug} attributes_table" id="attributes_table_${model.slug}_${content.id}">
         <table border="0" cellspacing="0" cellpadding="0">
           {{each(i, field) model.fields}}
           <tr>
             <th><label class="label">${field.name}</label></th>
-            <td>{{if $data.content[field.name] == null}}<span class="empty">Empty</span>{{else}}${$data.content[field.name]}{{/if}}</td>
+            <td>{{if $data.content[field.slug] == null}}<span class="empty">Empty</span>{{else}}${$data.content[field.slug]}{{/if}}</td>
           </tr>
           {{/each}}
         </table>
@@ -568,51 +571,51 @@ FIELD INPUT TEMPLATES
 -->
 
 <script id="booleanField" type="text/x-jquery-tmpl">
-  <label for="${model.name}_${field.name}">
-    <input type="checkbox" id="${model.name}_${field.name}" name="${model.name}[${field.name}]" value="true" {{if content[field.name]}}checked{{/if}} />
+  <label for="${model.slug}_${field.slug}">
+    <input type="checkbox" id="${model.slug}_${field.slug}" name="${model.slug}[${field.slug}]" value="true" {{if content[field.slug]}}checked{{/if}} />
     ${field.name}
   </label>
 </script>
 
 <script id="stringField" type="text/x-jquery-tmpl">
-  <label for="${$data.model.name}_${field.name}">${field.name}<abbr title="required">*</abbr></label>
-  <input type="text" id="${model.name}_${field.name}" name="${model.name}[${field.name}]" maxlength="255" value="${content[field.name]}" />
+  <label for="${$data.model.slug}_${field.slug}">${field.name}<abbr title="required">*</abbr></label>
+  <input type="text" id="${model.slug}_${field.slug}" name="${model.slug}[${field.slug}]" maxlength="255" value="${content[field.slug]}" />
 </script>
 
 <script id="slugField" type="text/x-jquery-tmpl">
-  <label for="${$data.model.name}_${field.name}">${field.name}<abbr title="required">*</abbr></label>
-  <input type="text" name="${model.name}[${field.name}]" value="${content[field.name]}" />
+  <label for="${$data.model.slug}_${field.slug}">${field.name}<abbr title="required">*</abbr></label>
+  <input type="text" name="${model.slug}[${field.slug}]" value="${content[field.slug]}" />
 </script>
 
 <script id="integerField" type="text/x-jquery-tmpl">
-  <label for="${$data.model.name}_${field.name}">${field.name}<abbr title="required">*</abbr></label>
-  <input type="text" name="${model.name}[${field.name}]" value="${content[field.name]}" />
+  <label for="${$data.model.slug}_${field.slug}">${field.name}<abbr title="required">*</abbr></label>
+  <input type="text" name="${model.slug}[${field.slug}]" value="${content[field.slug]}" />
 </script>
 
 <script id="decimalField" type="text/x-jquery-tmpl">
-  <label for="${$data.model.name}_${field.name}">${field.name}<abbr title="required">*</abbr></label>
-  <input type="text" name="${model.name}[${field.name}]" value="${content[field.name]}" />
+  <label for="${$data.model.slug}_${field.slug}">${field.name}<abbr title="required">*</abbr></label>
+  <input type="text" name="${model.slug}[${field.slug}]" value="${content[field.slug]}" />
 </script>
 
 <script id="textField" type="text/x-jquery-tmpl">
-  <label for="${$data.model.name}_${field.name}">${field.name}<abbr title="required">*</abbr></label>
-  <textarea name="${model.name}[${field.name}]">${content[field.name]}</textarea>
+  <label for="${$data.model.slug}_${field.slug}">${field.name}<abbr title="required">*</abbr></label>
+  <textarea name="${model.slug}[${field.slug}]">${content[field.slug]}</textarea>
 </script>
 
 <script id="timestampField" type="text/x-jquery-tmpl">
-  <label for="${$data.model.name}_${field.name}">${field.name}<abbr title="required">*</abbr></label>
-  <input type="text" name="${model.name}[${field.name}]" value="${content[field.name]}" />
+  <label for="${$data.model.slug}_${field.slug}">${field.name}<abbr title="required">*</abbr></label>
+  <input type="text" name="${model.slug}[${field.slug}]" value="${content[field.slug]}" />
 </script>
 
 <script id="addressField" type="text/x-jquery-tmpl">
-  <input type="hidden" name="${model.name}[${field.name}_id]" value="{{if content[field.name+'_id']}}${content[field.name+'_id']}{{/if}}" />
-  <label for="${$data.model.name}_${field.name}">${field.name}<abbr title="required">*</abbr></label>
-  <input type="text" name="${model.name}[${field.name}][address]" value="{{if content[field.name]}}${content[field.name].address}{{/if}}" />
-  <input type="text" name="${model.name}[${field.name}][address_two]" value="{{if content[field.name]}}${content[field.name].address_two}{{/if}}" />
-  <input type="text" name="${model.name}[${field.name}][city]" value="{{if content[field.name]}}${content[field.name].city}{{/if}}" />
-  <input type="text" name="${model.name}[${field.name}][state]" value="{{if content[field.name]}}${content[field.name].state}{{/if}}" />
-  <input type="text" name="${model.name}[${field.name}][postal_code]" value="{{if content[field.name]}}${content[field.name].postal_code}{{/if}}" />
-  <input type="text" name="${model.name}[${field.name}][country]" value="{{if content[field.name]}}${content[field.name].country}{{/if}}" />
+  <input type="hidden" name="${model.slug}[${field.slug}_id]" value="{{if content[field.slug+'_id']}}${content[field.slug+'_id']}{{/if}}" />
+  <label for="${$data.model.slug}_${field.slug}">${field.name}<abbr title="required">*</abbr></label>
+  <input type="text" name="${model.slug}[${field.slug}][address]" value="{{if content[field.slug]}}${content[field.slug].address}{{/if}}" />
+  <input type="text" name="${model.slug}[${field.slug}][address_two]" value="{{if content[field.slug]}}${content[field.slug].address_two}{{/if}}" />
+  <input type="text" name="${model.slug}[${field.slug}][city]" value="{{if content[field.slug]}}${content[field.slug].city}{{/if}}" />
+  <input type="text" name="${model.slug}[${field.slug}][state]" value="{{if content[field.slug]}}${content[field.slug].state}{{/if}}" />
+  <input type="text" name="${model.slug}[${field.slug}][postal_code]" value="{{if content[field.slug]}}${content[field.slug].postal_code}{{/if}}" />
+  <input type="text" name="${model.slug}[${field.slug}][country]" value="{{if content[field.slug]}}${content[field.slug].country}{{/if}}" />
 </script>
 
 <script id="collectionField" type="text/x-jquery-tmpl">
@@ -620,29 +623,29 @@ FIELD INPUT TEMPLATES
 </script>
 
 <script id="collectionFieldOld" type="text/x-jquery-tmpl">
-  {{tmpl({model: field.target(), content: content[field.name], meta: {}}) "#mainContentForList"}}
+  {{tmpl({model: field.target(), content: content[field.slug], meta: {}}) "#mainContentForList"}}
 </script>
 
 <script id="partField" type="text/x-jquery-tmpl">
-  <label for="${$data.model.name}_${field.name}">${field.name}<abbr title="required">*</abbr></label>
-  <input type="text" name="${model.name}[${field.name}]" value="${content[field.name]}" />
+  <label for="${$data.model.slug}_${field.slug}">${field.name}<abbr title="required">*</abbr></label>
+  <input type="text" name="${model.slug}[${field.slug}]" value="${content[field.slug]}" />
 </script>
 
 <script id="linkField" type="text/x-jquery-tmpl">
-  <label for="${$data.model.name}_${field.name}">${field.name}<abbr title="required">*</abbr></label>
-  <input type="text" name="${model.name}[${field.name}]" value="${content[field.name]}" />
+  <label for="${$data.model.slug}_${field.slug}">${field.name}<abbr title="required">*</abbr></label>
+  <input type="text" name="${model.slug}[${field.slug}]" value="${content[field.slug]}" />
 </script>
 
 <script id="assetField" type="text/x-jquery-tmpl">
   <div>
-    <label for="${$data.model.name}_${field.name}" class="fileinput-button">
+    <label for="${$data.model.slug}_${field.slug}" class="fileinput-button">
       <span>${field.name}</span>
     </label>
-    <input id="${field.name}_asset" name="${model.name}[${field.name}_id]" type="hidden" value="${content[field.name+'_id']}"/>
-    <span class="update" onclick="interface.admin.showUploadForm('${field.name}')">Choose Asset</span>
-    <span id="${field.name}_thumbnail">
-      {{if content[field.name]}}
-      <a target="_blank" href="http://api.triface.local/${content[field.name].path}"><img src="http://api.triface.local/${content[field.name].path}" height="100" /></a>
+    <input id="${field.slug}_asset" name="${model.slug}[${field.slug}_id]" type="hidden" value="${content[field.slug+'_id']}"/>
+    <span class="update" onclick="interface.admin.showUploadForm('${field.slug}')">Choose Asset</span>
+    <span id="${field.slug}_thumbnail">
+      {{if content[field.slug]}}
+      <a target="_blank" href="http://api.triface.local/${content[field.slug].path}"><img src="http://api.triface.local/${content[field.slug].path}" height="100" /></a>
       {{/if}}
     </span>
   </div>
