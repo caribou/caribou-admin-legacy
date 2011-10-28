@@ -29,7 +29,7 @@ interface.admin = function() {
       return field.type === 'string';
     });
     var fieldNames = _.map(stringFields, function(field) {
-      return field.name;
+      return field.slug;
     });
 
     var stringInputs = _.map($('.string_field'), function(string) {
@@ -42,7 +42,7 @@ interface.admin = function() {
     });
 
     var fieldOptions = _.map(stringFields, function(field) {
-      var select = link && (link.name === field.name) ? ' selected="selected"' : '';
+      var select = link && (link.slug === field.slug) ? ' selected="selected"' : '';
       return '<option value="'+field.slug+'"'+select+'>'+field.name+'</option>';
     });
 
@@ -107,7 +107,7 @@ interface.admin = function() {
   };
   
   var setBodyClass = function(model, action) {
-    $('body').removeClass().addClass('logged_in admin_' + model.name + ' ' + action);
+    $('body').removeClass().addClass('logged_in admin_' + model.slug + ' ' + action);
   };
   
   var setBreadcrumb = function(items) {
@@ -303,7 +303,7 @@ interface.admin = function() {
               model: model, content: response.response, meta: response.meta});
             $('.action_items').html(action_items);
 
-            var sidebar = renderTemplate(model.name, "sidebarFor<%= model %>View", {
+            var sidebar = renderTemplate(model.slug, "sidebarFor<%= model %>View", {
               model: model, 
               content: response.response, 
               meta: response.meta,
@@ -311,7 +311,7 @@ interface.admin = function() {
             });
             $('#sidebar').html(sidebar);
 
-            var main_content = renderTemplate(model.name, "mainContentFor<%= model %>View", {
+            var main_content = renderTemplate(model.slug, "mainContentFor<%= model %>View", {
               model: model, 
               content: response.response, 
               meta: response.meta,
@@ -350,7 +350,7 @@ interface.admin = function() {
             setPageTitle("Edit " + model.name);
             setActionItems(model, response.response, response.meta);
 
-            var sidebar = renderTemplate(model.name, "sidebarFor<%= model %>Edit", {
+            var sidebar = renderTemplate(model.slug, "sidebarFor<%= model %>Edit", {
               model: model, 
               content: response.response, 
               meta: response.meta,
@@ -358,7 +358,7 @@ interface.admin = function() {
             });
             $('#sidebar').html(sidebar);
 
-            var main_content = renderTemplate(model.name, "mainContentFor<%= model %>Edit", {
+            var main_content = renderTemplate(model.slug, "mainContentFor<%= model %>Edit", {
               model: model, 
               content: response.response, 
               meta: response.meta,
@@ -411,14 +411,14 @@ interface.admin = function() {
         headerNav(params.model);
         var model = interface.models[params.model];
 
-        var sidebar = renderTemplate(model.name, "sidebarFor<%= model %>Edit", {
+        var sidebar = renderTemplate(model.slug, "sidebarFor<%= model %>Edit", {
           model: model, 
           content: {}, 
           action: 'update'
         });
         $('#sidebar').html(sidebar);
 
-        var main_content = renderTemplate(model.name, "mainContentFor<%= model %>Edit", {
+        var main_content = renderTemplate(model.slug, "mainContentFor<%= model %>Edit", {
           model: model, 
           content: {}, 
           action: 'create'

@@ -164,8 +164,8 @@ var interface = function() {
           }
 
           models[model.id] = model;
-          models[model.name] = model;
-          modelNames.push(model.name);
+          models[model.slug] = model;
+          modelNames.push(model.slug);
         });
 
         success();
