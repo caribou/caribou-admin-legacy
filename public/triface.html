@@ -478,39 +478,39 @@ MODEL FIELD FORM TEMPLATES
 <!--ABSTRACT-->
 <script id="abstractFieldForModelEdit" type="text/x-jquery-tmpl">
   <tr>
-    <td class="name"><input type="text" class="string_field" name="model[fields][${index}][name]" value="${field.name}" /></td>
+    <td class="name"><input type="text" class="{{if field.type === 'string'}}string_field{{/if}}" name="model[fields][${index}][name]" value="${field.name}" /></td>
     <td class="type">
       <input type="hidden" name="model[fields][${index}][type]" value="${field.type}" />
       <input class="model_id" type="hidden" name="model[fields][${index}][id]" value="${field.id}" />
       <input class="model_position" type="hidden" name="model[fields][${index}][model_position]" value="${field.model_position}" />
       {{if field.type == 'text'}}
-        <span>Paragraph Text</span>
+      <span>Paragraph Text</span>
       {{else field.type == 'string'}}
-        <span>Single Line Text</span>
+      <span>Single Line Text</span>
       {{else}}
-        <span>${field.type}</span>
+      <span>${field.type}</span>
       {{/if}}
     </td>
     {{if field.type == 'boolean'}}
-      <td class="options">
-        <div class="field"><label for="">Default value</label><select><option>true</option><option>false</option></select></div>
-      </td>
-      {{else field.type == 'slug'}}
-        <td class="options">
-          <div class="field">
-            <label for="">Linked field</label>
-            <select name="model[fields][${index}][link_slug]" class="slug_options">{{html interface.admin.slugOptions(content, field.link)}}</select>
-          </div>
-        </td>
-      {{else field.type == 'text' || field.type == 'string'}}  
-        <td class="options">
-          <input type="hidden" name="model[fields][${index}][type]" value="${field.type}" />
-          <input class="model_id" type="hidden" name="model[fields][${index}][id]" value="${field.id}" />
-          <input class="model_position" type="hidden" name="model[fields][${index}][model_position]" value="${field.model_position}" />
-          <div class="field"><label for="">Default value</label><input type="text" name="model[fields][${index}][default_value]" value="" /></div>
-        </td>
-      {{else}}
-      <td class="options"></td>
+    <td class="options">
+      <div class="field"><label for="">Default value</label><select><option>true</option><option>false</option></select></div>
+    </td>
+    {{else field.type == 'slug'}}
+    <td class="options">
+      <div class="field">
+        <label for="">Linked field</label>
+        <select name="model[fields][${index}][link_slug]" class="slug_options">{{html interface.admin.slugOptions(content, field.link)}}</select>
+      </div>
+    </td>
+    {{else field.type == 'text' || field.type == 'string'}}  
+    <td class="options">
+      <input type="hidden" name="model[fields][${index}][type]" value="${field.type}" />
+      <input class="model_id" type="hidden" name="model[fields][${index}][id]" value="${field.id}" />
+      <input class="model_position" type="hidden" name="model[fields][${index}][model_position]" value="${field.model_position}" />
+      <div class="field"><label for="">Default value</label><input type="text" name="model[fields][${index}][default_value]" value="${field.default_value}" /></div>
+    </td>
+    {{else}}
+    <td class="options"></td>
     {{/if}}
     <td class="options"><label><input type="checkbox"> Required field?</label></td>
     <td class="actions">{{if !field.locked}}<a href="javascript:;" class="member_link delete_link">Delete</a> {{/if}}<a href="javascript:;" class="member_link handle_link">Drag</a></td>

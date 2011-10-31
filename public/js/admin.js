@@ -29,7 +29,7 @@ interface.admin = function() {
       return field.type === 'string';
     });
     var fieldNames = _.map(stringFields, function(field) {
-      return field.slug;
+      return field.name;
     });
 
     var stringInputs = _.map($('.string_field'), function(string) {
