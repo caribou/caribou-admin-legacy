@@ -64,7 +64,7 @@ interface.admin = function() {
   *///////////////////////////////////////////////
   
   var renderTemplate = function(model, name, env) {
-    env.fieldTypes = interface.modelFieldTypes;
+    env.fieldTypes = interface.modelFieldTypes();
     model = _.capitalize(model);
     var specific = _.template(name, {model: model});
     if (template[specific]) {

@@ -483,13 +483,7 @@ MODEL FIELD FORM TEMPLATES
       <input type="hidden" name="model[fields][${index}][type]" value="${field.type}" />
       <input class="model_id" type="hidden" name="model[fields][${index}][id]" value="${field.id}" />
       <input class="model_position" type="hidden" name="model[fields][${index}][model_position]" value="${field.model_position}" />
-      {{if field.type == 'text'}}
-      <span>Paragraph Text</span>
-      {{else field.type == 'string'}}
-      <span>Single Line Text</span>
-      {{else}}
       <span>${field.type}</span>
-      {{/if}}
     </td>
     {{if field.type == 'boolean'}}
     <td class="options">

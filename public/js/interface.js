@@ -173,22 +173,33 @@ var interface = function() {
     });
   };
 
-  var modelFieldTypes = function() {
-    return [
-      {name:'ID', slug:'id'},
-      {name:'Integer', slug:'integer'},
-      {name:'Decimal', slug:'decimal'},
-      {name:'Single Line Text', slug:'string'},
-      {name:'Paragraph Text', slug:'text'},
-      {name:'Boolean', slug:'boolean'},
-      {name:'Slug', slug:'slug'},
-      {name:'Timestamp', slug:'timestamp'},
-      {name:'Asset', slug:'asset'},
-      {name:'Address', slug:'address'},
-      {name:'Collection', slug:'collection'},
-      {name:'Part', slug:'part'},
-      {name:'Tie', slug:'tie'}
-    ];
+  // var modelFieldTypes = function() {
+  //   return [
+  //     {name:'ID', slug:'id'},
+  //     {name:'Integer', slug:'integer'},
+  //     {name:'Decimal', slug:'decimal'},
+  //     {name:'Single Line Text', slug:'string'},
+  //     {name:'Paragraph Text', slug:'text'},
+  //     {name:'Boolean', slug:'boolean'},
+  //     {name:'Slug', slug:'slug'},
+  //     {name:'Timestamp', slug:'timestamp'},
+  //     {name:'Asset', slug:'asset'},
+  //     {name:'Address', slug:'address'},
+  //     {name:'Collection', slug:'collection'},
+  //     {name:'Part', slug:'part'},
+  //     {name:'Tie', slug:'tie'}
+  //   ];
+  // };
+
+  var modelFieldTypes = [];
+  var retrieveFieldTypes = function() {
+    api.get({
+      url: "/type-specs.json",
+      success: function(response) {
+        console.log(response);
+        modelFieldTypes = response.response;
+      }
+    });
   };
 
   var act = function() {
@@ -225,6 +236,7 @@ var interface = function() {
   var init = function(success) {
     window.onstatechange = act;
     resetModels(act);
+    retrieveFieldTypes();
   };
 
   return {
@@ -234,7 +246,7 @@ var interface = function() {
     act: act,
     models: models,
     modelNames: modelNames,
-    modelFieldTypes: modelFieldTypes,
+    modelFieldTypes: function() {return modelFieldTypes},
     routing: routing,
     formData: formData,
     resetModels: resetModels
