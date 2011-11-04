@@ -1,0 +1,24 @@
+server {
+    listen 80;
+    server_name admin.triface;
+
+    root /Users/yourname/Projects/triface-admin/public;
+
+    index triface.html;
+
+    location /img {
+        if (-f $request_filename) {
+            break;
+        }
+    }
+
+    location / {
+        try_files $uri $uri.html $uri/index.html /triface.html;
+    }
+
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   html;
+    }
+}
+
