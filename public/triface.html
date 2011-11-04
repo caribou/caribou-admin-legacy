@@ -485,32 +485,40 @@ MODEL FIELD FORM TEMPLATES
       <input class="model_position" type="hidden" name="model[fields][${index}][model_position]" value="${field.model_position}" />
       <span>${fieldTypes[field.type].name}</span>
     </td>
-    {{if field.type == 'boolean'}}
     <td class="options">
-      <div class="field"><label for="">Default value</label><select><option>true</option><option>false</option></select></div>
+      {{each(i, option) fieldTypes[field.type].options}}
+      {{tmpl({model: $data.model, content: $data.content, field: $data.field, index: $data.index}) "#"+option+"FieldOptions"}}
+      {{/each}}
     </td>
-    {{else field.type == 'slug'}}
-    <td class="options">
-      <div class="field">
-        <label for="">Linked field</label>
-        <select name="model[fields][${index}][link_slug]" class="slug_options">{{html interface.admin.slugOptions(content, field.link)}}</select>
-      </div>
-    </td>
-    {{else field.type == 'text' || field.type == 'string'}}  
-    <td class="options">
-      <input type="hidden" name="model[fields][${index}][type]" value="${field.type}" />
-      <input class="model_id" type="hidden" name="model[fields][${index}][id]" value="${field.id}" />
-      <input class="model_position" type="hidden" name="model[fields][${index}][model_position]" value="${field.model_position}" />
-      <div class="field"><label for="">Default value</label><input type="text" name="model[fields][${index}][default_value]" value="${field.default_value}" /></div>
-    </td>
-    {{else}}
-    <td class="options"></td>
-    {{/if}}
     <td class="options"><label><input type="checkbox"> Required field?</label></td>
     <td class="actions">{{if !field.locked}}<a href="javascript:;" class="member_link delete_link">Delete</a> {{/if}}<a href="javascript:;" class="member_link handle_link">Drag</a></td>
   </tr>
 </script>
 <!--ABSTRACT-->
+
+<script id="defaultStringFieldOptions" type="text/x-jquery-tmpl">
+  <div class="field"><label for="">Default value</label><input type="text" name="model[fields][${index}][default_value]" value="${field.default_value}" /></div>
+</script>
+
+<script id="defaultBooleanFieldOptions" type="text/x-jquery-tmpl">
+  <div class="field">
+    <label for="">Default value</label>
+    <select name="model[fields][${index}][default_value]">
+      <option{{if field.default_value}} selected="selected"{{/if}}>true</option>
+      <option{{if !field.default_value}} selected="selected"{{/if}}>false</option>
+    </select>
+  </div>
+</script>
+
+<script id="slugLinkFieldOptions" type="text/x-jquery-tmpl">
+  <div class="field">
+    <label for="">Linked field</label>
+    <select name="model[fields][${index}][link_slug]" class="slug_options">{{html interface.admin.slugOptions(content, field.link)}}</select>
+  </div>
+</script>
+
+<script id="linkFieldOptions" type="text/x-jquery-tmpl">
+</script>
 
 <!-- 
 
