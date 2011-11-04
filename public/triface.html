@@ -239,8 +239,8 @@ SIDEBAR TEMPLATES
   <div class="panel sidebar_section" id="fields_sidebar_section">
     <h3>Model Builder</h3>
     <div class="panel_contents">
-      {{each(i, type) fieldTypes}}
-      <div onclick="interface.admin.modelView.edit.newField('${$data.content.slug}', '${type.slug}')" class="type">${type.name}</div>
+      {{each(i, type) _.keys(fieldTypes)}}
+      <div onclick="interface.admin.modelView.edit.newField('${$data.content.slug}', '${type}')" class="type">${$data.fieldTypes[type].name}</div>
       {{/each}}
       <!-- <a href="">Single Line Text</a> -->
       <!-- <a href="">Paragraph Text</a> -->
@@ -449,7 +449,7 @@ EDIT TEMPLATES
           </thead>
           <tbody class="sortable">
             {{each(i, field) content.fields}}
-            {{tmpl({model: $data.model, content: $data.content, field: field, index: i}) "#abstractFieldForModelEdit"}}
+            {{tmpl({model: $data.model, content: $data.content, field: field, index: i, fieldTypes: $data.fieldTypes}) "#abstractFieldForModelEdit"}}
             {{/each}}
           </tbody>
         </table>
@@ -483,7 +483,7 @@ MODEL FIELD FORM TEMPLATES
       <input type="hidden" name="model[fields][${index}][type]" value="${field.type}" />
       <input class="model_id" type="hidden" name="model[fields][${index}][id]" value="${field.id}" />
       <input class="model_position" type="hidden" name="model[fields][${index}][model_position]" value="${field.model_position}" />
-      <span>${field.type}</span>
+      <span>${fieldTypes[field.type].name}</span>
     </td>
     {{if field.type == 'boolean'}}
     <td class="options">

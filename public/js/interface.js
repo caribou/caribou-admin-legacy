@@ -52,7 +52,7 @@ var interface = function() {
         }
       }
     });
-  }
+  };
 
   var api = {};
   var sherpa = new Sherpa.Router();
@@ -173,27 +173,10 @@ var interface = function() {
     });
   };
 
-  // var modelFieldTypes = function() {
-  //   return [
-  //     {name:'ID', slug:'id'},
-  //     {name:'Integer', slug:'integer'},
-  //     {name:'Decimal', slug:'decimal'},
-  //     {name:'Single Line Text', slug:'string'},
-  //     {name:'Paragraph Text', slug:'text'},
-  //     {name:'Boolean', slug:'boolean'},
-  //     {name:'Slug', slug:'slug'},
-  //     {name:'Timestamp', slug:'timestamp'},
-  //     {name:'Asset', slug:'asset'},
-  //     {name:'Address', slug:'address'},
-  //     {name:'Collection', slug:'collection'},
-  //     {name:'Part', slug:'part'},
-  //     {name:'Tie', slug:'tie'}
-  //   ];
-  // };
-
   var modelFieldTypes = [];
   var retrieveFieldTypes = function() {
     api.get({
+      cache: false,
       url: "/type-specs.json",
       success: function(response) {
         console.log(response);
@@ -246,7 +229,7 @@ var interface = function() {
     act: act,
     models: models,
     modelNames: modelNames,
-    modelFieldTypes: function() {return modelFieldTypes},
+    modelFieldTypes: function() {return modelFieldTypes;},
     routing: routing,
     formData: formData,
     resetModels: resetModels
