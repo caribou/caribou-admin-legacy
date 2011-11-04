@@ -16,7 +16,7 @@ _.slugify = function(string) {
 }
 
 var interface = function() {
-  var REMOTE = "http://api.triface.local";
+  var REMOTE = "http://api.triface";
   var rpc = new easyXDM.Rpc({
     remote: REMOTE+"/cors/"
   }, {
