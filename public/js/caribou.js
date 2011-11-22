@@ -15,8 +15,8 @@ _.slugify = function(string) {
   return shaped.join('_');
 }
 
-var interface = function() {
-  var REMOTE = "http://api.triface";
+var caribou = function() {
+  var REMOTE = "http://api.caribou";
   var rpc = new easyXDM.Rpc({
     remote: REMOTE+"/cors/"
   }, {

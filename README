@@ -2,11 +2,11 @@
 
 ## Setup ----------------------------
 
-Install the core triface api repository: https://github.com/kaleidomedallion/triface
+Install the core caribou api repository: https://github.com/kaleidomedallion/caribou
 Add the following to your /etc/hosts file:
 
-  127.0.0.1 api.triface.local
-  127.0.0.1 admin.triface.local
+  127.0.0.1 api.caribou.local
+  127.0.0.1 admin.caribou.local
 
 ngingx
 Include the respective nginx config files from each repository in your main nginx config, 
@@ -19,6 +19,6 @@ making sure to change the root paths to point at your local installation directo
 
 ## Usage ----------------------------
 
-Navigate to http://admin.triface.local
+Navigate to http://admin.caribou.local
 
 Enjoy!

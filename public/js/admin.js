@@ -1,4 +1,4 @@
-interface.admin = function() {
+caribou.admin = function() {
   
   /*//////////////////////////////////////////////
   //
@@ -64,7 +64,7 @@ interface.admin = function() {
   *///////////////////////////////////////////////
   
   var renderTemplate = function(model, name, env) {
-    env.fieldTypes = interface.modelFieldTypes();
+    env.fieldTypes = caribou.modelFieldTypes();
     model = _.capitalize(model);
     var specific = _.template(name, {model: model});
     if (template[specific]) {
@@ -84,7 +84,7 @@ interface.admin = function() {
 
     var select = function(choice, url) {
       highlight(choice);
-      interface.go(url);
+      caribou.go(url);
     };
 
     return {
@@ -95,8 +95,8 @@ interface.admin = function() {
 
   var headerNav = function(modelname) {
     if ($('#tabs').html() == '') {
-      var choices = _.map(interface.modelNames, function(modelName) {
-        var model = interface.models[modelName];
+      var choices = _.map(caribou.modelNames, function(modelName) {
+        var model = caribou.models[modelName];
         return {url: _.template('/<%= slug %>', model), title: model.name};
       });
       var tabs = template.tabbedNavigation({chosen: modelname, choices: choices});
@@ -151,19 +151,19 @@ interface.admin = function() {
   *///////////////////////////////////////////////
   
   var contentCreate = function(name) {
-    var data = interface.formData('#'+name+'_edit');
+    var data = caribou.formData('#'+name+'_edit');
     var url = '/' + name;
 
-    interface.api.post({
+    caribou.api.post({
       url: url,
       data: data,
       success: function(response) {
         var succeed = function() {
-          interface.go(url + '/' + response.response.id + '/edit');
+          caribou.go(url + '/' + response.response.id + '/edit');
         };
 
         if (name === 'model') {
-          interface.resetModels(succeed);
+          caribou.resetModels(succeed);
         } else {
           succeed();
         }
@@ -174,21 +174,21 @@ interface.admin = function() {
   };
 
   var contentUpdate = function(name) {
-    var data = interface.formData('#'+name+'_edit');
+    var data = caribou.formData('#'+name+'_edit');
     var id = name + '[id]';
     var url = '/' + name + '/' + data[id];
     delete data[id];
 
-    interface.api.put({
+    caribou.api.put({
       url: url,
       data: data,
       success: function(response) {
         var succeed = function() {
-          interface.go(url + '/edit');
+          caribou.go(url + '/edit');
           setFlashNotice(_.capitalize(name) + ' was successfully updated.');
         };
         if (name === 'model') {
-          interface.resetModels(succeed);
+          caribou.resetModels(succeed);
         } else {
           succeed();
         }
@@ -200,14 +200,14 @@ interface.admin = function() {
 
   var contentDelete = function(name, id) {
     var url = '/' + name + '/' + id;
-    interface.api.delete({
+    caribou.api.delete({
       url: url,
       success: function(response) {
         var succeed = function() {
           $('#'+name+'_'+id).remove();
         };
         if (name === 'model') {
-          interface.resetModels(succeed);
+          caribou.resetModels(succeed);
         } else {
           succeed();
         }
@@ -240,12 +240,12 @@ interface.admin = function() {
     
     list: {
       init: function(params, query) {
-        interface.api.get({
+        caribou.api.get({
           url: _.template('/<%= model %>', params),
           data: query,
           success: function(response) {
             headerNav(params.model);
-            var model = interface.models[params.model];
+            var model = caribou.models[params.model];
 
             var breadcrumb = template.breadcrumb({
               model: model, content: response.response, meta: response.meta});
@@ -275,7 +275,7 @@ interface.admin = function() {
     
     view: {
       init: function(params, query) {
-        var model = interface.models[params.model];
+        var model = caribou.models[params.model];
         var include = _.map(_.filter(model.fields, function(field) {
           return field.type === 'collection';
         }), function(collection) {
@@ -284,7 +284,7 @@ interface.admin = function() {
 
         var url = _.template('/<%= model %>/<%= id %>', params);
 
-        interface.api.get({
+        caribou.api.get({
           url: url,
           data: {include: include},
           success: function(response) {
@@ -325,7 +325,7 @@ interface.admin = function() {
     
     edit: {
       init: function(params, query) {
-        var model = interface.models[params.model];
+        var model = caribou.models[params.model];
         var include = _.map(_.filter(model.fields, function(field) {
           return field.type === 'collection';
         }), function(collection) {
@@ -338,7 +338,7 @@ interface.admin = function() {
         
         var url = _.template('/<%= model %>/<%= id %>', params);
 
-        interface.api.get({
+        caribou.api.get({
           url: url,
           data: {include: include},
           success: function(response) {
@@ -395,8 +395,8 @@ interface.admin = function() {
 
             // buildSlugOptions();
 
-            var upload = interface.api.upload(function(response) {
-              var src = 'http://api.triface.local/'+response.url;
+            var upload = caribou.api.upload(function(response) {
+              var src = 'http://api.caribou.local/'+response.url;
               $('#'+response.context+'_asset').val(response.asset_id);
               $('#'+response.context+'_thumbnail').html('<a target="_blank" href="'+src+'"><img src="'+src+'" height="100" /></a>');
               $('#upload_dialog').dialog("close");
@@ -409,7 +409,7 @@ interface.admin = function() {
     new: {
       init: function(params) {
         headerNav(params.model);
-        var model = interface.models[params.model];
+        var model = caribou.models[params.model];
 
         var sidebar = renderTemplate(model.slug, "sidebarFor<%= model %>Edit", {
           model: model, 
@@ -425,8 +425,8 @@ interface.admin = function() {
         });
         $('#main_content').html(main_content);
         
-        var upload = interface.api.upload(function(response) {
-          var src = 'http://api.triface.local/'+response.url;
+        var upload = caribou.api.upload(function(response) {
+          var src = 'http://api.caribou.local/'+response.url;
           $('#'+response.context+'_asset').val(response.asset_id);
           $('#'+response.context+'_thumbnail').append('<a target="_blank" href="'+src+'"><img src="'+src+'" height="100" /></a>');
           $('#upload_dialog').dialog("close");
@@ -474,7 +474,7 @@ interface.admin = function() {
       },
       newField: function(slug, type) {
         var index = $('.model_fields_edit_table table tbody tr').length;
-        var field = template['abstractFieldForModelEdit']({model: interface.models[slug], field: {type: type, model_position: index}, index: index});
+        var field = template['abstractFieldForModelEdit']({model: caribou.models[slug], field: {type: type, model_position: index}, index: index});
         $('.model_fields_edit_table table tbody').append(field);
         $('.delete_link').click(fieldDeleteLink);
       }
@@ -492,11 +492,11 @@ interface.admin = function() {
   //
   *///////////////////////////////////////////////
   
-  interface.routing.add('/', 'dashboard', dashboardView.init);
-  interface.routing.add('/:model', 'list', genericView.list.init);
-  interface.routing.add('/:model/new', 'new', genericView.new.init);
-  interface.routing.add('/:model/:id', 'view', genericView.view.init);
-  interface.routing.add('/:model/:id/edit', 'edit', genericView.edit.init);
+  caribou.routing.add('/', 'dashboard', dashboardView.init);
+  caribou.routing.add('/:model', 'list', genericView.list.init);
+  caribou.routing.add('/:model/new', 'new', genericView.new.init);
+  caribou.routing.add('/:model/:id', 'view', genericView.view.init);
+  caribou.routing.add('/:model/:id/edit', 'edit', genericView.edit.init);
   
   /*//////////////////////////////////////////////
   //
@@ -506,7 +506,7 @@ interface.admin = function() {
   
   return {
     init: function() {
-      interface.init();
+      caribou.init();
       $('#upload_dialog').dialog({
         autoOpen: false,
         modal: true,

@@ -1,10 +1,10 @@
 server {
     listen 80;
-    server_name admin.triface;
+    server_name admin.caribou;
 
-    root /Users/yourname/Projects/triface-admin/public;
+    root /Users/yourname/Projects/caribou-admin/public;
 
-    index triface.html;
+    index caribou.html;
 
     location /img {
         if (-f $request_filename) {
@@ -13,7 +13,7 @@ server {
     }
 
     location / {
-        try_files $uri $uri.html $uri/index.html /triface.html;
+        try_files $uri $uri.html $uri/index.html /caribou.html;
     }
 
     error_page   500 502 503 504  /50x.html;
