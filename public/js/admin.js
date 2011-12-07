@@ -474,7 +474,7 @@ caribou.admin = function() {
       },
       newField: function(slug, type) {
         var index = $('.model_fields_edit_table table tbody tr').length;
-        var field = template['abstractFieldForModelEdit']({model: caribou.models[slug], field: {type: type, model_position: index}, index: index});
+        var field = template['abstractFieldForModelEdit']({model: caribou.models[slug], field: {type: type, model_position: index}, index: index, fieldTypes: caribou.modelFieldTypes()});
         $('.model_fields_edit_table table tbody').append(field);
         $('.delete_link').click(fieldDeleteLink);
       }
