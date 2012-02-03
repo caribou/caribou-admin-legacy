@@ -54,7 +54,7 @@
       </div>
       
       <div id="upload_dialog">
-        <form accept-charset="UTF-8" target="upload_target" action="http://api.caribou.local/upload" class="formtastic ${model.slug} content_form" id="file_upload" method="post" enctype="multipart/form-data">
+        <form accept-charset="UTF-8" target="upload_target" action="${caribou.remoteAPI}/upload" class="formtastic ${model.slug} content_form" id="file_upload" method="post" enctype="multipart/form-data">
           <input type="hidden" id="upload_context" name="context" value="" />
           <input type="file" name="upload" />
           <input type="submit" value="Upload File">
@@ -333,7 +333,7 @@ LIST TEMPLATES
       </div>
     </div>
     <div id="index_footer">
-      Download:&nbsp;<a href="http://api.caribou.local/${model.slug}.csv">CSV</a>&nbsp;<a href="http://api.caribou.local/${model.slug}.xml">XML</a>&nbsp;<a href="http://api.caribou.local/${model.slug}.json">JSON</a>
+      Download:&nbsp;<a href="${caribou.remoteAPI}/${model.slug}.csv">CSV</a>&nbsp;<a href="#{caribou.remoteAPI}/${model.slug}.xml">XML</a>&nbsp;<a href="#{caribou.remoteAPI}/${model.slug}.json">JSON</a>
       <nav class="pagination">
         {{if meta.page > 1}}
         <span class="first">
@@ -382,7 +382,7 @@ EDIT TEMPLATES
 -->
 
 <script id="mainContentForGenericEdit" type="text/x-jquery-tmpl">
-  <form accept-charset="UTF-8" target="upload_target" action="http://api.caribou.local/upload" class="formtastic ${model.slug} content_form" id="${model.slug}_edit" method="post" enctype="multipart/form-data">
+  <form accept-charset="UTF-8" target="upload_target" action="${caribou.remoteAPI}/upload" class="formtastic ${model.slug} content_form" id="${model.slug}_edit" method="post" enctype="multipart/form-data">
     <div style="margin:0;padding:0;display:inline">
       {{if content.id}}
       <input type="hidden" name="${model.slug}[id]" value="${content.id}" />
@@ -649,7 +649,7 @@ FIELD INPUT TEMPLATES
     <span class="update" onclick="caribou.admin.showUploadForm('${field.slug}')">Choose Asset</span>
     <span id="${field.slug}_thumbnail">
       {{if content[field.slug]}}
-      <a target="_blank" href="http://api.caribou.local/${content[field.slug].path}"><img src="http://api.caribou.local/${content[field.slug].path}" height="100" /></a>
+      <a target="_blank" href="${caribou.remoteAPI}/${content[field.slug].path}"><img src="${caribou.remoteAPI}/${content[field.slug].path}" height="100" /></a>
       {{/if}}
     </span>
   </div>

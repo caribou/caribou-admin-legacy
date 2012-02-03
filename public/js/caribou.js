@@ -233,6 +233,7 @@ var caribou = function() {
     modelFieldTypes: function() {return modelFieldTypes;},
     routing: routing,
     formData: formData,
-    resetModels: resetModels
+    resetModels: resetModels,
+    remoteAPI: REMOTE
   };
 }();
