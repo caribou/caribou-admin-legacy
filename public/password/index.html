@@ -24,16 +24,13 @@
   <body class="logged_out new">
 
     <div id="wrapper">
-      
+
       <div id="content_wrapper">
-        
-        <div class="flash flash_alert">Invalid email or password.</div>
-        
         <div id="active_admin_content">
           <div id="login">
-            <h2>Nike Better World Login</h2>
+            <h2>Forgot your password?</h2>
 
-            <form accept-charset="UTF-8" action="/login" class="formtastic admin_user" id="session_new" method="post" novalidate="novalidate">
+            <form accept-charset="UTF-8" action="/admin/password" class="formtastic admin_user" id="admin_user_new" method="post" novalidate="novalidate">
               <div style="margin:0;padding:0;display:inline">
                 <input name="utf8" type="hidden" value="&#x2713;" />
                 <input name="authenticity_token" type="hidden" value="FShSfBf6MMpyDmS5BAlC9frJVGjML8rHh5uRvCdyZxY=" />
@@ -44,33 +41,21 @@
                     <label class=" label" for="admin_user_email">Email<abbr title="required">*</abbr></label>
                     <input id="admin_user_email" maxlength="255" name="admin_user[email]" type="email" value="" />
                   </li>
-                  <li class="password input required stringish" id="admin_user_password_input">
-                    <label class=" label" for="admin_user_password">Password<abbr title="required">*</abbr></label>
-                    <input id="admin_user_password" maxlength="128" name="admin_user[password]" type="password" />
-                  </li>
-                  <li class="boolean input optional" id="admin_user_remember_me_input">
-                    <input name="admin_user[remember_me]" type="hidden" value="0" />
-                    <label class="" for="admin_user_remember_me" name="admin_user[remember_me]">
-                    <input id="admin_user_remember_me" name="admin_user[remember_me]" type="checkbox" value="1" />Remember me</label>
-                  </li>
                 </ol>
               </fieldset>
               <fieldset class="buttons">
                 <ol>
                   <li class="commit button">
-                    <input class="create" id="admin_user_submit" name="commit" type="submit" value="Login" />
+                    <input class="create" id="admin_user_submit" name="commit" type="submit" value="Reset My Password" />
                   </li>
                 </ol>
               </fieldset>
             </form>
-            
-            <a href="/password/">Forgot your password?</a><br />
-            
+            <a href="/login">Sign in</a><br />
           </div>
         </div>
       </div>
       <div id="footer"></div>
-      
     </div>
     
   </body>

@@ -26,28 +26,24 @@
     <div id="wrapper">
       
       <div id="header">
-        <h1 id="site_title">Interface 3.0</h1>
-        <ul class="tabbed_navigation" id="tabs"></ul>
-        <p id="utility_nav"><span class="current_user">justin@weareinstrument.com</span> <a href="#">Logout</a></p>
+        <h1 id="site_title">Nike Better World</h1>
+        <ul class="header-item" id="tabs"></ul>
+        <p class="header-item" id="utility_nav"><span class="current_user">justin@weareinstrument.com</span> <a href="#">Logout</a></p>
       </div>
       
       <div id="title_bar">
-        <span class="breadcrumb">&nbsp;</span>
-        <h2 id="page_title">&nbsp;</h2>
-        <div class="action_items">&nbsp;</div>
+        <div id="titlebar_left">
+          <span class="breadcrumb">&nbsp;</span>
+          <h2 id="page_title">&nbsp;</h2>
+        </div>
+        <div id="titlebar_right">
+          <div class="action_items">&nbsp;</div>
+        </div>
       </div>
       
       <div class="flashes"></div>
       
-      <div class="with_sidebar" id="active_admin_content">
-        
-        <div id="main_content_wrapper">
-          <div id="main_content">&nbsp;</div>
-        </div>
-        
-        <div id="sidebar">&nbsp;</div>
-        
-      </div>
+      <div class="without_sidebar" id="active_admin_content">&nbsp;</div>
       
       <div id="footer">
         <p>Powered by <a href="http://www.activeadmin.info">Active Admin</a> 0.3.1</p>
@@ -77,13 +73,16 @@ HEADER TEMPLATES
 
 <script id="tabbedNavigation" type="text/x-jquery-tmpl">
   {{each(i, choice) choices}}
-  <li id="${choice.title}" class="${chosen === choice.title ? 'current' : ''}"><a href="javascript:;" onclick="caribou.admin.nav.select('${choice.title}', '${choice.url}')">${choice.title}</a></li>
-  {{/each}}
-  <li id="content" class="current has_nested"><a href="">Content</a>
-    <ul>
-      <li id="pages" class="current"><a href="">Pages</a></li>
+  {{if choice.children}}
+  <li id="${choice.slug}" class="has_nested"><a href="javascript:;">${choice.label}</a>
+  	<ul>
+        {{tmpl({chosen: $data.chosen, choices: choice.children}) "#tabbedNavigation"}}
     </ul>
   </li>
+  {{else}}
+  <li id="${choice.slug}" class="${chosen === choice.slug ? 'current' : ''}"><a href="javascript:;" onclick="caribou.admin.nav.select('${choice.slug}', '${choice.action}')">${choice.label}</a></li>
+  {{/if}}
+  {{/each}}
 </script>
 
 <!-- 
@@ -93,10 +92,8 @@ BREADCRUMB AND PAGE TITLE TEMPLATES
 -->
 
 <script id="breadcrumb" type="text/x-jquery-tmpl">
-  <a href="/">Admin</a>
-  <span class="breadcrumb_sep">/</span>
   {{each(i, item) items}}
-  <a href="${item.url}">${item.title}</a>
+  <a href="javascript:;" onclick="caribou.go('${item.action}')">${item.label}</a>
   <span class="breadcrumb_sep">/</span>
   {{/each}}
 </script>
@@ -121,12 +118,14 @@ FLASH TEMPLATES
 
 <!-- 
 
-ACTION ITEM TEMPLATES
+ACTION ITEMS TEMPLATES
 
 -->
 
-<script id="actionItemsForGenericList" type="text/x-jquery-tmpl">
-  <span class="action_item"><a href="javascript:;" onclick="caribou.go('/${model.slug}/new')">New ${model.name}</a></span>
+<script id="actionItems" type="text/x-jquery-tmpl">
+  {{each(i, item) items}}
+  {{if item.action === "new"}}<span class="action_item"><a href="javascript:;" onclick="caribou.go('${item.action}')">New </a></span>{{/if}}
+  {{/each}}
 </script>
 
 <script id="actionItemsForGenericEdit" type="text/x-jquery-tmpl">
@@ -143,6 +142,14 @@ ACTION ITEM TEMPLATES
 SIDEBAR TEMPLATES
 
 -->
+
+<script id="sidebar" type="text/x-jquery-tmpl">
+  {{each(i, object) viewSpec.response.content.sidebar}}
+  {{if object.type == "sidebarPanel"}}
+  {{tmpl({viewSpec: $data.viewSpec, viewData: $data.viewData, object: object}) "#sidebarPanel"}}
+  {{/if}}
+  {{/each}}
+</script>
 
 <script id="sidebarForGenericList" type="text/x-jquery-tmpl">
   <div class="panel sidebar_section" id="filters_sidebar_section">
@@ -170,52 +177,11 @@ SIDEBAR TEMPLATES
         </div>
       </form>
     </div>
-  </div> 
-</script>
-
-<script id="sidebarForGenericView" type="text/x-jquery-tmpl">
-  <div class="panel sidebar_section" id="filters_sidebar_section">
-  </div> 
-</script>
-
-<script id="sidebarForModelView" type="text/x-jquery-tmpl">
-  <div class="panel sidebar_section" id="filters_sidebar_section">
-    <h3>Model Details</h3>
-    <div class="panel_contents">
-      <div class="${model.slug} attributes_table" id="attributes_table_${model.slug}_${content.id}">
-        <table border="0" cellspacing="0" cellpadding="0">
-          {{each(i, field) model.fields}}
-          {{if field.slug != "fields"}}
-          <tr>
-            <th>${field.name}</th>
-            <td>{{if $data.content[field.slug] === null || $data.content[field.slug] === ""}}<span class="empty">Empty</span>{{else}}${$data.content[field.slug]}{{/if}}</td>
-          </tr>
-          {{/if}}
-          {{/each}}
-        </table>
-      </div>
-    </div>
-  </div> 
-</script>
-
-<script id="sidebarForGenericEdit" type="text/x-jquery-tmpl">
-  <div class="panel sidebar_section" id="filters_sidebar_section">
-    <h3>Model Details</h3>
-    <div class="panel_contents">
-      <div class="${model.slug} attributes_table" id="attributes_table_${model.slug}_${content.id}">
-        <table border="0" cellspacing="0" cellpadding="0">
-          {{each(i, field) model.fields}}
-          {{if !field.editable}}
-          <tr>
-            <th>${field.name}</th>
-            <td>{{if $data.content[field.slug] === null || $data.content[field.slug] === ""}}<span class="empty">Empty</span>{{else}}${$data.content[field.slug]}{{/if}}</td>
-          </tr>
-          {{/if}}
-          {{/each}}
-        </table>
-      </div>
-    </div>
-  </div> 
+  </div>
+  <div class="panel sidebar_section" id="active admin demo_sidebar_section">
+    <h3>Active Admin Demo</h3>
+    <div class="panel_contents">This is the demo app for <a href="http://activeadmin.info">Active Admin</a>. Don't hesitate to check out the <a href="https://github.com/gregbell/demo.activeadmin.info/blob/master/app/admin/orders.rb">source code for this page</a>, the <a href="http://activeadmin.info/documentation.html">Documentation</a> and the <a href="https://github.com/gregbell/active_admin">Github Repo</a>.</div>
+  </div>
 </script>
 
 <script id="sidebarForModelEdit" type="text/x-jquery-tmpl">
@@ -272,107 +238,228 @@ SIDEBAR TEMPLATES
 
 <!-- 
 
-LIST TEMPLATES
+DASHBOARD TEMPLATES
 
 -->
 
-<script id="mainContentForGenericRow" type="text/x-jquery-tmpl">
-  {{each(i, field) model.fields}}
-  <td>{{if i==0}}<a href="javascript:;" onclick="caribou.go('/${$data.model.slug}/${content.id}')">{{/if}}${content[field.slug]}{{if i==0}}</a>{{/if}}</td>
-  {{/each}}
-  <td>
-    <a href="javascript:;" onclick="caribou.go('/${model.slug}/${content.id}')" class="member_link view_link">View</a>
-    <a href="javascript:;" onclick="caribou.go('/${model.slug}/${content.id}/edit')" class="member_link edit_link">Edit</a>
-    {{if !content.locked}}
-    <a href="javascript:;" onclick="caribou.admin.delete('${model.slug}', ${content.id})" class="member_link delete_link" data-confirm="Are you sure you want to delete this?" data-method="delete" rel="nofollow">Delete</a>
-    {{/if}}
-  </td>
+
+
+<!-- 
+
+INDEX TEMPLATES
+
+-->
+
+<script id="contentForGenericIndex" type="text/x-jquery-tmpl">
+  <div id="main_content_wrapper">
+    <div id="main_content">
+      {{if viewData.response.length > 0}}
+      {{tmpl({viewSpec: viewSpec, viewData: viewData}) "#scopes"}}
+      <div class="paginated_collection">
+        <div class="paginated_collection_contents">
+          <div class="index_content">
+            <div class="index_as_table">
+              <table class="index_table" border="0" cellspacing="0" cellpadding="0">
+                <thead>
+                  <tr>
+                    {{each(i, column) viewSpec.response.content.main_content.table.columns}}
+                    {{if column.sortable === true}}
+                    <th class="{{if column.slug === viewData.meta.order_by}}sorted-${viewData.meta.order}{{/if}} sortable ${column.slug}">
+                      <a href="javascript:;" onclick="caribou.go('/${viewSpec.meta.view.slug}?page=${viewData.meta.page}&page_size=${viewData.meta.page_size}&order_by=${column.slug}&order=${viewData.meta.order === 'asc' ? 'desc' : 'asc'}')">${column.label}</a>
+                    </th>
+                    {{else}}
+                    <th>${column.label}</th>
+                    {{/if}}
+                    {{/each}}
+                    {{if viewSpec.response.content.main_content.table.actions.length > 0}}
+                    <th>&nbsp;</th>
+                    {{/if}}
+                  </tr>
+                </thead>
+                <tbody>
+                  {{each(i, row) viewData.response}}
+                  <tr id="${$data.viewSpec.meta.view.slug}_${row.id}" class="{{if i%2==0}}odd{{else}}even{{/if}}">
+                    {{tmpl({viewSpec: $data.viewSpec, rowData: row}) "#mainContentForGenericRow"}}
+                  </tr>
+                  {{/each}}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        {{tmpl({viewSpec: viewSpec, viewData: viewData}) "#indexFooter"}}
+      </div>
+      {{else}}
+      <div class="blank_slate_container">
+        <span class="blank_slate">There are no ${viewSlug} yet. <a href="/${viewSlug}/new">Create one</a></span>
+      </div>
+      {{/if}}
+    </div>
+  </div>
+  <div id="sidebar">
+    {{tmpl({viewSpec: viewSpec, viewData: viewData}) "#sidebarForGenericList"}}
+  </div>
 </script>
 
-<script id="mainContentForGenericList" type="text/x-jquery-tmpl">
-  {{if content.length > 0}}
-  <div class="scopes">
-    <span class="scope all selected">
-      <em>All</em>
-      <span class="count">(${meta.total_items})</span>
-    </span>
-    <!-- <span class="scope in_progress"> -->
-    <!--   <a href="/admin/orders?order=id_desc&amp;page=1&amp;scope=in_progress">In Progress</a> -->
-    <!--   <span class="count">(32)</span> -->
-    <!-- </span> -->
-    <!-- <span class="scope complete"> -->
-    <!--   <a href="/admin/orders?order=id_desc&amp;page=1&amp;scope=complete">Complete</a> -->
-    <!--   <span class="count">(265)</span> -->
-    <!-- </span> -->
-  </div>
-  <div class="paginated_collection">
-    <div class="pagination_information">Displaying ${model.name} <b>${(meta.page-1)*(meta.page_size)+1}&nbsp;-&nbsp;${(meta.page-1)*(meta.page_size)+meta.count}</b> of <b>${meta.total_items}</b> in total</div>
-    <div class="paginated_collection_contents">
-      <div class="index_content">
-        <div class="index_as_table">
-          <table class="index_table" border="0" cellspacing="0" cellpadding="0" id="${model.slug}">
-            <thead>
-              <tr>
-                {{each(i, field) model.fields}}
-                <th class="{{if field.slug === meta.order_by}}sorted-${meta.order}{{/if}} sortable">
-                  <a href="javascript:;" onclick="caribou.go('/${$data.model.slug}?page=${meta.page}&page_size=${meta.page_size}&order_by=${field.slug}&order=${meta.order === 'asc' ? 'desc' : 'asc'}')">${field.name}</a>
-                </th>
-                {{/each}}
-                <th>&nbsp;</th>
-              </tr>
-            </thead>
-            <tbody>
-              {{each(i, item) content}}
-              <tr id="${$data.model.slug}_${item.id}" class="{{if i%2==0}}odd{{else}}even{{/if}}">
-                {{tmpl({model: $data.model, content: item}) "#mainContentForGenericRow"}}
-              </tr>
-              {{/each}}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-    <div id="index_footer">
-      Download:&nbsp;<a href="${caribou.remoteAPI}/${model.slug}.csv">CSV</a>&nbsp;<a href="#{caribou.remoteAPI}/${model.slug}.xml">XML</a>&nbsp;<a href="#{caribou.remoteAPI}/${model.slug}.json">JSON</a>
-      <nav class="pagination">
-        {{if meta.page > 1}}
-        <span class="first">
-          <a href="javascript:;" onclick="caribou.go('/${model.slug}?page=1&page_size=${meta.page_size}&order_by=${meta.order_by}&order=${meta.order}')">First &laquo;</a>
-        </span>
-        {{/if}}
-        {{if meta.page > 1}}
-        <span class="previous">
-          <a href="javascript:;" onclick="caribou.go('/${model.slug}?page=${meta.page-1}&page_size=${meta.page_size}&order_by=${meta.order_by}&order=${meta.order}')" rel="previous">Previous &lsaquo;</a>
-        </span>
-        {{/if}}
-        {{each(i, page) _.range(1, meta.total_pages+1)}}
-        {{if page === $data.meta.page}}
-        <span class="page current">${$data.meta.page}</span>
-        {{else}}
-        <span class="page">
-          <a href="javascript:;" onclick="caribou.go('/${model.slug}?page=${page}&page_size=${$data.meta.page_size}&order_by=${$data.meta.order_by}&order=${$data.meta.order}')">${page}</a>
-        </span>
-        {{/if}}
-        {{/each}}
-        <!--<span class="page gap">...</span>-->
-        {{if meta.page < meta.total_pages}}
-        <span class="next">
-          <a href="javascript:;" onclick="caribou.go('/${model.slug}?page=${meta.page+1}&page_size=${meta.page_size}&order_by=${meta.order_by}&order=${meta.order}')" rel="next">Next &rsaquo;</a>
-        </span>
-        {{/if}}
-        {{if meta.page < meta.total_pages}}
-        <span class="last">
-          <a href="javascript:;" onclick="caribou.go('/${model.slug}?page=${meta.total_pages}&page_size=${meta.page_size}&order_by=${meta.order_by}&order=${meta.order}')">Last &raquo;</a>
-        </span>
-        {{/if}}
-      </nav>
-    </div>
-  </div>
-  {{else}}
-  <div class="blank_slate_container">
-    <span class="blank_slate">There are no ${model.name} yet. <a href="/${model.slug}/new">Create one</a></span>
+<script id="scopes" type="text/x-jquery-tmpl">
+  {{if viewSpec.response.content.main_content.scopes.length > 0}}
+  <div class="table_tools">
+    <ul class="scopes table_tools_segmented_control">
+      <li class="scope all selected">
+        <a href="javascript:;" onclick="caribou.go('${viewSpec.meta.view.slug}?page=${viewData.meta.page}&page_size=${viewData.meta.page_size}&order_by=${viewData.meta.order_by}&order=${viewData.meta.order}&scope=all')" class="table_tools_button">
+          All
+          <span class="count">(${viewData.meta.count})</span>
+        </a>
+      </li>
+    </ul>
   </div>
   {{/if}}
+</script>
+
+<script id="mainContentForGenericRow" type="text/x-jquery-tmpl">
+  {{each(i, column) viewSpec.response.content.main_content.table.columns}}
+  {{tmpl({viewSpec: $data.viewSpec, columnSpec: column, rowData: $data.rowData}) "#" + column.format + "Cell"}}
+  {{/each}}
+  {{if viewSpec.response.content.main_content.table.actions.length > 0}}
+  <td>
+  {{each(i, action) viewSpec.response.content.main_content.table.actions}}
+  {{if action === "view"}}<a href="javascript:;" onclick="caribou.go('/${viewSpec.meta.view.slug}/${rowData.id}')" class="member_link view_link">View</a>{{/if}}
+  {{if action === "edit"}}<a href="javascript:;" onclick="caribou.go('/${viewSpec.meta.view.slug}/${rowData.id}/edit')" class="member_link edit_link">Edit</a>{{/if}}
+  {{if action === "delete" && rowData.locked != true}}<a href="javascript:;" class="member_link delete_link" data-confirm="Are you sure you want to delete this?" data-method="delete" rel="nofollow">Delete</a>{{/if}}
+  {{/each}}
+  </td>
+  {{/if}}
+</script>
+
+<script id="textCell" type="text/x-jquery-tmpl">
+  <td>${rowData[columnSpec.slug]}</td>
+</script>
+
+<script id="linkCell" type="text/x-jquery-tmpl">
+  <td><a href="javascript:;" onclick="caribou.go('/${viewSpec.meta.view.slug}/${rowData.id}')">${rowData[columnSpec.slug]}</a></td>
+</script>
+
+<script id="indexFooter" type="text/x-jquery-tmpl">
+  <div id="index_footer">
+    <nav class="pagination">
+      {{if viewData.meta.page > 1}}
+      <span class="first">
+        <a href="javascript:;" onclick="caribou.go('/${viewSpec.meta.view.slug}?page=1&page_size=${viewData.meta.page_size}&order_by=${viewData.meta.order_by}&order=${viewData.meta.order}')">First &laquo;</a>
+      </span>
+      {{/if}}
+      {{if viewData.meta.page > 1}}
+      <span class="previous">
+        <a href="javascript:;" onclick="caribou.go('/${viewSpec.meta.view.slug}?page=${viewData.meta.page-1}&page_size=${viewData.meta.page_size}&order_by=${viewData.meta.order_by}&order=${viewData.meta.order}')" rel="previous">Previous &lsaquo;</a>
+      </span>
+      {{/if}}
+      {{each(i, page) _.range(1, viewData.meta.total_pages+1)}}
+      {{if page === $data.viewData.meta.page}}
+      <span class="page current">${$data.viewData.meta.page}</span>
+      {{else}}
+      <span class="page">
+        <a href="javascript:;" onclick="caribou.go('/${viewSpec.meta.view.slug}?page=${page}&page_size=${$data.viewData.meta.page_size}&order_by=${$data.viewData.meta.order_by}&order=${$data.viewData.meta.order}')">${page}</a>
+      </span>
+      {{/if}}
+      {{/each}}
+      <!--<span class="page gap">...</span>-->
+      {{if viewData.meta.page < viewData.meta.total_pages}}
+      <span class="next">
+        <a href="javascript:;" onclick="caribou.go('/${viewSpec.meta.view.slug}?page=${viewData.meta.page+1}&page_size=${viewData.meta.page_size}&order_by=${viewData.meta.order_by}&order=${viewData.meta.order}')" rel="next">Next &rsaquo;</a>
+      </span>
+      {{/if}}
+      {{if viewData.meta.page < viewData.meta.total_pages}}
+      <span class="last">
+        <a href="javascript:;" onclick="caribou.go('/${viewSpec.meta.view.slug}?page=${viewData.meta.total_pages}&page_size=${viewData.meta.page_size}&order_by=${viewData.meta.order_by}&order=${viewData.meta.order}')">Last &raquo;</a>
+      </span>
+      {{/if}}
+    </nav>
+    <div class="pagination_information">Displaying ${viewSpec.meta.view.label} <b>${(viewData.meta.page-1)*(viewData.meta.page_size)+1}&nbsp;-&nbsp;${(viewData.meta.page-1)*(viewData.meta.page_size)+viewData.meta.count}</b> of <b>${viewData.meta.total_items}</b> in total</div>
+    <div class="download_links">Download:&nbsp;<a href="${caribou.remoteAPI}/${viewSpec.meta.view.slug}.csv">CSV</a>&nbsp;<a href="#{caribou.remoteAPI}/${viewSpec.meta.view.slug}.xml">XML</a>&nbsp;<a href="#{caribou.remoteAPI}/${viewSpec.meta.view.slug}.json">JSON</a></div>
+  </div>
+</script>
+
+<!-- 
+
+VIEW TEMPLATES
+
+-->
+
+<script id="contentForGenericView" type="text/x-jquery-tmpl">
+  <div id="main_content_wrapper">
+    <div id="main_content">
+      {{each(i, object) viewSpec.response.content.main_content}}
+      {{if object.type == "panel"}}
+      {{tmpl({viewSpec: $data.viewSpec, viewData: $data.viewData, object: object}) "#panel"}}
+      {{/if}}
+      {{/each}}
+    </div>
+  </div>
+  <div id="sidebar">
+    {{tmpl({viewSpec: viewSpec, viewData: viewData}) "#sidebar"}}
+  </div>
+</script>
+
+<script id="panel" type="text/x-jquery-tmpl">
+  <div class="panel">
+    <h3>${object.title}</h3>
+    <div class="panel_contents">
+      {{each(i, object) object.contents}}
+      {{if object.type == "panelAttributesTable"}}
+      {{tmpl({viewSpec: $data.viewSpec, viewData: $data.viewData, object: object}) "#panelAttributesTable"}}
+      {{/if}}
+      {{/each}}
+    </div>
+  </div>
+</script>
+
+<script id="sidebarPanel" type="text/x-jquery-tmpl">
+  <div class="panel sidebar_section">
+    <h3>${object.title}</h3>
+    <div class="panel_contents">
+      {{each(i, object) object.contents}}
+      {{if object.type == "panelAttributesTable"}}
+      {{tmpl({viewSpec: $data.viewSpec, viewData: $data.viewData, object: object}) "#panelAttributesTable"}}
+      {{/if}}
+      {{/each}}
+    </div>
+  </div>
+</script>
+
+<script id="panelAttributesTable" type="text/x-jquery-tmpl">
+  <div class="${viewSpec.meta.model} attributes_table" id="attributes_table_${viewSpec.meta.model}_${viewData.response.id}">
+    <table border="0" cellspacing="0" cellpadding="0">
+      {{each(i, field) object.contents}}
+      <tr>
+        <th><label class="label">${field.label}</label></th>
+        <td>{{if viewData.response[field.slug] == null}}<span class="empty">Empty</span>{{else}}${viewData.response[field.slug]}{{/if}}</td>
+      </tr>
+      {{/each}}
+    </table>
+  </div>
+</script>
+
+<script id="mainContentForModelView" type="text/x-jquery-tmpl">
+  <div class="panel">
+    <h3>Fields (${content.fields.length})</h3>
+    <div class="panel_contents">
+      <table border="0" cellspacing="0" cellpadding="0">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{each(i, field) content.fields}}
+          <tr class="{{if i%2==0}}odd{{else}}even{{/if}}">
+            <td>${field.name}</td>
+            <td>${field.type}</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  </div>
 </script>
 
 <!-- 
@@ -381,38 +468,53 @@ EDIT TEMPLATES
 
 -->
 
-<script id="mainContentForGenericEdit" type="text/x-jquery-tmpl">
-  <form accept-charset="UTF-8" target="upload_target" action="${caribou.remoteAPI}/upload" class="formtastic ${model.slug} content_form" id="${model.slug}_edit" method="post" enctype="multipart/form-data">
-    <div style="margin:0;padding:0;display:inline">
-      {{if content.id}}
-      <input type="hidden" name="${model.slug}[id]" value="${content.id}" />
-      {{/if}}
+<script id="contentForGenericEdit" type="text/x-jquery-tmpl">
+  <div id="main_content_wrapper">
+    <div id="main_content">
+      <form accept-charset="UTF-8" action="/${viewSpec.meta.model}/${viewData.response.id}" class="formtastic ${viewSpec.meta.model}" id="${viewSpec.meta.model}_edit" method="post">
+        <div style="margin:0;padding:0;display:inline">
+          {{if viewData.response.id}}
+          <input type="hidden" name="${viewSpec.meta.model}[id]" value="${viewData.response.id}" />
+          {{/if}}
+        </div>
+        {{each(i, item) viewSpec.response.content.main_content}}
+          {{if item.type == "fieldset"}}
+          {{tmpl({viewSpec: $data.viewSpec, viewData: $data.viewData, fieldsetData: item}) "#fieldset"}}
+          {{/if}}
+        {{/each}}
+        <fieldset class="buttons">
+          <ol>
+            <li class="commit button">
+              <a href="javascript:;" class="button" onclick="caribou.admin.${action}('${viewSpec.meta.model}', '${viewSpec.meta.view.slug}')">${action} ${viewSpec.meta.view.label}</a>
+            </li>
+            <li class="cancel">
+              <a href="javascript:;" onclick="caribou.go('/${viewSpec.meta.view.slug}')">Cancel</a>
+            </li>
+          </ol>
+        </fieldset>
+      </form>
     </div>
-    <fieldset class="inputs">
+  </div>
+  <div id="sidebar">
+    {{tmpl({viewSpec: viewSpec, viewData: viewData}) "#sidebarForGenericList"}}
+  </div>
+</script>
+
+<script id="fieldset" type="text/x-jquery-tmpl">
+  <fieldset class="inputs">
       <ol>
-        {{each(i, field) model.fields}}
-        <li class="${field.type} required" id="${$data.model.slug}_${field.slug}_input">
+        {{each(i, field) fieldsetData.fields}}
+        <li class="${field.format} input required stringish" id="${$data.viewSpec.meta.model}_${field.slug}_input">
           {{if field.editable}}
-          {{tmpl({model: $data.model, content: $data.content, field: field}) "#"+field.type+"Field"}}
+          {{tmpl({viewSpec: $data.viewSpec, viewData: $data.viewData, field: field}) "#" + field.format + "Field"}}
           {{else}}
-          <label>${field.name}</label>
-          ${$data.content[field.slug]}
+          <label>${field.label}</label>
+          ${viewData.response[field.slug]}
           {{/if}}
         </li>
         {{/each}}
       </ol>
     </fieldset>
-    <fieldset class="buttons">
-      <ol>
-        <li class="commit">
-          <div class="update" onclick="caribou.admin.${action}('${model.slug}')">${action} ${model.name}</div>
-        </li>
-        <li class="cancel">
-          <a href="/${model.slug}">Cancel</a>
-        </li>
-      </ol>
-    </fieldset>
-  </form>
 </script>
 
 <script id="mainContentForModelEdit" type="text/x-jquery-tmpl">
@@ -522,54 +624,6 @@ MODEL FIELD FORM TEMPLATES
 
 <!-- 
 
-VIEW TEMPLATES
-
--->
-
-<script id="mainContentForGenericView" type="text/x-jquery-tmpl">
-  <div class="panel">
-    <h3>${model.name} Details</h3>
-    <div class="panel_contents">
-      <div class="${model.slug} attributes_table" id="attributes_table_${model.slug}_${content.id}">
-        <table border="0" cellspacing="0" cellpadding="0">
-          {{each(i, field) model.fields}}
-          <tr>
-            <th><label class="label">${field.name}</label></th>
-            <td>{{if $data.content[field.slug] == null}}<span class="empty">Empty</span>{{else}}${$data.content[field.slug]}{{/if}}</td>
-          </tr>
-          {{/each}}
-        </table>
-      </div>
-    </div>
-  </div>
-</script>
-
-<script id="mainContentForModelView" type="text/x-jquery-tmpl">
-  <div class="panel">
-    <h3>Fields (${content.fields.length})</h3>
-    <div class="panel_contents">
-      <table border="0" cellspacing="0" cellpadding="0">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Type</th>
-          </tr>
-        </thead>
-        <tbody>
-          {{each(i, field) content.fields}}
-          <tr class="{{if i%2==0}}odd{{else}}even{{/if}}">
-            <td>${field.name}</td>
-            <td>${field.type}</td>
-          </tr>
-          {{/each}}
-        </tbody>
-      </table>
-    </div>
-  </div>
-</script>
-
-<!-- 
-
 FIELD INPUT TEMPLATES
 
 -->
@@ -582,8 +636,8 @@ FIELD INPUT TEMPLATES
 </script>
 
 <script id="stringField" type="text/x-jquery-tmpl">
-  <label for="${$data.model.slug}_${field.slug}">${field.name}<abbr title="required">*</abbr></label>
-  <input type="text" id="${model.slug}_${field.slug}" name="${model.slug}[${field.slug}]" maxlength="255" value="${content[field.slug]}" />
+  <label for="${viewSpec.meta.model}_${field.slug}">${field.label}<abbr title="required">*</abbr></label>
+  <input type="text" id="${viewSpec.meta.model}_${field.slug}" name="${viewSpec.meta.model}[${field.slug}]" maxlength="255" value="${viewData.response[field.slug]}" />
 </script>
 
 <script id="slugField" type="text/x-jquery-tmpl">
@@ -602,7 +656,7 @@ FIELD INPUT TEMPLATES
 </script>
 
 <script id="textField" type="text/x-jquery-tmpl">
-  <label for="${$data.model.slug}_${field.slug}">${field.name}<abbr title="required">*</abbr></label>
+  <label for="${$data.model.slug}_${field.slug}">${field.label}<abbr title="required">*</abbr></label>
   <textarea name="${model.slug}[${field.slug}]">${content[field.slug]}</textarea>
 </script>
 

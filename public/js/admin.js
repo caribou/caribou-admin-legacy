@@ -1,4 +1,15 @@
 caribou.admin = function() {
+
+  // Private Vars
+  
+  var _allViewsSpec = {},
+      _currentView = "",
+      _currentAction = "",
+      _currentId = "",
+      _currentViewSpec = {};
+      _currentViewData = {};
+  
+  // Public Vars
   
   /*//////////////////////////////////////////////
   //
@@ -63,6 +74,17 @@ caribou.admin = function() {
   //
   *///////////////////////////////////////////////
   
+  var getAllViewsSpec = function(success) {
+    caribou.api.get({
+      url: "/views/views.index.spec.json",
+      data: {},
+      success: function(response) {
+      	_allViewsSpec = response;
+        success && success();
+      }
+    });
+  };
+  
   var renderTemplate = function(model, name, env) {
     env.fieldTypes = caribou.modelFieldTypes();
     model = _.capitalize(model);
@@ -92,22 +114,29 @@ caribou.admin = function() {
       select: select
     };
   }();
-
-  var headerNav = function(modelname) {
+  
+  var setTabbedNavigation = function(view) {
     if ($('#tabs').html() == '') {
-      var choices = _.map(caribou.modelNames, function(modelName) {
-        var model = caribou.models[modelName];
-        return {url: _.template('/<%= slug %>', model), title: model.name};
-      });
-      var tabs = template.tabbedNavigation({chosen: modelname, choices: choices});
+      var choices = _.map(_allViewsSpec.response, parseAllViewsSpec);
+      var tabs = template.tabbedNavigation({chosen: view, choices: choices});
       $('#tabs').html(tabs);
     }
-
-    nav.highlight(modelname);
+    nav.highlight(view);
   };
   
-  var setBodyClass = function(model, action) {
-    $('body').removeClass().addClass('logged_in admin_' + model.slug + ' ' + action);
+  var parseAllViewsSpec = function(obj) {
+  	if(obj.children.length > 0) {
+  		var choices = _.map(obj.children, parseAllViewsSpec); 
+  	}
+  	return {action: "/" + obj.action, slug: obj.slug, label: obj.label, children: choices};
+  };
+  
+  var setBodyClass = function(view, action) {
+    $('body').removeClass().addClass('logged_in admin_' + view + ' ' + action);
+  };
+  
+  var setContentClass = function(string) {
+    $('#active_admin_content').removeClass().addClass(string);
   };
   
   var setBreadcrumb = function(items) {
@@ -130,18 +159,10 @@ caribou.admin = function() {
     $('.flashes').html(flash_error);
   };
   
-  var setActionItems = function(model, content, meta) {
-    var action_items = template.actionItemsForGenericEdit({
-      model: model, content: content, meta: meta});
+  var setActionItems = function(view, items) {
+    var action_items = template.actionItems({
+      view: view, items: items});
     $('.action_items').html(action_items);
-  };
-  
-  var setSidebar = function() {
-    
-  };
-  
-  var setMainContent = function() {
-    
   };
   
   /*//////////////////////////////////////////////
@@ -173,10 +194,11 @@ caribou.admin = function() {
     return false;
   };
 
-  var contentUpdate = function(name) {
+  var contentUpdate = function(name, view) {
     var data = caribou.formData('#'+name+'_edit');
     var id = name + '[id]';
     var url = '/' + name + '/' + data[id];
+    var redirect = '/' + view + '/' + data[id] + '/edit';
     delete data[id];
 
     caribou.api.put({
@@ -184,7 +206,7 @@ caribou.admin = function() {
       data: data,
       success: function(response) {
         var succeed = function() {
-          caribou.go(url + '/edit');
+          caribou.go(redirect);
           setFlashNotice(_.capitalize(name) + ' was successfully updated.');
         };
         if (name === 'model') {
@@ -228,187 +250,146 @@ caribou.admin = function() {
 
     $(tr).remove();
   };
+    
+  var getModel = function(url, params, query, success) {
+    caribou.api.get({
+      url: url,
+      data: query,
+      success: function(response) {
+        _currentViewData = response;
+      	success && success(params);
+      }
+    });
+  };
+  
+  var loginView = {
+    init: function(params, query) {
+      console.log("loginView.init");
+    }
+  };
+  
+  var passwordView = {
+    new: {
+      init: function(params, query) {
+        console.log("passwordView.new.init");
+      }
+    }
+  };
 
   var dashboardView = {
-    init: function() {
-      headerNav();
-      $('#container').html('');
+    init: function(params, query) {
+      caribou.api.get({
+        url: "/views/dashboard.index.spec.json",
+        data: query,
+        success: function(response) {
+        	
+        	_currentViewSlug = "dashboard";
+        	_currentViewSpec = response;
+        	
+        	setTabbedNavigation("dashboard");
+        	setBodyClass(_currentView, "index");
+          setBreadcrumb([{label: "Admin", action: "/"}]);
+          setPageTitle(_currentViewSpec.response.title_bar.page_title);
+          setActionItems(_currentView, _currentViewSpec.response.title_bar.action_items);
+          setContentClass("without_sidebar");
+          
+        	$('#active_admin_content').html('');
+
+        }
+      });
     }
   };
   
   var genericView = {
     
-    list: {
+    index: {
       init: function(params, query) {
+        _currentView = params.view;
+        _currentAction = "index";
         caribou.api.get({
-          url: _.template('/<%= model %>', params),
+          url: "/views/" + _currentView + "." + _currentAction + ".spec.json",
           data: query,
           success: function(response) {
-            headerNav(params.model);
-            var model = caribou.models[params.model];
+          	_currentViewSpec = response;
+          	var url = "/" + _currentViewSpec.meta.model;
+            getModel(url, params, query, genericView.index.draw);
 
-            var breadcrumb = template.breadcrumb({
-              model: model, content: response.response, meta: response.meta});
-            $('.breadcrumb').html(breadcrumb);
-
-            var page_title = template.pageTitle({
-              title: model.name});
-            $('#page_title').html(page_title);
-
-            var action_items = template.actionItemsForGenericList({
-              model: model, content: response.response, meta: response.meta});
-            $('.action_items').html(action_items);
-
-            var sidebar = template.sidebarForGenericList({
-              model: model, content: response.response, meta: response.meta});
-            $('#sidebar').html(sidebar);
-
-            var main_content = template.mainContentForGenericList({
-              model: model, content: response.response, meta: response.meta});
-            $('#main_content').html(main_content);
-
-            $(".datepicker").datepicker({dateFormat: 'yy-mm-dd'});
+            //$(".datepicker").datepicker({dateFormat: 'yy-mm-dd'});
           }
         });
+      },
+      draw: function(params) {
+        setTabbedNavigation(_currentView);
+        setBodyClass(_currentView, _currentAction);
+        setBreadcrumb([{label: "Admin", action: "/"}]);
+        setPageTitle(_currentViewSpec.response.title_bar.page_title);
+        setActionItems(_currentView, _currentViewSpec.response.title_bar.action_items);
+        setContentClass("with_sidebar");
+      	var content = template.contentForGenericIndex({
+          viewSpec: _currentViewSpec, viewData: _currentViewData});
+        $('#active_admin_content').html(content);
       }
     },
     
     view: {
       init: function(params, query) {
-        var model = caribou.models[params.model];
-        var include = _.map(_.filter(model.fields, function(field) {
-          return field.type === 'collection';
-        }), function(collection) {
-          return collection.name;
-        }).join(',');
-
-        var url = _.template('/<%= model %>/<%= id %>', params);
-
+        _currentView = params.view;
+        _currentId = params.id;
+        _currentAction = "view";
         caribou.api.get({
-          url: url,
-          data: {include: include},
+          url: "/views/" + _currentView + "." + _currentAction + ".spec.json",
+          data: query,
           success: function(response) {
-
-            headerNav(params.model);
-
-            var breadcrumb = template.breadcrumb({
-              items: [{title: params.model, url: "/" + params.model}, {title: params.id, url: "/" + params.model + "/" + params.id}]});
-            $('.breadcrumb').html(breadcrumb);
-
-            var page_title = template.pageTitle({
-              title: "View " + model.name});
-            $('#page_title').html(page_title);
-
-            var action_items = template.actionItemsForGenericView({
-              model: model, content: response.response, meta: response.meta});
-            $('.action_items').html(action_items);
-
-            var sidebar = renderTemplate(model.slug, "sidebarFor<%= model %>View", {
-              model: model, 
-              content: response.response, 
-              meta: response.meta,
-              action: 'update'
-            });
-            $('#sidebar').html(sidebar);
-
-            var main_content = renderTemplate(model.slug, "mainContentFor<%= model %>View", {
-              model: model, 
-              content: response.response, 
-              meta: response.meta,
-              action: 'update'
-            });
-            $('#main_content').html(main_content);
+          	_currentViewSpec = response;
+          	var url = "/" + _currentViewSpec.meta.model + "/" + _currentId;
+            getModel(url, params, query, genericView.view.draw);
           }
         });
+      },
+      draw: function(params) {
+        setTabbedNavigation(_currentView);
+        setBodyClass(_currentView, _currentAction);
+        setBreadcrumb([{label: "Admin", action: "/"},{label: _currentViewSpec.meta.view.label, action: "/" + _currentViewSpec.meta.view.slug}]);
+        setPageTitle(_currentViewData.response[_currentViewSpec.response.title_bar.page_title]);
+        setActionItems(_currentView, _currentViewSpec.response.title_bar.action_items);
+        setContentClass("with_sidebar");
+      	var content = template.contentForGenericView({
+          viewSpec: _currentViewSpec, viewData: _currentViewData});
+        $('#active_admin_content').html(content);
       }
     },
     
     edit: {
       init: function(params, query) {
-        var model = caribou.models[params.model];
-        var include = _.map(_.filter(model.fields, function(field) {
-          return field.type === 'collection';
-        }), function(collection) {
-          if (model.slug === 'model' && collection.slug === 'fields') {
-            return collection.slug + '.link';
-          } else {
-            return collection.slug;
-          }
-        }).join(',');
-        
-        var url = _.template('/<%= model %>/<%= id %>', params);
-
+        _currentView = params.view;
+        _currentId = params.id;
+        _currentAction = "edit";
         caribou.api.get({
-          url: url,
-          data: {include: include},
+          url: "/views/" + _currentView + "." + _currentAction + ".spec.json",
+          data: query,
           success: function(response) {
-
-            headerNav(params.model);
-
-            setBodyClass(model, 'edit');
-            setBreadcrumb([{title: params.model, url: "/" + params.model}, {title: params.id, url: "/" + params.model + "/" + params.id}]);
-            setPageTitle("Edit " + model.name);
-            setActionItems(model, response.response, response.meta);
-
-            var sidebar = renderTemplate(model.slug, "sidebarFor<%= model %>Edit", {
-              model: model, 
-              content: response.response, 
-              meta: response.meta,
-              action: 'update'
-            });
-            $('#sidebar').html(sidebar);
-
-            var main_content = renderTemplate(model.slug, "mainContentFor<%= model %>Edit", {
-              model: model, 
-              content: response.response, 
-              meta: response.meta,
-              action: 'update'
-            });
-            $('#main_content').html(main_content);
-            
-            $('.sortable').sortable({
-              axis: 'y',
-              scroll: true,
-              handle: '.handle_link',
-              helper: fixHelper,
-              stop: function(event, ui) {
-                $('.model_position').each(function(index) {
-                  this.value = index + 1;
-                });
-              }
-            }).disableSelection();
-
-            $('.delete_link').click(fieldDeleteLink);
-            // $('.delete_link').click(function(e){
-            //   var tr = $(this).parents('tr');
-            //   var name = $(tr).find('input')[0].name.match(/\[([^\]]+)\]/)[1];
-            //   var id = $(tr).find('.model_id').val();
-            //   var removed = $('#removed_'+name);
-            //   var sofar = removed.val();
-
-            //   if (id) {
-            //     removed.val(sofar ? sofar + ',' + id : id);
-            //   }
-
-            //   $(tr).remove();
-            // });
-
-            // buildSlugOptions();
-
-            var upload = caribou.api.upload(function(response) {
-              var src = caribou.remoteAPI+'/'+response.url;
-              $('#'+response.context+'_asset').val(response.asset_id);
-              $('#'+response.context+'_thumbnail').html('<a target="_blank" href="'+src+'"><img src="'+src+'" height="100" /></a>');
-              $('#upload_dialog').dialog("close");
-            });
+          	_currentViewSpec = response;
+          	var url = "/" + _currentViewSpec.meta.model + "/" + _currentId;
+            getModel(url, params, query, genericView.edit.draw);
           }
         });
+      },
+      draw: function(params) {
+        setTabbedNavigation(_currentView);
+        setBodyClass(_currentView, _currentAction);
+        setBreadcrumb([{label: "Admin", action: "/"},{label: _currentViewSpec.meta.view.label, action: "/" + _currentViewSpec.meta.view.slug},{label: params.id, action: "/" + _currentViewSpec.meta.view.slug + "/" + params.id}]);
+        setPageTitle(_currentViewSpec.response.title_bar.page_title);
+        setActionItems(_currentView, _currentViewSpec.response.title_bar.action_items);
+        setContentClass("with_sidebar");
+      	var content = template.contentForGenericEdit({
+          viewSpec: _currentViewSpec, viewData: _currentViewData, action: "update"});
+        $('#active_admin_content').html(content);
       }
     },
     
     new: {
       init: function(params) {
-        headerNav(params.model);
+        setTabbedNavigation(params.model);
         var model = caribou.models[params.model];
 
         var sidebar = renderTemplate(model.slug, "sidebarFor<%= model %>Edit", {
@@ -455,19 +436,7 @@ caribou.admin = function() {
   };
   
   var modelView = {
-    
-    list: {
-      init: function() {
-        
-      }
-    },
-    
-    view: {
-      init: function() {
-        
-      }
-    },
-    
+  
     edit: {
       init: function() {
         
@@ -479,6 +448,7 @@ caribou.admin = function() {
         $('.delete_link').click(fieldDeleteLink);
       }
     }
+    
   };
   
   var showUploadForm = function(context) {
@@ -492,11 +462,13 @@ caribou.admin = function() {
   //
   *///////////////////////////////////////////////
   
+  caribou.routing.add('/login', 'login', loginView.init);
+  caribou.routing.add('/password/new', 'new', passwordView.new.init);
   caribou.routing.add('/', 'dashboard', dashboardView.init);
-  caribou.routing.add('/:model', 'list', genericView.list.init);
+  caribou.routing.add('/:view', 'index', genericView.index.init);
   caribou.routing.add('/:model/new', 'new', genericView.new.init);
-  caribou.routing.add('/:model/:id', 'view', genericView.view.init);
-  caribou.routing.add('/:model/:id/edit', 'edit', genericView.edit.init);
+  caribou.routing.add('/:view/:id', 'view', genericView.view.init);
+  caribou.routing.add('/:view/:id/edit', 'edit', genericView.edit.init);
   
   /*//////////////////////////////////////////////
   //
@@ -516,8 +488,8 @@ caribou.admin = function() {
         height: 480,
         title: 'File upload'
       });
-
       findTemplates();
+      getAllViewsSpec(caribou.act);
     },
     nav: nav,
     create: contentCreate,

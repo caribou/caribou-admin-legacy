@@ -1,0 +1,24 @@
+{
+	"meta":
+	{
+		"status":"200",
+		"msg":"OK",
+		"type":"tabbedNavigation",
+		"total_items":2
+	},
+	"response":
+	[
+		{
+			"name":"Page",
+			"slug":"page",
+			"description":"",
+			"type":"view"
+		},
+		{
+			"name":"Content",
+			"slug":null,
+			"description":"",
+			"type":"folder"
+		}
+	]
+}

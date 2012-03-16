@@ -169,7 +169,7 @@ var caribou = function() {
           modelNames.push(model.slug);
         });
 
-        success();
+        success && success();
       }
     });
   };
@@ -219,7 +219,7 @@ var caribou = function() {
 
   var init = function(success) {
     window.onstatechange = act;
-    resetModels(act);
+    resetModels();
     retrieveFieldTypes();
   };
 
