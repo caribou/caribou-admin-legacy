@@ -82,10 +82,17 @@ var caribou = function() {
   api.upload = upload;
   api.request = function(request) {
     var success = request.success || function(response) {};
-    var error = request.error || function(response) {History.log(response);};
+    var error = request.error || function(response) {console.log(JSON.parse(response));};
 
     rpc.request(request, function(response) {
-      success(JSON.parse(response.data));
+      var data = JSON.parse(response.data);
+      var code = parseInt(data.meta.status);
+
+      if (code === 403) {
+        go('/login')
+      } else {
+        success(data);
+      }
     }, function(response) {
       error(response);
     });
@@ -180,7 +187,6 @@ var caribou = function() {
       cache: false,
       url: "/type-specs.json",
       success: function(response) {
-        console.log(response);
         modelFieldTypes = response.response;
       }
     });

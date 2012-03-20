@@ -236,6 +236,15 @@ caribou.admin = function() {
     }
   };
   
+  var loginView = {
+    init: function() {
+      var login = template.loginForm();
+      //History.console(login);
+      headerNav();
+      $('#wrapper').html(login);
+    }
+  };
+
   var genericView = {
     
     list: {
@@ -493,6 +502,7 @@ caribou.admin = function() {
   *///////////////////////////////////////////////
   
   caribou.routing.add('/', 'dashboard', dashboardView.init);
+  caribou.routing.add('/login', 'login', loginView.init);
   caribou.routing.add('/:model', 'list', genericView.list.init);
   caribou.routing.add('/:model/new', 'new', genericView.new.init);
   caribou.routing.add('/:model/:id', 'view', genericView.view.init);

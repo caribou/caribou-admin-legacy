@@ -121,6 +121,21 @@ FLASH TEMPLATES
 
 <!-- 
 
+AUTHORIZATION TEMPLATES
+
+-->
+
+<script id="loginForm" type="text/x-jquery-tmpl">
+  <form accept-charset="UTF-8"  action="${caribou.remoteAPI}/login" class="formtastic content_form" id="login_form" method="post">
+    <label>Email</label>
+    <input type="text" name="account[email]" value="">
+    <label>Password</label>
+    <input type="password" name="account[password]" value="">
+  </form>
+</script>
+
+<!-- 
+
 ACTION ITEM TEMPLATES
 
 -->
@@ -145,32 +160,32 @@ SIDEBAR TEMPLATES
 -->
 
 <script id="sidebarForGenericList" type="text/x-jquery-tmpl">
-  <div class="panel sidebar_section" id="filters_sidebar_section">
-    <h3>Filters</h3>
-    <div class="panel_contents">
-      <form accept-charset="UTF-8" action="/admin/customers" class="filter_form" id="q_search" method="get">
-        <div style="margin:0;padding:0;display:inline">
-          <input name="utf8" type="hidden" value="&#x2713;" />
-        </div>
-        <div class="filter_form_field filter_string">
-          <label for="q_username_contains">Search Text</label>
-          <input id="q_username_contains" name="q[username_contains]" size="30" type="text" />
-        </div>
-        <div class="filter_form_field filter_date_range">
-          <label for="q_created_at_gte">Created at</label>
-          <input class="datepicker" id="q_created_at_gte" max="10" name="q[created_at_gte]" size="12" type="text" value="" />
-          <span class="seperator">-</span>
-          <input class="datepicker" id="q_created_at_lte" max="10" name="q[created_at_lte]" size="12" type="text" value="" />
-        </div>
-        <div class="buttons">
-          <input id="q_submit" name="commit" type="submit" value="Filter" />
-          <a href="#" class="clear_filters_btn">Clear Filters</a>
-          <input id="order" name="order" type="hidden" value="id_desc" />
-          <input id="scope" name="scope" type="hidden" />
-        </div>
-      </form>
-    </div>
-  </div> 
+  <!-- <div class="panel sidebar_section" id="filters_sidebar_section"> -->
+  <!--   <h3>Filters</h3> -->
+  <!--   <div class="panel_contents"> -->
+  <!--     <form accept-charset="UTF-8" action="/admin/customers" class="filter_form" id="q_search" method="get"> -->
+  <!--       <div style="margin:0;padding:0;display:inline"> -->
+  <!--         <input name="utf8" type="hidden" value="&#x2713;" /> -->
+  <!--       </div> -->
+  <!--       <div class="filter_form_field filter_string"> -->
+  <!--         <label for="q_username_contains">Search Text</label> -->
+  <!--         <input id="q_username_contains" name="q[username_contains]" size="30" type="text" /> -->
+  <!--       </div> -->
+  <!--       <div class="filter_form_field filter_date_range"> -->
+  <!--         <label for="q_created_at_gte">Created at</label> -->
+  <!--         <input class="datepicker" id="q_created_at_gte" max="10" name="q[created_at_gte]" size="12" type="text" value="" /> -->
+  <!--         <span class="seperator">-</span> -->
+  <!--         <input class="datepicker" id="q_created_at_lte" max="10" name="q[created_at_lte]" size="12" type="text" value="" /> -->
+  <!--       </div> -->
+  <!--       <div class="buttons"> -->
+  <!--         <input id="q_submit" name="commit" type="submit" value="Filter" /> -->
+  <!--         <a href="#" class="clear_filters_btn">Clear Filters</a> -->
+  <!--         <input id="order" name="order" type="hidden" value="id_desc" /> -->
+  <!--         <input id="scope" name="scope" type="hidden" /> -->
+  <!--       </div> -->
+  <!--     </form> -->
+  <!--   </div> -->
+  <!-- </div>  -->
 </script>
 
 <script id="sidebarForGenericView" type="text/x-jquery-tmpl">
@@ -648,8 +663,9 @@ FIELD INPUT TEMPLATES
     <input id="${field.slug}_asset" name="${model.slug}[${field.slug}_id]" type="hidden" value="${content[field.slug+'_id']}"/>
     <span class="update" onclick="caribou.admin.showUploadForm('${field.slug}')">Choose Asset</span>
     <span id="${field.slug}_thumbnail">
-      {{if content[field.slug]}}
-      <a target="_blank" href="${caribou.remoteAPI}/${content[field.slug].path}"><img src="${caribou.remoteAPI}/${content[field.slug].path}" height="100" /></a>
+      {{if content[field.slug] && content[field.slug].path}}
+      <a target="_blank" href="${caribou.remoteAPI}/${content[field.slug].path}">
+        <img src="${caribou.remoteAPI}/${content[field.slug].path}" height="100" /></a>
       {{/if}}
     </span>
   </div>
