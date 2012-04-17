@@ -17,6 +17,7 @@ _.slugify = function(string) {
 
 var caribou = function() {
   var REMOTE = window.location.toString().replace(/^(https?:\/\/)(admin)(\.[^\/]+).*/, "$1api$3")
+  var REMOTE = 'http://localhost:33443'
   console.log(REMOTE);
   var rpc = new easyXDM.Rpc({
     remote: REMOTE+"/cors/"
