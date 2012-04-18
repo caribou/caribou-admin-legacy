@@ -159,10 +159,13 @@ caribou.admin = function() {
     $('.flashes').html(flash_error);
   };
   
-  var setActionItems = function(view, items) {
-    var action_items = template.actionItems({
-      view: view, items: items});
-    $('.action_items').html(action_items);
+  var setActionItems = function(view, items, label /**optional**/) {
+    var actionItems = template.actionItems({
+                        view: view,
+                        items: items,
+                        label: label || ''
+                      });
+    $('.action_items').html(actionItems);
   };
   
   /*//////////////////////////////////////////////
@@ -323,7 +326,7 @@ caribou.admin = function() {
         setBodyClass(_currentView, _currentAction);
         setBreadcrumb([{label: "Admin", action: "/"}]);
         setPageTitle(_currentViewSpec.response.title_bar.page_title);
-        setActionItems(_currentView, _currentViewSpec.response.title_bar.action_items);
+        setActionItems(_currentView, _currentViewSpec.response.title_bar.action_items, _currentViewSpec.meta.view.label);
         setContentClass("with_sidebar");
       	var content = template.contentForGenericIndex({
           viewSpec: _currentViewSpec, viewData: _currentViewData});
@@ -353,9 +356,17 @@ caribou.admin = function() {
         setPageTitle(_currentViewData.response[_currentViewSpec.response.title_bar.page_title]);
         setActionItems(_currentView, _currentViewSpec.response.title_bar.action_items);
         setContentClass("with_sidebar");
+        
       	var content = template.contentForGenericView({
           viewSpec: _currentViewSpec, viewData: _currentViewData});
         $('#active_admin_content').html(content);
+        
+        // var sidebar = renderTemplate(model.slug, "sidebarFor<%= model %>Edit", {
+        //   model: model, 
+        //   content: {}, 
+        //   action: 'update'
+        // });
+        // $('#sidebar').html(sidebar);
       }
     },
     
@@ -390,7 +401,7 @@ caribou.admin = function() {
     new: {
       init: function(params) {
         setTabbedNavigation(params.model);
-        var model = caribou.models[params.model];
+        var model = caribou.models[_.singularize(params.model)];
 
         var sidebar = renderTemplate(model.slug, "sidebarFor<%= model %>Edit", {
           model: model, 
@@ -400,6 +411,7 @@ caribou.admin = function() {
         $('#sidebar').html(sidebar);
 
         var main_content = renderTemplate(model.slug, "mainContentFor<%= model %>Edit", {
+          viewSpec: _currentViewSpec,
           model: model, 
           content: {}, 
           action: 'create'
