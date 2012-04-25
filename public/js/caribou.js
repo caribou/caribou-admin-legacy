@@ -1,29 +1,7 @@
-_.mixin({
-  
-  capitalize: function(string) {
-    var bits = string.split(/[_ ]+/);
-    var shaped = _.map(bits, function(bit) {
-      var low = bit.toLowerCase();
-      return low.charAt(0).toUpperCase() + low.slice(1);
-    });
-    return shaped.join(' ');
-  },
-
-  slugify: function(string) {
-    var bits = string.split(/[^a-zA-Z]+/);
-    var shaped = _.map(bits, function(bit) {
-      return bit.toLowerCase();
-    });
-    return shaped.join('_');
-  }
-  
-});
-
-
 var caribou = function() {
   var REMOTE = window.location.toString().replace(/^(https?:\/\/)(admin)(\.[^\/]+).*/, "$1api$3")
   var REMOTE = 'http://localhost:33443'
-  console.log(REMOTE);
+
   var rpc = new easyXDM.Rpc({
     remote: REMOTE+"/cors/"
   }, {

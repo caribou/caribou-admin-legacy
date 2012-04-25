@@ -140,8 +140,11 @@ caribou.admin = function() {
   };
   
   var setBreadcrumb = function(items) {
-    var breadcrumb = template.breadcrumb({items: items});
-    $('.breadcrumb').html(breadcrumb);
+    //var breadcrumb = template.breadcrumb({items: items});
+    var view = caribou.Views.Tools.Breadcrumbs;
+
+    //$('.breadcrumb').html(view.render(items).el);
+    $('.breadcrumb').html('broken for now');
   };
   
   var setPageTitle = function(string) {
@@ -160,11 +163,18 @@ caribou.admin = function() {
   };
   
   var setActionItems = function(view, items, label /**optional**/) {
-    var actionItems = template.actionItems({
-                        view: view,
-                        items: items,
-                        label: label || ''
-                      });
+    
+    var actionItems = _.map(items, function(item) {
+      var view = new caribou.Views.Tools.ActionItem;
+      return view.render(item).el;      
+    });
+    
+    // Eventually will just be this:
+    //
+    // var actionItems = _.map(items, function(item) {
+    //   return template['tools/action-item'](item);
+    // });
+    
     $('.action_items').html(actionItems);
   };
   
@@ -328,9 +338,12 @@ caribou.admin = function() {
         setPageTitle(_currentViewSpec.response.title_bar.page_title);
         setActionItems(_currentView, _currentViewSpec.response.title_bar.action_items, _currentViewSpec.meta.view.label);
         setContentClass("with_sidebar");
-      	var content = template.contentForGenericIndex({
+      	//var content = template.contentForGenericIndex({
+        //  viewSpec: _currentViewSpec, viewData: _currentViewData});
+        var content = new caribou.Views.Generic.Index({
           viewSpec: _currentViewSpec, viewData: _currentViewData});
-        $('#active_admin_content').html(content);
+
+        $('#active_admin_content').html(content.render().el);
       }
     },
     
@@ -361,7 +374,7 @@ caribou.admin = function() {
           viewSpec: _currentViewSpec, viewData: _currentViewData});
         $('#active_admin_content').html(content);
         
-        // var sidebar = renderTemplate(model.slug, "sidebarFor<%= model %>Edit", {
+        // var sidebar = renderTemplate(model.slug, "sidebarFor{{ model }}Edit", {
         //   model: model, 
         //   content: {}, 
         //   action: 'update'
@@ -403,14 +416,14 @@ caribou.admin = function() {
         setTabbedNavigation(params.model);
         var model = caribou.models[_.singularize(params.model)];
 
-        var sidebar = renderTemplate(model.slug, "sidebarFor<%= model %>Edit", {
+        var sidebar = renderTemplate(model.slug, "sidebarFor{{ model }}Edit", {
           model: model, 
           content: {}, 
           action: 'update'
         });
         $('#sidebar').html(sidebar);
 
-        var main_content = renderTemplate(model.slug, "mainContentFor<%= model %>Edit", {
+        var main_content = renderTemplate(model.slug, "mainContentFor{{ model }}Edit", {
           viewSpec: _currentViewSpec,
           model: model, 
           content: {}, 
