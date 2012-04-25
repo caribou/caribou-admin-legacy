@@ -15,3 +15,19 @@ lein ring server
 ## Usage ----------------------------
 
 Enjoy!
+
+## TODO -----------------------------
+
+model index:
+  if there is no view data, render blank view
+  render footer
+  render sidebar
+  fix sorting links
+  fix routes (going straight to /models doesn't render anything)
+  add actions
+
+breadcrumbs, fix this
+
+new model
+edit model
+ensure actions work
