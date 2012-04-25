@@ -1,5 +1,4 @@
-caribou.Views = caribou.Views || {};
-caribou.Views.Tools = caribou.Views.Tools || {};
+_.provide('caribou.Views.Tools');
 
 caribou.Views.Tools.ActionItem = Backbone.View.extend({
 

@@ -27,14 +27,26 @@ _.mixin({
 
   // Provide a namespace (like goog.provides)
   // 'foo.bar.baz' => { foo: { bar: { baz: {}}}}
-  provide: function(namespace) {
+  provide: function(namespace, root) {
     var bits = namespace.split('.');
-    for(i=0, l=bits.length, root=window; i<l; i++) {
+    for(i=0, l=bits.length, root= root || window; i<l; i++) {
       root[bits[i]] = root[bits[i]] || {};
       root = root[bits[i]];
     }
+  },
+
+
+  // Just like extend, except it won't overwrite an existing property
+  reverseExtend: function(obj) {
+    _.each(Array.prototype.slice.call(arguments, 1), function(source) {
+      for (var prop in source) {
+        obj[prop] = obj[prop] || source[prop];
+      }
+    });
+    return obj;
   }
-  
+
+
 });
 
 

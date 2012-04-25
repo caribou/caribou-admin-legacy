@@ -7,22 +7,23 @@ caribou.Views.Generic.Table.HeaderColumn = Backbone.View.extend({
 
   initialize: function() {
     _.bindAll(this, 'buildClassName');
+    _.reverseExtend(this, this.options);
   },
 
 
 
   render: function() {
     var output,
-        options = this.options.data;
+        data = this.data;
 
     // Add a class and a link if its sortable, otherwise just render the label
-    if(options.sortable) {
+    if(data.sortable) {
       output = this.make('a', {
         'class': this.buildClassName(),
         'href' : '#'
-      }, options.label);
+      }, data.label);
     } else {
-      output = options.label;
+      output = data.label;
     }
 
     this.$el.html(output);
@@ -35,10 +36,10 @@ caribou.Views.Generic.Table.HeaderColumn = Backbone.View.extend({
   buildClassName: function() {
     var classNames = [];
 
-    if(this.options.data.slug === this.options.table.viewData.meta.order_by) {
-      classNames.push('sorted-' + this.options.table.viewData.meta.order);
+    if(this.data.slug === this.table.viewData.meta.order_by) {
+      classNames.push('sorted-' + this.table.viewData.meta.order);
       classNames.push(sortable);
-      classNames.push(this.options.data.slug);
+      classNames.push(this.data.slug);
     }
 
     return classNames.join(' ');

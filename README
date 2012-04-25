@@ -23,8 +23,7 @@ model index:
   render footer
   render sidebar
   fix sorting links
-  fix routes (going straight to /models doesn't render anything)
-  add actions
+  fix routes (going straight to /models/ doesn't render anything)
 
 breadcrumbs, fix this
 

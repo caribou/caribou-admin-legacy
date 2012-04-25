@@ -185,7 +185,7 @@ INDEX TEMPLATES
 
 -->
 
-<script id="contentForGenericIndex" type="text/x-jquery-tmpl">
+<!--<script id="contentForGenericIndex" type="text/x-jquery-tmpl">
   <div id="main_content_wrapper">
     <div id="main_content">
       {{if viewData.response.length > 0}}
@@ -234,7 +234,7 @@ INDEX TEMPLATES
   <div id="sidebar">
     {{tmpl({viewSpec: viewSpec, viewData: viewData}) "#sidebarForGenericList"}}
   </div>
-</script>
+</script>-->
 
 <script id="scopes" type="text/x-jquery-tmpl">
   {{if viewSpec.response.content.main_content.scopes.length > 0}}
@@ -251,7 +251,7 @@ INDEX TEMPLATES
   {{/if}}
 </script>
 
-<script id="mainContentForGenericRow" type="text/x-jquery-tmpl">
+<!--<script id="mainContentForGenericRow" type="text/x-jquery-tmpl">
   {{each(i, column) viewSpec.response.content.main_content.table.columns}}
   {{tmpl({viewSpec: $data.viewSpec, columnSpec: column, rowData: $data.rowData}) "#" + column.format + "Cell"}}
   {{/each}}
@@ -264,15 +264,15 @@ INDEX TEMPLATES
   {{/each}}
   </td>
   {{/if}}
-</script>
+</script>-->
 
-<script id="textCell" type="text/x-jquery-tmpl">
+<!--<script id="textCell" type="text/x-jquery-tmpl">
   <td>${rowData[columnSpec.slug]}</td>
 </script>
 
 <script id="linkCell" type="text/x-jquery-tmpl">
   <td><a href="javascript:;" onclick="caribou.go('/${viewSpec.meta.view.slug}/${rowData.id}')">${rowData[columnSpec.slug]}</a></td>
-</script>
+</script>-->
 
 <script id="indexFooter" type="text/x-jquery-tmpl">
   <div id="index_footer">

@@ -5,6 +5,13 @@ caribou.Views.Generic.Table.Column = Backbone.View.extend({
   tagName: 'td',
 
 
+  initialize: function() {
+    _.bindAll(this, 'go');
+    _.reverseExtend(this, this.options);
+
+  },
+
+
   events: {
     'click a': 'go'
   },
@@ -13,8 +20,8 @@ caribou.Views.Generic.Table.Column = Backbone.View.extend({
 
   render: function() {
     var output,
-        data = this.options.data,
-        rowData = this.options.row.options.data;
+        data = this.data,
+        rowData = this.row.data;
 
     // Depending on the column type, we will render either plain text or a link
     if(data.format === 'link') {
@@ -32,7 +39,7 @@ caribou.Views.Generic.Table.Column = Backbone.View.extend({
 
   go: function(e) {
     e.preventDefault();
-    var path = [this.options.table.viewSpec.meta.view.slug, this.options.data.id].join('/');
+    var path = [this.table.viewSpec.meta.view.slug, this.data.id].join('/');
     caribou.go(path);
   }
 });
