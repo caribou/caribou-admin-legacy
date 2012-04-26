@@ -20,9 +20,9 @@ Enjoy!
 
 
 ensure actions work
+edit model: fieldsets, *fields*, hidden field
 new model
 render sidebar
-edit model
 add views to models
 assocations
 
@@ -34,3 +34,9 @@ breadcrumbs, fix this
 if there is no view data, render blank view
 
 
+## NOTE -------------
+
+address fields have conditional values that needs to be filled in
+as does boolean
+assetField has an onclick event
+  and a dynamic id, content
