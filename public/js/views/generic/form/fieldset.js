@@ -31,17 +31,19 @@ caribou.Views.Generic.Form.Fieldset = Backbone.View.extend({
 
 
   renderField: function(field) {
+    if(!field.editable || field.slug === 'position') return;
+
     var li = this.make('li', {
-      'class' : [field.format, 'input', 'required', 'stringish'].join(' '),
+      'class' : [field.type, 'input', 'required', 'stringish'].join(' '),
       'id'    : [this.viewSpec.meta.model, field.slug, 'input'].join('_')
     });
 
     // Handle the different kinds of fields
-    var tmpl = caribou.templates.form.fields[field.format];
+    var tmpl = caribou.templates.form.fields[field.type];
 
     // A notice if we are requesting a field type that isn't defined
     if(_.isUndefined(tmpl)) {
-      console.log('[', field.format, '] Field type is not defined, go throw something at Willhite!');
+      console.log('[', field.type, '] Field type is not defined, go throw something at Willhite!');
       return;
     }
 
@@ -49,18 +51,18 @@ caribou.Views.Generic.Form.Fieldset = Backbone.View.extend({
     var args = {
       modelSlug : this.viewSpec.meta.model,
       fieldSlug : field.slug,
-      value     : this.viewSpec.response[field.slug] || ''
+      fieldName : field.name,
+      value     : this.viewData.response[field.slug] || ''
     };
 
-    console.log(this, field)
 
-    if(/string|slug|integer|decimal|text|timestamp|part|link|address/.test(field.format))
-      args['fieldName'] = field.label;
+    //if(/string|slug|integer|decimal|text|timestamp|part|link|address/.test(field.type))
+    //  args['fieldName'] = field.name;
 
     // Wrap the tmpl with a list item
     li.innerHTML = _.template(tmpl, args);
 
     // Add the fields to the DOM
-    $('ol', this.$el).prepend(li);
+    $('ol', this.$el).append(li);
   }
 });

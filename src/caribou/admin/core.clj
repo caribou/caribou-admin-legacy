@@ -74,7 +74,8 @@
         "/js/views/generic/form/fieldset.js"
         "/js/views/generic/table/header-column.js"
         "/js/views/generic/table/row.js"
-        "/js/views/generic/table/column.js")
+        "/js/views/generic/table/column.js"
+        "/js/views/abstract/row-for-model-edit.js")
       (slurp "public/templates.html")]]]))
 
 

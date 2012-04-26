@@ -394,6 +394,13 @@ caribou.admin = function() {
           success: function(response) {
           	_currentViewSpec = response;
           	var url = "/" + _currentViewSpec.meta.model + "/" + _currentId;
+
+            // WARNING: Grabbing all associated objects too
+            var associatedFields = _.filter(caribou.models[_currentViewSpec.meta.model].fields, function(field) {
+              return field.type === 'collection' });
+
+            query['include'] = _.pluck(associatedFields, 'slug').join(',');
+
             getModel(url, params, query, genericView.edit.draw);
           }
         });
@@ -409,7 +416,9 @@ caribou.admin = function() {
         //  viewSpec: _currentViewSpec, viewData: _currentViewData, action: "update"});
 
         var content = new caribou.Views.Generic.Edit({
-          viewSpec: _currentViewSpec, viewData: _currentViewData, action: 'update'});
+          viewSpec: _currentViewSpec,
+          viewData: _currentViewData,
+          action: 'update'});
 
         $('#active_admin_content').html(content.render().el);
       }

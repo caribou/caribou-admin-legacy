@@ -40,3 +40,6 @@ address fields have conditional values that needs to be filled in
 as does boolean
 assetField has an onclick event
   and a dynamic id, content
+
+abstract field for edit has a conditional class:w
+also td.actions
