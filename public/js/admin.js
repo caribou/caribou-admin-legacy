@@ -346,7 +346,7 @@ caribou.admin = function() {
         $('#active_admin_content').html(content.render().el);
       }
     },
-    
+
     view: {
       init: function(params, query) {
         _currentView = params.view;
@@ -369,11 +369,11 @@ caribou.admin = function() {
         setPageTitle(_currentViewData.response[_currentViewSpec.response.title_bar.page_title]);
         setActionItems(_currentView, _currentViewSpec.response.title_bar.action_items);
         setContentClass("with_sidebar");
-        
+
       	var content = template.contentForGenericView({
           viewSpec: _currentViewSpec, viewData: _currentViewData});
         $('#active_admin_content').html(content);
-        
+
         // var sidebar = renderTemplate(model.slug, "sidebarFor{{ model }}Edit", {
         //   model: model, 
         //   content: {}, 
@@ -382,7 +382,7 @@ caribou.admin = function() {
         // $('#sidebar').html(sidebar);
       }
     },
-    
+
     edit: {
       init: function(params, query) {
         _currentView = params.view;
@@ -405,9 +405,13 @@ caribou.admin = function() {
         setPageTitle(_currentViewSpec.response.title_bar.page_title);
         setActionItems(_currentView, _currentViewSpec.response.title_bar.action_items);
         setContentClass("with_sidebar");
-      	var content = template.contentForGenericEdit({
-          viewSpec: _currentViewSpec, viewData: _currentViewData, action: "update"});
-        $('#active_admin_content').html(content);
+      	//var content = template.contentForGenericEdit({
+        //  viewSpec: _currentViewSpec, viewData: _currentViewData, action: "update"});
+
+        var content = new caribou.Views.Generic.Edit({
+          viewSpec: _currentViewSpec, viewData: _currentViewData, action: 'update'});
+
+        $('#active_admin_content').html(content.render().el);
       }
     },
     

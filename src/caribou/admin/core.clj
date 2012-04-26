@@ -39,7 +39,7 @@
 
         [:div#header
 
-          [:h1#site_title "Relevant App Name"]
+          [:h1#site_title "Interface 3.0"]
           [:ul#tabs.header-items]
           [:p#utility_nav.header-item
             [:span.current_user "justin@weareinstrument.com"]
@@ -69,7 +69,9 @@
       (include-js
         "/js/views/tools/action-item.js"
         "/js/views/tools/breadcrumb.js"
+        "/js/views/generic/edit.js"
         "/js/views/generic/index.js"
+        "/js/views/generic/form/fieldset.js"
         "/js/views/generic/table/header-column.js"
         "/js/views/generic/table/row.js"
         "/js/views/generic/table/column.js")

@@ -19,6 +19,7 @@ caribou.Views.Generic.Index = Backbone.View.extend({
     var table = this.viewSpec.response.content.main_content.table;
     var output = _.template(this.template, {});
 
+    // Render template
     this.$el.html(output);
 
     // Render the table header columns
