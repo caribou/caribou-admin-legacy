@@ -84,8 +84,7 @@ caribou.Views.Generic.Edit = Backbone.View.extend({
 
   updateModel: function(e) {
     e.preventDefault();
-debugger;
-    caribou.admin.update('/' + this.viewSpec.meta.view.slug);
+    caribou.admin.update(this.viewSpec.meta.model);
   }
 
 

@@ -205,7 +205,7 @@ caribou.admin = function() {
     debugger;
     var data = caribou.formData('#'+name+'_edit');
     var id = name + '[id]';
-    var url = '/' + name + '/' + data[id];
+    var url = '/' + _.pluralize(name) + '/' + data[id];
     var redirect = '/' + view + '/' + data[id] + '/edit';
     delete data[id];
 
