@@ -156,14 +156,16 @@
           [:div
             [:label.fileinput-buttons
               { :for "{{ modelSlug }}_{{ fieldSlug }}" }
-              [:span "{{ fildName }}"]]
+              [:span "{{ fieldName }}"]]
 
             [:input
               { :type   "hidden"
                 :name   "{{ modelSlug }}[{{ fieldSlug }}]"
                 :value  "{{ value }}" }]
 
-            [:span.update "Choose Asset"]
+            [:span.update
+              { :data-slug "{{ fieldSlug }}" }
+              "Choose Asset"]
             [:span#_thumbnail]])}}
 
 
@@ -253,7 +255,8 @@
          [:input
            { :type "text"
              :name "model[fields][{{ index }}][name]"
-             :value "{{ name }}" }]]
+             :value "{{ name }}"
+             :class "{{ className }}" }]]
 
        [:td.type
          [:input

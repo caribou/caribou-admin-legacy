@@ -9,8 +9,14 @@ caribou.Views.Generic.Form.Fieldset = Backbone.View.extend({
 
 
   initialize: function() {
-    _.bindAll(this, 'renderField');
+    _.bindAll(this, 'renderField', 'updateAsset');
     _.reverseExtend(this, this.options);
+  },
+
+
+
+  events: {
+    'click .update': 'updateAsset'
   },
 
 
@@ -33,6 +39,8 @@ caribou.Views.Generic.Form.Fieldset = Backbone.View.extend({
   renderField: function(field) {
     if(!field.editable || field.slug === 'position') return;
 
+    var data = this.viewData.response;
+
     var li = this.make('li', {
       'class' : [field.type, 'input', 'required', 'stringish'].join(' '),
       'id'    : [this.viewSpec.meta.model, field.slug, 'input'].join('_')
@@ -52,17 +60,57 @@ caribou.Views.Generic.Form.Fieldset = Backbone.View.extend({
       modelSlug : this.viewSpec.meta.model,
       fieldSlug : field.slug,
       fieldName : field.name,
-      value     : this.viewData.response[field.slug] || ''
+      value     : data[field.slug] || ''
     };
 
-
-    //if(/string|slug|integer|decimal|text|timestamp|part|link|address/.test(field.type))
-    //  args['fieldName'] = field.name;
 
     // Wrap the tmpl with a list item
     li.innerHTML = _.template(tmpl, args);
 
+    // We have to wrap this in jQuery so that we can manipulate it easily
+    var $li = $(li);
+
+    //  Special conditions
+    switch(field.type) {
+      case 'boolean':
+        if(data[field.slug])
+          $('input[type=checkbox]', $li).attr('checked', 'checked')
+        break;
+
+      case 'address':
+        // Fill in the values if they exist
+        _.each(['_id', 'address', 'address_two', 'city', 'state', 'postal_code', 'country'], function(attr) {
+          $('input[name*=' + attr + ']', $li).val(attr, field[attr]); });
+        break;
+
+      case 'asset':
+        $('input[name*=_id]', $li).attr('id', field.slug + '_asset');
+
+        if(data[field.slug]) {
+          var img = this.make('img', {
+            src     : [caribou.remoteAPI, data[field.slug + '_id'].path].join('/'),
+            height  : '100'
+          });
+
+          $('#_thumbnail').html(this.make('a', {
+            target  : '_blank',
+            href    : '#'
+          }, img));
+        }
+        break;
+    };
+
+
     // Add the fields to the DOM
-    $('ol', this.$el).append(li);
+    $('ol', this.$el).append($li);
+  },
+
+
+
+  updateAsset: function(e) {
+    e.preventDefault();
+
+    var slug = $(this).attr('data-slug');
+    caribou.admin.showUploadForm(slug);
   }
 });

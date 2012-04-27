@@ -25,11 +25,21 @@ caribou.Views.Abstract.RowForModelEdit = Backbone.View.extend({
       id            : field.id,
       index         : this.index,
       fieldType     : fieldTypes[field.type].name,
-      modelPosition : field.model_position
+      modelPosition : field.model_position,
+      className     : field.type === 'string' ? 'string_field' : ''
     });
 
-
     this.$el.html(output);
+
+
+    // Add the delete button unless the field is locked
+    if(! field.locked) {
+      $('.actions', this.$el).prepend(this.make('a', {
+        href: '#',
+        'class': 'member_link delete_link'
+      }, 'Delete'));
+    }
+
 
     // Render the field options
     _.each(fieldTypes[field.type].options, this.renderFieldOptions);
@@ -43,31 +53,31 @@ caribou.Views.Abstract.RowForModelEdit = Backbone.View.extend({
 
     var key  = _.last(_.parameterize(option).split('-'));
 
-    var output = _.template(caribou.templates.abstract['field-options'][key], {
+    var field = _.template(caribou.templates.abstract['field-options'][key], {
       index: i
     });
 
     // This is necessary for the following changes be actually affect the output
-    output = $(output);
+    var $field = $(field);
 
     switch(key) {
       case 'string':
-        $('input[type=text]', output).attr('value', this.field.default_value);
+        $('input[type=text]', $field).attr('value', this.field.default_value);
         break;
 
       case 'boolean':
         var d = this.field.default_value;
         d = d || 'false'; // We have to do this because somteimes its null
 
-        $('option[value=' + d.toLowerCase() + ']', output).attr('selected', 'selected');
+        $('option[value=' + d.toLowerCase() + ']', $field).attr('selected', 'selected');
         break;
 
       case 'link':
-        $('select', output).html(caribou.admin.slugOptions(this.model, this.field.link));
+        $('select', $field).html(caribou.admin.slugOptions(this.model, this.field.link));
         break;
     };
 
-    $('.options:first', this.$el).html(output);
+    $('.options:first', this.$el).html($field);
 
   }
 

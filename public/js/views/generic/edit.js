@@ -9,8 +9,14 @@ caribou.Views.Generic.Edit = Backbone.View.extend({
 
 
   initialize: function() {
-    _.bindAll(this, 'renderFieldset', 'renderAbstractField');
+    _.bindAll(this, 'renderFieldset', 'renderAbstractField', 'updateModel');
     _.reverseExtend(this, this.options);
+  },
+
+
+
+  events: {
+    'click .commit a': 'updateModel'
   },
 
 
@@ -34,7 +40,13 @@ caribou.Views.Generic.Edit = Backbone.View.extend({
     _.each(fieldsets, this.renderFieldset);
 
     // Render hidden input
-    // TODO
+    if(this.action === 'update') {
+      $('form div:first', this.$el).html(this.make('input', {
+        type  : 'hidden',
+        name  : this.viewSpec.meta.model + '[id]',
+        value : this.viewData.response.id
+      }));
+    }
 
     // Render abstract fields on model
     var abstractFields = this.viewData.response.fields;
@@ -61,10 +73,19 @@ caribou.Views.Generic.Edit = Backbone.View.extend({
   renderAbstractField: function(field, i) {
     var view = new caribou.Views.Abstract.RowForModelEdit({
       field: field,
-      index: i
+      index: i,
+      model: this.model
     });
 
     $('.model_fields_edit_table table tbody', this.$el).append(view.render().el);
+  },
+
+
+
+  updateModel: function(e) {
+    e.preventDefault();
+debugger;
+    caribou.admin.update('/' + this.viewSpec.meta.view.slug);
   }
 
 

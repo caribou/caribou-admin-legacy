@@ -20,7 +20,7 @@ Enjoy!
 
 
 ensure actions work
-edit model: fieldsets, *fields*, hidden field, options for abstract fields
+edit model
 new model
 render sidebar
 add views to models
@@ -36,10 +36,3 @@ if there is no view data, render blank view
 
 ## NOTE -------------
 
-address fields have conditional values that needs to be filled in
-as does boolean
-assetField has an onclick event
-  and a dynamic id, content
-
-abstract field for edit has a conditional class:w
-also td.actions

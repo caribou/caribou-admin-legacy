@@ -28,12 +28,6 @@ caribou.admin = function() {
     });
   };
   
-  var fixHelper = function(e, ui) {
-    ui.children().each(function() {
-      $(this).width($(this).width());
-    });
-    return ui;
-  };
   
   var slugOptions = function(model, link) {
     var stringFields = _.filter(model.fields, function(field) {
@@ -208,6 +202,7 @@ caribou.admin = function() {
   };
 
   var contentUpdate = function(name, view) {
+    debugger;
     var data = caribou.formData('#'+name+'_edit');
     var id = name + '[id]';
     var url = '/' + name + '/' + data[id];
@@ -421,6 +416,25 @@ caribou.admin = function() {
           action: 'update'});
 
         $('#active_admin_content').html(content.render().el);
+
+        // This may want to get moved out to another, more "global" location
+        $('.sortable').sortable({
+          axis: 'y',
+          scroll: true,
+          handle: '.handle_link',
+          helper: function(e, ui) {
+            ui.children().each(function() {
+              $(this).width($(this).width());
+            });
+            return ui;
+          },
+          stop: function(event, ui) {
+            $('.model_position').each(function(index) {
+              this.value = index + 1;
+            });
+          }
+        }).disableSelection();
+        
       }
     },
     
@@ -526,6 +540,7 @@ caribou.admin = function() {
         height: 480,
         title: 'File upload'
       });
+
       findTemplates();
       getAllViewsSpec(caribou.act);
     },
