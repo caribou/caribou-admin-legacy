@@ -44,6 +44,15 @@ _.mixin({
       }
     });
     return obj;
+  },
+
+
+  // Parameratize's camel-cased strings
+  // 'defaultString' => 'default-string'
+  parameterize: function(string) {
+    return _.map(_.rest(string.match(/^(.*[a-z])([A-Z].*)$/)), function(bit) {
+      return bit.toLowerCase();
+    }).join('-');
   }
 
 

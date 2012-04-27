@@ -20,7 +20,7 @@ Enjoy!
 
 
 ensure actions work
-edit model: fieldsets, *fields*, hidden field
+edit model: fieldsets, *fields*, hidden field, options for abstract fields
 new model
 render sidebar
 add views to models

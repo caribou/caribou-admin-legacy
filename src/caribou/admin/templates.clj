@@ -286,4 +286,34 @@
          ;; Optional "delete" field inserted with js
          [:a.member_link.handle_link
            { :href "#" }
-           "Drag"]])}})
+           "Drag"]])
+
+
+      :field-options
+      { :string
+        (html
+          [:div.field
+            [:label
+              "Default value"]
+            [:input.slug_options
+              { :type "text"
+                :name "model[fields][{{ index }}][default_value]" }]]) ;; "value" attribute is set by js
+
+        :boolean
+        (html
+          [:div.field
+            [:label
+              "Default value"]
+            [:select
+              { :name "model[fields][{{ index }}][default_value]" }
+              [:option { :value "true" } "true"]      ;; "selected" attribute is set by js
+              [:option { :value "false" } "false"]]]) ;; "selected" attribute is set by js
+
+        :link
+        (html
+          [:div.field
+            [:label
+              "Linked field"]
+            [:select.slug_options
+              { :name "model[fields][{{ index }}][link_slug]" }
+              "{{ slugOptions }}"]])}}})
