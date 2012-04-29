@@ -44,6 +44,11 @@ caribou.Views.Abstract.RowForModelEdit = Backbone.View.extend({
     // Render the field options
     _.each(fieldTypes[field.type].options, this.renderFieldOptions);
 
+
+    // Set the value for the require checkboxes
+    if(field.required)
+      $('.options:last input[type=checkbox]', this.$el).attr('checked', true);
+
     return this;
   },
 
