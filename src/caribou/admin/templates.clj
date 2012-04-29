@@ -199,6 +199,26 @@
             ])}
 
 
+      :view
+      { :main
+        (html
+          [:h3 "Fields ({{ fieldsLength }})"]
+          [:div.panel_contents
+            [:table
+              { :border "0"
+                :cellspacing "0"
+                :cellpadding "0" }
+              [:thead
+                [:tr
+                  [:th "Name"]
+                  [:th "Type"]]]
+              [:tbody
+                ;; --------------------
+                ;; Rows populated by js
+                ;; --------------------
+                ]]])}
+
+
       :edit
       { :main
         (html

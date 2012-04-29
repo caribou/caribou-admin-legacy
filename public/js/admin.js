@@ -365,9 +365,14 @@ caribou.admin = function() {
         setActionItems(_currentView, _currentViewSpec.response.title_bar.action_items);
         setContentClass("with_sidebar");
 
-      	var content = template.contentForGenericView({
-          viewSpec: _currentViewSpec, viewData: _currentViewData});
-        $('#active_admin_content').html(content);
+        var content = new caribou.Views.Generic.View({
+          viewSpec: _currentViewSpec,
+          viewData: _currentViewData
+        });
+
+      	//var content = template.contentForGenericView({
+        //  viewSpec: _currentViewSpec, viewData: _currentViewData});
+        $('#active_admin_content').html(content.render().el);
 
         // var sidebar = renderTemplate(model.slug, "sidebarFor{{ model }}Edit", {
         //   model: model, 

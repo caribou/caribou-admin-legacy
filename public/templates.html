@@ -372,7 +372,7 @@ VIEW TEMPLATES
     </table>
   </div>
 </script>
-
+<!--
 <script id="mainContentForModelView" type="text/x-jquery-tmpl">
   <div class="panel">
     <h3>Fields (${content.fields.length})</h3>
@@ -396,12 +396,11 @@ VIEW TEMPLATES
     </div>
   </div>
 </script>
-
+-->
 <!-- 
 
 EDIT TEMPLATES
 
--->
 
 <script id="contentForGenericEdit" type="text/x-jquery-tmpl">
   <div id="main_content_wrapper">
@@ -505,14 +504,14 @@ EDIT TEMPLATES
     </fieldset>
   </form>
 </script>
-
+-->
 <!-- 
 
 MODEL FIELD FORM TEMPLATES
 
 -->
 
-<!--ABSTRACT-->
+<!--ABSTRACT
 <script id="abstractFieldForModelEdit" type="text/x-jquery-tmpl">
   <tr>
     <td class="name"><input type="text" class="{{if field.type === 'string'}}string_field{{/if}}" name="model[fields][${index}][name]" value="${field.name}" /></td>
@@ -531,7 +530,8 @@ MODEL FIELD FORM TEMPLATES
     <td class="actions">{{if !field.locked}}<a href="javascript:;" class="member_link delete_link">Delete</a> {{/if}}<a href="javascript:;" class="member_link handle_link">Drag</a></td>
   </tr>
 </script>
-<!--ABSTRACT-->
+-->
+<!--ABSTRACT
 
 <script id="defaultStringFieldOptions" type="text/x-jquery-tmpl">
   <div class="field"><label for="">Default value</label><input type="text" name="model[fields][${index}][default_value]" value="${field.default_value}" /></div>
@@ -556,12 +556,11 @@ MODEL FIELD FORM TEMPLATES
 
 <script id="linkFieldOptions" type="text/x-jquery-tmpl">
 </script>
-
+-->
 <!-- 
 
 FIELD INPUT TEMPLATES
 
--->
 
 <script id="booleanField" type="text/x-jquery-tmpl">
   <label for="${model.slug}_${field.slug}">
@@ -643,4 +642,4 @@ FIELD INPUT TEMPLATES
     </span>
   </div>
 </script>
-
+-->

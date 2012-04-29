@@ -20,7 +20,12 @@ Enjoy!
 
 
 ensure actions work
-edit model
+edit model -> required field?'s not retaining state in abstract fields
+
+  unable to update default values on abstract fields
+  sometimes they load as "false" othertime, nothing at all
+
+
 new model
 render sidebar
 add views to models
