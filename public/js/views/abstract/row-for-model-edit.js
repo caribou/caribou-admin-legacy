@@ -66,10 +66,7 @@ caribou.Views.Abstract.RowForModelEdit = Backbone.View.extend({
         break;
 
       case 'boolean':
-        var d = this.field.default_value;
-        d = d || 'false'; // We have to do this because somteimes its null
-
-        $('option[value=' + d.toLowerCase() + ']', $field).attr('selected', 'selected');
+        $('option[value=' + this.field.default_value + ']', $field).attr('selected', 'selected');
         break;
 
       case 'link':

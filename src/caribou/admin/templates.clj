@@ -303,7 +303,8 @@
        [:td.options
          [:label
            [:input
-             { :type "checkbox" }
+             { :type "checkbox"
+               :name "model[fields][{{ index }}][required]" }
              "Required field?"]]]
        [:td.actions
          ;; Optional "delete" field inserted with js
