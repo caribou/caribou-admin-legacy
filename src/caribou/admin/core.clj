@@ -68,7 +68,6 @@
 
       (include-js
         "/js/views/tools/action-item.js"
-        "/js/views/tools/breadcrumb.js"
         "/js/views/generic/edit.js"
         "/js/views/generic/index.js"
         "/js/views/generic/index/footer.js"
@@ -79,7 +78,9 @@
         "/js/views/generic/table/header-column.js"
         "/js/views/generic/table/row.js"
         "/js/views/generic/table/column.js"
-        "/js/views/generic/global/navigation/tabs.js"
+        "/js/views/global/navigation/tabs.js"
+        "/js/views/global/navigation/breadcrumb.js"
+        "/js/views/global/notification/flash.js"
         "/js/views/abstract/row-for-model-edit.js")
       (slurp "public/templates.html")]]]))
 

@@ -129,38 +129,39 @@ caribou.admin = function() {
   	}
   	return {action: "/" + obj.action, slug: obj.slug, label: obj.label, children: choices};
   };
-  
+
   var setBodyClass = function(view, action) {
     $('body').removeClass().addClass('logged_in admin_' + view + ' ' + action);
   };
-  
+
   var setContentClass = function(string) {
     $('#active_admin_content').removeClass().addClass(string);
   };
-  
-  var setBreadcrumb = function(items) {
-    //var breadcrumb = template.breadcrumb({items: items});
-    var view = caribou.Views.Tools.Breadcrumbs;
 
-    //$('.breadcrumb').html(view.render(items).el);
-    $('.breadcrumb').html('broken for now');
+  var setBreadcrumb = function(parts) {
+    new caribou.Views.Global.Navigation.Breadcrumb({
+      parts: parts
+    }).render().el;
   };
-  
+
   var setPageTitle = function(string) {
-    var page_title = template.pageTitle({title: string});
-    $('#page_title').html(page_title);
+    $('#page_title').html(string);
   };
-  
+
   var setFlashNotice = function(string) {
-    var flash_notice = template.flashNotice({message: string});
-    $('.flashes').html(flash_notice);
+    new caribou.Views.Global.Notification.Flash({
+      message: string,
+      type: 'notice'
+    }).render();
   };
-  
+
   var setFlashError = function(string) {
-    var flash_error = template.flashError({message: string});
-    $('.flashes').html(flash_error);
+    new caribou.Views.Global.Notification.Flash({
+      message: string,
+      type: 'error'
+    }).render();
   };
-  
+
   var setActionItems = function(view, items, label /**optional**/) {
     
     var actionItems = _.map(items, function(item) {

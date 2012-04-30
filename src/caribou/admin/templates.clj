@@ -6,6 +6,17 @@
 
   {
 
+    :global
+    { :navigation
+      { :breadcrumb
+        (html
+          [:a
+            { :href        "#"
+              :data-action "{{ action }}" }
+            "{{ label }}"]
+          [:span.breadcrumb_sep "/"])}}
+
+
     :tools
     { :action-item (html [:a {:href "#"} "{{ label }}"])}
 
