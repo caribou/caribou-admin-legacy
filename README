@@ -16,20 +16,21 @@ lein ring server
 
 Enjoy!
 
-## TODO -----------------------------
 
+## Repairs -----------------------------
 
 ensure actions work
-edit model -> required field?'s not retaining state in abstract fields
 
+edit model -> required field?'s not retaining state in abstract fields
+  sidebar
   unable to update default values on abstract fields
   sometimes they load as "false" othertime, nothing at all
 
+view model
+  sidebar
 
 new model
 render sidebar
-add views to models
-assocations
 
 render footer
 fix sorting links
@@ -39,5 +40,11 @@ breadcrumbs, fix this
 if there is no view data, render blank view
 
 
-## NOTE -------------
+## New Features -----------------------
+
+add views to models
+associations
+
+
+## NOTES ------------------------------
 

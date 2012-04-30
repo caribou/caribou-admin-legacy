@@ -319,7 +319,7 @@ VIEW TEMPLATES
 
 -->
 
-<script id="contentForGenericView" type="text/x-jquery-tmpl">
+<!--<script id="contentForGenericView" type="text/x-jquery-tmpl">
   <div id="main_content_wrapper">
     <div id="main_content">
       {{each(i, object) viewSpec.response.content.main_content}}
@@ -333,7 +333,6 @@ VIEW TEMPLATES
     {{tmpl({viewSpec: viewSpec, viewData: viewData}) "#sidebar"}}
   </div>
 </script>
-
 <script id="panel" type="text/x-jquery-tmpl">
   <div class="panel">
     <h3>${object.title}</h3>
@@ -346,7 +345,7 @@ VIEW TEMPLATES
     </div>
   </div>
 </script>
-
+-->
 <script id="sidebarPanel" type="text/x-jquery-tmpl">
   <div class="panel sidebar_section">
     <h3>${object.title}</h3>
@@ -359,7 +358,7 @@ VIEW TEMPLATES
     </div>
   </div>
 </script>
-
+<!--
 <script id="panelAttributesTable" type="text/x-jquery-tmpl">
   <div class="${viewSpec.meta.model} attributes_table" id="attributes_table_${viewSpec.meta.model}_${viewData.response.id}">
     <table border="0" cellspacing="0" cellpadding="0">
@@ -372,7 +371,7 @@ VIEW TEMPLATES
     </table>
   </div>
 </script>
-<!--
+-->
 <script id="mainContentForModelView" type="text/x-jquery-tmpl">
   <div class="panel">
     <h3>Fields (${content.fields.length})</h3>
@@ -396,7 +395,6 @@ VIEW TEMPLATES
     </div>
   </div>
 </script>
--->
 <!-- 
 
 EDIT TEMPLATES

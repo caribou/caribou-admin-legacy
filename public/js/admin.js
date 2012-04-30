@@ -368,7 +368,6 @@ caribou.admin = function() {
           viewSpec: _currentViewSpec,
           viewData: _currentViewData
         });
-
       	//var content = template.contentForGenericView({
         //  viewSpec: _currentViewSpec, viewData: _currentViewData});
         $('#active_admin_content').html(content.render().el);

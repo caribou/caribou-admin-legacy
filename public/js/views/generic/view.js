@@ -2,46 +2,42 @@ _.provide('caribou.Views.Generic');
 
 caribou.Views.Generic.View = Backbone.View.extend({
 
-  className: 'panel',
+  id: 'main_content_wrapper',
 
   template: caribou.templates.generic.view.main,
 
 
 
   initialize: function() {
-    _.bindAll(this, 'renderFieldRow');
+    _.bindAll(this, 'renderPanel');
     _.reverseExtend(this, this.options);
   },
 
 
 
   render: function() {
-    var fields = this.viewData.response.fields;
-
-    var output = _.template(this.template, {
-      fieldsLength: fields.length
-    });
+    var output = _.template(this.template);
 
     this.$el.html(output);
 
-    // Render each of the table rows
-    _.each(fields, this.renderFieldRow);
+    // Render each of the panels
+    _.each(this.viewSpec.response.content.main_content, this.renderPanel);
+
+
     return this;
   },
 
 
 
-  renderFieldRow: function(field, i) {
-    var td = this.make('td'),
+  renderPanel: function(panel, i) {
 
-        row = this.make('tr', {
-          'class': i%2==0 ? 'odd' : 'even'
-        },[
-          td.text(field.name),
-          td.text(field.type)
-        ]);
+    var view = new caribou.Views.Generic.View.Panel({
+      viewSpec: this.viewSpec,
+      viewData: this.viewData,
+      object: panel
+    });
 
-    $('table tbody', this.$el).append(row);
+    $('#main_content', this.$el).append(view.render().el);
   }
 
 

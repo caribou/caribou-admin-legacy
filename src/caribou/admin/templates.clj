@@ -202,21 +202,41 @@
       :view
       { :main
         (html
-          [:h3 "Fields ({{ fieldsLength }})"]
-          [:div.panel_contents
+          [:div#main_content
+            ;; ----------------------
+            ;; Panels populated by js
+            ;; ----------------------
+            ]
+          [:div#sidebar
+            ;; -----------------------
+            ;; Sidebar populated by js
+            ;; -----------------------
+            ])
+
+         :panel
+          (html
+            [:h3 "{{ objectTitle }}"]
+            [:div.panel_contents
+              ;; ---------------------
+              ;; Table populated by js
+              ;; ---------------------
+              ])
+
+         :panel-attributes-table
+          (html
             [:table
-              { :border "0"
-                :cellspacing "0"
-                :cellpadding "0" }
-              [:thead
-                [:tr
-                  [:th "Name"]
-                  [:th "Type"]]]
-              [:tbody
-                ;; --------------------
-                ;; Rows populated by js
-                ;; --------------------
-                ]]])}
+                { :border "0"
+                  :cellspacing "0"
+                  :cellpadding "0" }
+                [:thead
+                  [:tr
+                    [:th "Name"]
+                    [:th "Type"]]]
+                [:tbody
+                  ;; --------------------
+                  ;; Rows populated by js
+                  ;; --------------------
+                  ]])}
 
 
       :edit
