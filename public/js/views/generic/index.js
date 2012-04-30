@@ -9,8 +9,14 @@ caribou.Views.Generic.Index = Backbone.View.extend({
 
 
   initialize: function() {
-    _.bindAll(this, 'renderColumnHead', 'renderRow');
+    _.bindAll(this, 'renderColumnHead', 'renderRow', 'applyScope');
     _.reverseExtend(this, this.options);
+  },
+
+
+
+  events: {
+    'click a.table_tools_button': 'applyScope'
   },
 
 
@@ -22,6 +28,15 @@ caribou.Views.Generic.Index = Backbone.View.extend({
     // Render template
     this.$el.html(output);
 
+    // Render scopes
+    if(this.viewSpec.response.content.main_content.scopes.length) {
+      var scopes = _.template(caribou.templates.generic.index.scopes, {
+        count: this.viewData.meta.count
+      });
+
+      $('#main_content', this.$el).prepend(scopes);
+    }
+
     // Render the table header columns
     _.each(table.columns, this.renderColumnHead);
 
@@ -31,6 +46,14 @@ caribou.Views.Generic.Index = Backbone.View.extend({
 
     // Render each of the rows
     _.each(this.viewData.response, this.renderRow);
+
+    // Render the footer
+    var footer = new caribou.Views.Generic.Index.Footer({
+      viewSpec: this.viewSpec,
+      viewData: this.viewData
+    });
+
+    $('.paginated_collection_contents', this.$el).after(footer.render().el);
 
     return this;
   },
@@ -53,6 +76,26 @@ caribou.Views.Generic.Index = Backbone.View.extend({
       table: this
     });
     $('.index_table tbody', this.$el).append(view.render().el);
+  },
+
+
+
+  applyScope: function(e) {
+    e.preventDefault();
+
+    var viewDataMeta = this.viewData.meta,
+
+        params = {
+          page      : viewDataMeta.page,
+          page_size : viewDataMeta.page_size,
+          order_by  : viewDataMeta.order_by,
+          order     : viewDataMeta.order,
+          scope     : 'all' },
+
+        url = [this.viewSpec.meta.view.slug, $param(params)].join('?');
+
+    caribou.go(url);
+
   }
 
 

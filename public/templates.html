@@ -235,7 +235,7 @@ INDEX TEMPLATES
     {{tmpl({viewSpec: viewSpec, viewData: viewData}) "#sidebarForGenericList"}}
   </div>
 </script>-->
-
+<!--
 <script id="scopes" type="text/x-jquery-tmpl">
   {{if viewSpec.response.content.main_content.scopes.length > 0}}
   <div class="table_tools">
@@ -250,7 +250,7 @@ INDEX TEMPLATES
   </div>
   {{/if}}
 </script>
-
+-->
 <!--<script id="mainContentForGenericRow" type="text/x-jquery-tmpl">
   {{each(i, column) viewSpec.response.content.main_content.table.columns}}
   {{tmpl({viewSpec: $data.viewSpec, columnSpec: column, rowData: $data.rowData}) "#" + column.format + "Cell"}}
@@ -273,7 +273,7 @@ INDEX TEMPLATES
 <script id="linkCell" type="text/x-jquery-tmpl">
   <td><a href="javascript:;" onclick="caribou.go('/${viewSpec.meta.view.slug}/${rowData.id}')">${rowData[columnSpec.slug]}</a></td>
 </script>-->
-
+<!--
 <script id="indexFooter" type="text/x-jquery-tmpl">
   <div id="index_footer">
     <nav class="pagination">
@@ -296,7 +296,6 @@ INDEX TEMPLATES
       </span>
       {{/if}}
       {{/each}}
-      <!--<span class="page gap">...</span>-->
       {{if viewData.meta.page < viewData.meta.total_pages}}
       <span class="next">
         <a href="javascript:;" onclick="caribou.go('/${viewSpec.meta.view.slug}?page=${viewData.meta.page+1}&page_size=${viewData.meta.page_size}&order_by=${viewData.meta.order_by}&order=${viewData.meta.order}')" rel="next">Next &rsaquo;</a>
@@ -312,7 +311,7 @@ INDEX TEMPLATES
     <div class="download_links">Download:&nbsp;<a href="${caribou.remoteAPI}/${viewSpec.meta.view.slug}.csv">CSV</a>&nbsp;<a href="#{caribou.remoteAPI}/${viewSpec.meta.view.slug}.xml">XML</a>&nbsp;<a href="#{caribou.remoteAPI}/${viewSpec.meta.view.slug}.json">JSON</a></div>
   </div>
 </script>
-
+-->
 <!-- 
 
 VIEW TEMPLATES

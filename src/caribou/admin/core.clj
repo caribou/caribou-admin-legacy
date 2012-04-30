@@ -71,6 +71,7 @@
         "/js/views/tools/breadcrumb.js"
         "/js/views/generic/edit.js"
         "/js/views/generic/index.js"
+        "/js/views/generic/index/footer.js"
         "/js/views/generic/view.js"
         "/js/views/generic/view/panel.js"
         "/js/views/generic/view/panel-attributes-table.js"
@@ -78,6 +79,7 @@
         "/js/views/generic/table/header-column.js"
         "/js/views/generic/table/row.js"
         "/js/views/generic/table/column.js"
+        "/js/views/generic/global/navigation/tabs.js"
         "/js/views/abstract/row-for-model-edit.js")
       (slurp "public/templates.html")]]]))
 

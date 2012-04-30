@@ -5,6 +5,7 @@
 (def templates
 
   {
+
     :tools
     { :action-item (html [:a {:href "#"} "{{ label }}"])}
 
@@ -191,6 +192,41 @@
                         ;; Rows populated by js
                         ;; --------------------
                         ]]]]]]])
+
+        :footer
+        (html
+          [:nav.pagination
+            ;; --------------------------
+            ;; Navigation populated by js
+            ;; --------------------------
+            ]
+          [:div.pagination_information
+            "Displaying {{ viewLabel }} <b>{{ rangeStart }} - {{ rangeEnd }}</b> "
+            "of <b>{{ totalItems }}</b> in total"]
+          [:div.download_links
+            "Download: "
+            [:a
+              { :href "{{ csvUrl }}" }
+              "CSV"]
+            "&nbsp;"
+            [:a
+              { :href "{{ xmlUrl }}" }
+              "XML"]
+            "&nbsp;"
+            [:a
+              { :href "{{ jsonUrl }}" }
+              "JSON"]])
+
+
+        :scopes
+        (html
+          [:ul.scopes.table_tools_segmented_control
+            [:li.scope.all.selected
+              [:a.table_tools_button
+                { :href "#" }
+                "All"
+                [:span.count "{{ count }}"]]]])
+
 
         :sidebar
         (html

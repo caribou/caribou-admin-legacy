@@ -112,8 +112,13 @@ caribou.admin = function() {
   var setTabbedNavigation = function(view) {
     if ($('#tabs').html() == '') {
       var choices = _.map(_allViewsSpec.response, parseAllViewsSpec);
-      var tabs = template.tabbedNavigation({chosen: view, choices: choices});
-      $('#tabs').html(tabs);
+      //var tabs = template.tabbedNavigation({chosen: view, choices: choices});
+      //$('#tabs').html(tabs);
+
+      new caribou.Views.Generic.Global.Navigation.Tabs({
+        chosen: view,
+        choices: choices
+      }).render();
     }
     nav.highlight(view);
   };
