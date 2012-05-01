@@ -163,27 +163,27 @@ caribou.admin = function() {
   };
 
   var setActionItems = function(view, items, label /**optional**/) {
-    
+
     var actionItems = _.map(items, function(item) {
       var view = new caribou.Views.Tools.ActionItem;
-      return view.render(item).el;      
+      return view.render(item).el;
     });
-    
+
     // Eventually will just be this:
     //
     // var actionItems = _.map(items, function(item) {
     //   return template['tools/action-item'](item);
     // });
-    
+
     $('.action_items').html(actionItems);
   };
-  
+
   /*//////////////////////////////////////////////
   //
   // VIEW SPECIFIC METHODS EXPOSED THROUGH ROUTES
   //
   *///////////////////////////////////////////////
-  
+
   var contentCreate = function(name) {
     var data = caribou.formData('#'+name+'_edit');
     var url = '/' + name;
@@ -249,7 +249,7 @@ caribou.admin = function() {
       }
     });
   };
-  
+
   fieldDeleteLink = function(e){
     var tr = $(this).parents('tr');
     var name = $(tr).find('input')[0].name.match(/\[([^\]]+)\]/)[1];
@@ -263,7 +263,7 @@ caribou.admin = function() {
 
     $(tr).remove();
   };
-    
+
   var getModel = function(url, params, query, success) {
     caribou.api.get({
       url: url,
@@ -274,13 +274,13 @@ caribou.admin = function() {
       }
     });
   };
-  
+
   var loginView = {
     init: function(params, query) {
       console.log("loginView.init");
     }
   };
-  
+
   var passwordView = {
     new: {
       init: function(params, query) {
@@ -378,12 +378,13 @@ caribou.admin = function() {
         //  viewSpec: _currentViewSpec, viewData: _currentViewData});
         $('#active_admin_content').html(content.render().el);
 
+
         // var sidebar = renderTemplate(model.slug, "sidebarFor{{ model }}Edit", {
         //   model: model, 
         //   content: {}, 
         //   action: 'update'
         // });
-        // $('#sidebar').html(sidebar);
+//        $('#sidebar').html(sidebar.render().el);
       }
     },
 
@@ -426,6 +427,18 @@ caribou.admin = function() {
 
         $('#active_admin_content').html(content.render().el);
 
+        var model = caribou.models[_.singularize(params.view)];
+
+        var sidebar = new caribou.Views.Generic.Edit.Sidebar({
+          model: model,
+          viewData: _currentViewData,
+          viewSpec: _currentViewSpec,
+          action: 'update'
+        }).render().el;
+
+        $('#active_admin_content').append(sidebar);
+
+
         // This may want to get moved out to another, more "global" location
         $('.sortable').sortable({
           axis: 'y',
@@ -451,6 +464,7 @@ caribou.admin = function() {
       init: function(params) {
         setTabbedNavigation(params.model);
         var model = caribou.models[_.singularize(params.model)];
+
 
         var sidebar = renderTemplate(model.slug, "sidebarFor{{ model }}Edit", {
           model: model, 
@@ -505,6 +519,7 @@ caribou.admin = function() {
       newField: function(slug, type) {
         var index = $('.model_fields_edit_table table tbody tr').length;
         var field = template['abstractFieldForModelEdit']({model: caribou.models[slug], field: {type: type, model_position: index}, index: index, fieldTypes: caribou.modelFieldTypes()});
+
         $('.model_fields_edit_table table tbody').append(field);
         $('.delete_link').click(fieldDeleteLink);
       }

@@ -48,11 +48,9 @@ FLASH TEMPLATES
 
 ACTION ITEMS TEMPLATES
 
--->
 
 <script id="actionItems" type="text/x-jquery-tmpl">
   {{each(i, item) items}}
-  <!-- {{if (/new/).test(item.action)}}<span class="action_item"><a href="javascript:;" onclick="caribou.go('${item.action}')">${label}</a></span>{{/if}} -->
   <span class="action_item"><a href="javascript:;" onclick="caribou.go('${item.action}')">${label}</a></span>
   {{/each}}
 </script>
@@ -66,7 +64,6 @@ ACTION ITEMS TEMPLATES
   <span class="action_item"><a href="/${model.slug}/${content.id}" data-confirm="Are you sure you want to delete this?" data-method="delete" rel="nofollow">Delete ${model.name}</a></span>
 </script>
 
-<!-- 
 
 SIDEBAR TEMPLATES
 
@@ -74,7 +71,7 @@ SIDEBAR TEMPLATES
 
 <script id="sidebar" type="text/x-jquery-tmpl">
   {{each(i, object) viewSpec.response.content.sidebar}}
-  {{if object.type == "sidebarPanel"}}
+
   {{tmpl({viewSpec: $data.viewSpec, viewData: $data.viewData, object: object}) "#sidebarPanel"}}
   {{/if}}
   {{/each}}
@@ -112,7 +109,7 @@ SIDEBAR TEMPLATES
     <div class="panel_contents">This is the demo app for <a href="http://activeadmin.info">Active Admin</a>. Don't hesitate to check out the <a href="https://github.com/gregbell/demo.activeadmin.info/blob/master/app/admin/orders.rb">source code for this page</a>, the <a href="http://activeadmin.info/documentation.html">Documentation</a> and the <a href="https://github.com/gregbell/active_admin">Github Repo</a>.</div>
   </div>
 </script>
-
+<!--
 <script id="sidebarForModelEdit" type="text/x-jquery-tmpl">
   <div class="panel sidebar_section" id="filters_sidebar_section">
     <h3>Model Details</h3>
@@ -137,34 +134,10 @@ SIDEBAR TEMPLATES
       {{each(i, type) _.keys(fieldTypes)}}
       <div onclick="caribou.admin.modelView.edit.newField('${$data.content.slug}', '${type}')" class="type">${$data.fieldTypes[type].name}</div>
       {{/each}}
-      <!-- <a href="">Single Line Text</a> -->
-      <!-- <a href="">Paragraph Text</a> -->
-      <!-- <a href="">Slug</a> -->
-      <!-- <a href="">Asset</a> -->
-      <!-- <a href="">Related Data</a> -->
-      <!-- <a href="">Drop Down</a> -->
-      <!-- <a href="">Multiple Choice</a> -->
-      <!-- <a href="">Checkbox</a> -->
-      <!-- <br><br> -->
-      <!-- <a href="">Number</a> -->
-      <!-- <a href="">Date / Time</a> -->
-      <!-- <a href="">Duration</a> -->
-      <!-- <a href="">Calculation</a> -->
-      <!-- <a href="">Price</a> -->
-      <!-- <a href="">Automatic Counter</a> -->
-      <!-- <a href="">Rating</a> -->
-      <!-- <a href="">Encrypted</a> -->
-      <!-- <br><br> -->
-      <!-- <a href="">Address</a> -->
-      <!-- <a href="">Phone Number</a> -->
-      <!-- <a href="">Email Address</a> -->
-      <!-- <a href="">URL</a> -->
-      <!-- <a href="">IM Account</a> -->
-      <!-- <br><br> -->
     </div>
   </div>
 </script>
-
+-->
 <!-- 
 
 DASHBOARD TEMPLATES

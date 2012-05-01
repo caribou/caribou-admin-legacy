@@ -9,8 +9,14 @@ caribou.Views.Abstract.RowForModelEdit = Backbone.View.extend({
 
 
   initialize: function() {
-    _.bindAll(this, 'renderFieldOptions');
+    _.bindAll(this, 'renderFieldOptions', 'deleteField');
     _.reverseExtend(this, this.options);
+  },
+
+
+
+  events: {
+    'click .delete_link': 'deleteField'
   },
 
 
@@ -81,6 +87,28 @@ caribou.Views.Abstract.RowForModelEdit = Backbone.View.extend({
 
     $('.options:first', this.$el).html($field);
 
+  },
+
+
+
+  // TODO: Refactor this
+  deleteField: function(e) {
+    e.preventDefault();
+
+    var $tr   = $(e.target).closest('tr'),
+        name  = $('input', $tr).attr('name').match(/\[([^\]]+)\]/)[1],
+        id    = $('.model_id', $tr).val(),
+        // 'removed' refers to the hidden input that tracks the removed fields
+        removed = $('#removed_' + name),
+        // 'sofar' is just the fields that have already been added to the list
+        sofar = removed.val();
+
+    // If our attribute/field is part of the model (wasn't added dynamically)
+    // then we want to add it to the removed list for the request
+    if(id)
+      removed.val(sofar ? [sofar, id].join(',') : id);
+
+    $tr.remove();
   }
 
 });
