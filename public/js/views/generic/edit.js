@@ -53,6 +53,28 @@ caribou.Views.Generic.Edit = Backbone.View.extend({
     _.each(abstractFields, this.renderAbstractField);
 
 
+    // Render the sidebar
+    var sidebar = new caribou.Views.Generic.Sidebar({
+      viewSpec: this.viewSpec,
+      viewData: this.viewData,
+      panels: {
+        'model-details': {
+          id: ['attributes_table', this.viewSpec.meta.view.slug, this.viewData.response.id].join('_'),
+          className: this.viewSpec.meta.view.slug
+        },
+        'editable-fields': {}
+      }
+    });
+
+
+    // FIXME: This is a little janky right now, but we can't insert
+    // an element _after_ another until its actually in the DOM
+    var $el = this.$el;
+    this.el.addEventListener('DOMNodeInserted', _.once(function() {
+      $el.after(sidebar.render().el);
+    }), false);
+
+
     return this;
   },
 

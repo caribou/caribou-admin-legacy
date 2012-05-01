@@ -14,6 +14,14 @@ _.mixin({
   },
 
 
+  // Capitalize only the first character of a string
+  // with no affect on the rest
+  // 'foo bar' => 'Foo bar'
+  lazyCapitalize: function(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1)
+  },
+
+
   // Slugify (parameterize) a string
   // 'Foo Bar' => 'foo_bar'
   slugify: function(string) {
@@ -53,6 +61,15 @@ _.mixin({
     return _.map(_.rest(string.match(/^(.*[a-z])([A-Z].*)$/)), function(bit) {
       return bit.toLowerCase();
     }).join('-');
+  },
+
+
+  // Deparameterize paramterized strings
+  // 'default-string' => 'defaultString'
+  deparameterize: function(string) {
+    return _.map(string.split('-'), function(bit, i) {
+      return i ? _.capitalize(bit) : bit;
+    }).join('');
   }
 
 

@@ -429,14 +429,14 @@ caribou.admin = function() {
 
         var model = caribou.models[_.singularize(params.view)];
 
-        var sidebar = new caribou.Views.Generic.Edit.Sidebar({
-          model: model,
-          viewData: _currentViewData,
-          viewSpec: _currentViewSpec,
-          action: 'update'
-        }).render().el;
+        // var sidebar = new caribou.Views.Generic.Edit.Sidebar({
+        //   model: model,
+        //   viewData: _currentViewData,
+        //   viewSpec: _currentViewSpec,
+        //   action: 'update'
+        // }).render().el;
 
-        $('#active_admin_content').append(sidebar);
+        // $('#active_admin_content').append(sidebar);
 
 
         // This may want to get moved out to another, more "global" location

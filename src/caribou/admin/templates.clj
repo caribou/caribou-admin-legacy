@@ -332,17 +332,17 @@
                 [:li.commit.button
                   [:a.button { :href "#" } "{{ action }} {{ label }}"]]
                 [:li.cancel
-                  [:a { :href "#" } "Cancel"]]]]]])
+                  [:a { :href "#" } "Cancel"]]]]]])}
 
 
-        :sidebar
+     :sidebar
+      { :model-details
         (html
           [:div#filters_sidebar_section.panel.sidebar_section
             [:h3 "Model Details"]
             [:div.panel_contents
               [:div
-                { :id "{{ id }}"
-                  :class "attributes_table {{ className }}" }
+                { :class "attributes_table {{ className }}" }
                 [:table
                   { :border "0"
                     :cellspacing "0"
@@ -350,14 +350,18 @@
                   ;; --------------------
                   ;; Rows populated by js
                   ;; --------------------
-                  ]]]]
+                  ]]]])
+
+        :editable-fields
+        (html
           [:div#fields_sidebar_section.panel.sidebar_section
             [:h3 "Model Builder"]
             [:div.panel_contents
               ;; ----------------------
               ;; Fields populated by js
               ;; ----------------------
-              ]])}}
+              ]])
+        }}
 
 
 
