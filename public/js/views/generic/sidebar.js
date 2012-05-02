@@ -52,15 +52,16 @@ caribou.Views.Generic.Sidebar = Backbone.View.extend({
   renderModelDetails: function() {
     var _this = this, data = this.panels['model-details'];
 
-    // Render attributes
+    // Weeding out the associated fields for now
     var attributes = _.filter(this.model.fields, function(field) {
-      return !field.editable || field.slug === 'position';
+      return field.slug !== 'fields';
     });
-
 
     _.each(attributes, function(attribute) {
       var attr    = _this.viewData.response[attribute.slug],
-          content = attr || _this.make('span', {'class': 'empty'}, 'Empty'),
+          content = _.isNull(attr)
+                      ? _this.make('span', {'class': 'empty'}, 'Empty')
+                      : attr.toString(),
           $tr     = $(_this.make('tr')),
           th      = _this.make('th', {}, attribute.name),
           td      = _this.make('td', {}, content);

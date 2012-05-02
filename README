@@ -17,34 +17,70 @@ lein ring server
 Enjoy!
 
 
-## Repairs -----------------------------
+## FIXME -----------------------------
+
+When trying to access a model (i.e. /newer_model)
+I get a 500
+org.postgresql.util.PSQLException: ERROR: relation "views" does not exist
+
+
+fix new models
+  - Fields are not saved to model (probably due to the next item, postgres is looking for an 'undefined' id)
+  - Get rid of "undefined" values in request
+  - Uncaught TypeError: Cannot read property 'fields' of undefined (could be related to model loading bug)
+  - error: error rendering /model: org.postgresql.util.PSQLException: ERROR: column "undefined" does not exist
+    (seems this may just be a problem with the redirect)
+  - Need failure states for api requests (Also need proper status returning from the api)
+  - Need to move update params to form body, can't rely on url lengths
+
+view models
+  - Model details are a little light compared to previous version
+  - Edit from view doesn't work
+  - Figure out wth is going on with the field rendering, it doesn't make sense and appears broken on proper
+
+edit models
+  - Edit locale_id
+
+
 
 ensure actions work
 
-edit model -> required field?'s not retaining state in abstract fields
-  sidebar
-  unable to update default values on abstract fields
-  sometimes they load as "false" othertime, nothing at all
-
-view model
-  sidebar
-
 new model
-render sidebar
 
-render footer
 fix sorting links
 
-fix routes (going straight to /models/ doesn't render anything)
-breadcrumbs, fix this
 if there is no view data, render blank view
 
 
-## New Features -----------------------
+# TODO
 
-add views to models
+create instances of models
 associations
+fix model loading bug (can't go directly to /edit page)
+
+slug field:
+  - overrides the default slug
+  - user can either enter free text or choose another field to slugify
+  - this will slugify the value of the field chosen
+  - would be cool to allow multiple field references -MW
 
 
-## NOTES ------------------------------
+# Questions
 
+
+## UI NOTES ------------------------------
+
+New/Edit
+  - Adding fields: Better indication to rename the field, needs a pointer to indicate a click
+  - Do we need Model Details on the New page?
+
+Flash notices need to disappear
+
+
+## General Notes
+
+associations:
+  collection is the has many 1..n
+  part is the belongs to n..1
+  link is a habtm n..n
+  each of these fields needs to allow the user to override the name (think followee/follower on self-ref)

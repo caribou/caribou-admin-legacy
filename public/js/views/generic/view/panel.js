@@ -25,10 +25,7 @@ caribou.Views.Generic.View.Panel = Backbone.View.extend({
 
 
     // Render attributes tables
-    var contents = _.filter(this.object.contents, function(c) {
-      return c.type === 'panelAttributesTable'
-    });
-    _.each(contents, this.renderPanelAttributesTable);
+    this.renderPanelAttributesTable(this.viewData.response.fields);
 
     return this;
   },

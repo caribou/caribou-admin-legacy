@@ -1,6 +1,7 @@
 _.provide('caribou.Views.Generic');
 
-caribou.Views.Generic.Edit = Backbone.View.extend({
+
+caribou.Views.Generic.New = Backbone.View.extend({
 
   id: 'main_content_wrapper',
 
@@ -9,14 +10,14 @@ caribou.Views.Generic.Edit = Backbone.View.extend({
 
 
   initialize: function() {
-    _.bindAll(this, 'renderFieldset', 'renderAbstractField', 'updateModel');
+    _.bindAll(this, 'renderFieldset', 'renderAbstractField', 'createModel');
     _.reverseExtend(this, this.options);
   },
 
 
 
   events: {
-    'click .commit a': 'updateModel'
+    'click .commit a': 'createModel'
   },
 
 
@@ -41,14 +42,6 @@ caribou.Views.Generic.Edit = Backbone.View.extend({
       return item.type === 'fieldset';
     });
     _.each(fieldsets, this.renderFieldset);
-
-
-    // Render hidden input
-    $('form div:first', this.$el).html(this.make('input', {
-      type  : 'hidden',
-      name  : this.viewSpec.meta.model + '[id]',
-      value : this.viewData.response.id
-    }));
 
 
     // Render abstract fields on model
@@ -106,11 +99,10 @@ caribou.Views.Generic.Edit = Backbone.View.extend({
   },
 
 
-
-  updateModel: function(e) {
+  createModel: function(e) {
     e.preventDefault();
-    caribou.admin.update(this.viewSpec.meta.model, this.viewSpec.meta.view.slug);
-  }
 
+    caribou.admin.create(this.viewSpec.meta.model);
+  }
 
 });

@@ -26,12 +26,12 @@ caribou.Views.Abstract.RowForModelEdit = Backbone.View.extend({
         field = this.field;
 
     var output = _.template(this.template, {
-      name          : field.name,
-      type          : field.type,
-      id            : field.id,
+      name          : field.name                  || '', // Can't let 'undefined' values go in
+      type          : field.type                  || '',
+      id            : field.id                    || '',
       index         : this.index,
-      fieldType     : fieldTypes[field.type].name,
-      modelPosition : field.model_position,
+      fieldType     : fieldTypes[field.type].name || '',
+      modelPosition : field.model_position        || '',
       className     : field.type === 'string' ? 'string_field' : ''
     });
 

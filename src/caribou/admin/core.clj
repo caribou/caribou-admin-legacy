@@ -69,6 +69,7 @@
       (include-js
         "/js/views/tools/action-item.js"
         "/js/views/generic/edit.js"
+        "/js/views/generic/new.js"
         "/js/views/generic/sidebar.js"
         "/js/views/generic/index.js"
         "/js/views/generic/index/footer.js"

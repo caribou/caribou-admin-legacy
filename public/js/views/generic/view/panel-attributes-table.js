@@ -16,7 +16,17 @@ caribou.Views.Generic.View.PanelAttributesTable = Backbone.View.extend({
 
 
   render: function() {
+    // FIXME: This stuff is in a state of confustion
+    // Not sure what this view is supposed to display
+    // At one time it appeared to rely on the panel
+    //   attributes defined in the spec but that
+    //   was always empty
+    //
+    // Considered in a state of flux
 
+
+    var output = _.template(this.template);
+    this.$el.html(output);
 
     // Update class and id attrs
     this.$el.addClass(this.viewSpec.meta.model);
@@ -28,7 +38,7 @@ caribou.Views.Generic.View.PanelAttributesTable = Backbone.View.extend({
 
 
     // Render the table rows
-    _.each(this.object.contents, this.renderTableRow);
+    _.each(this.object, this.renderTableRow);
 
     return this;
   },
@@ -40,9 +50,9 @@ caribou.Views.Generic.View.PanelAttributesTable = Backbone.View.extend({
 
         td        = this.make('td'),
 
-        label     = this.make('label', {
+        label     = this.make('td', {
                       'class': 'label'
-                    }, field.label),
+                    }, field.name),
 
         emptySpan = this.make('span', {
                       'class': 'empty'
@@ -50,10 +60,10 @@ caribou.Views.Generic.View.PanelAttributesTable = Backbone.View.extend({
 
         fieldData = this.viewData.response[field.slug],
 
-        content   = $(td).html(fieldData ? fieldData : emptySpan);
+        content   = $(td).html(field.type ? field.type : emptySpan);
 
 
-    $('table', this.$el).append( $(tr).html([label, content]) );
+    $('table', this.$el).append( $(tr).append(label).append(content) );
   }
 
 });

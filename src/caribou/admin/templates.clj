@@ -293,7 +293,7 @@
             [:form
               { :accept-charset "UTF-8"
                 :action "{{ action }}"
-                :class "formtastic {{ model }}"
+                :class "{{ model }}"
                 :id "{{ model }}_edit" }
 
             ;; Placeholder div, populated by js

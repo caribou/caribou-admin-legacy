@@ -265,6 +265,9 @@ caribou.admin = function() {
   };
 
   var getModel = function(url, params, query, success) {
+    // FIXME: temporary hack to include all fields on a model
+    query.include = 'fields';
+
     caribou.api.get({
       url: url,
       data: query,
@@ -417,8 +420,6 @@ caribou.admin = function() {
         setPageTitle(_currentViewSpec.response.title_bar.page_title);
         setActionItems(_currentView, _currentViewSpec.response.title_bar.action_items);
         setContentClass("with_sidebar");
-      	//var content = template.contentForGenericEdit({
-        //  viewSpec: _currentViewSpec, viewData: _currentViewData, action: "update"});
 
         var content = new caribou.Views.Generic.Edit({
           viewSpec: _currentViewSpec,
@@ -428,15 +429,6 @@ caribou.admin = function() {
         $('#active_admin_content').html(content.render().el);
 
         var model = caribou.models[_.singularize(params.view)];
-
-        // var sidebar = new caribou.Views.Generic.Edit.Sidebar({
-        //   model: model,
-        //   viewData: _currentViewData,
-        //   viewSpec: _currentViewSpec,
-        //   action: 'update'
-        // }).render().el;
-
-        // $('#active_admin_content').append(sidebar);
 
 
         // This may want to get moved out to another, more "global" location
@@ -456,65 +448,70 @@ caribou.admin = function() {
             });
           }
         }).disableSelection();
-        
+
       }
     },
-    
+
     new: {
-      init: function(params) {
-        setTabbedNavigation(params.model);
-        var model = caribou.models[_.singularize(params.model)];
+      init: function(params, query) {
+        _currentView = params.model; // FIXME: why is this params.model, but edit has params.view?
+        _currentAction = 'new';
 
+        caribou.api.get({
+          url: "/views/" + _currentView + "." + _currentAction + ".spec.json",
+          data: query,
+          success: function(response) {
+          	_currentViewSpec = response;
+          	var url = "/" + _currentViewSpec.meta.model + "/" + _currentId;
 
-        var sidebar = renderTemplate(model.slug, "sidebarFor{{ model }}Edit", {
-          model: model, 
-          content: {}, 
-          action: 'update'
+            // WARNING: Grabbing all associated objects too
+            var associatedFields = _.filter(caribou.models[_currentViewSpec.meta.model].fields, function(field) {
+              return field.type === 'collection' });
+
+            query['include'] = _.pluck(associatedFields, 'slug').join(',');
+
+            //getModel(url, params, query, genericView['new'].draw);
+            genericView['new'].draw()
+          }
         });
-        $('#sidebar').html(sidebar);
+      },
+      draw: function() {
+        setTabbedNavigation(_currentView);
 
-        var main_content = renderTemplate(model.slug, "mainContentFor{{ model }}Edit", {
+        var content = new caribou.Views.Generic.New({
           viewSpec: _currentViewSpec,
-          model: model, 
-          content: {}, 
-          action: 'create'
-        });
-        $('#main_content').html(main_content);
-        
-        var upload = caribou.api.upload(function(response) {
-          var src = caribou.remoteAPI+'/'+response.url;
-          $('#'+response.context+'_asset').val(response.asset_id);
-          $('#'+response.context+'_thumbnail').append('<a target="_blank" href="'+src+'"><img src="'+src+'" height="100" /></a>');
-          $('#upload_dialog').dialog("close");
-        });
+          viewData: _currentViewData,
+          action: 'create'});
+
+        $('#active_admin_content').html(content.render().el);
       }
     },
-    
+
     create: {
       init: function() {
-        
+
       }
     },
-    
+
     update: {
       init: function() {
-        
+
       }
     },
-    
+
     delete: {
       init: function() {
-        
+
       }
     }
-    
+
   };
-  
+
   var modelView = {
-  
+
     edit: {
       init: function() {
-        
+
       },
       newField: function(slug, type) {
         var index = $('.model_fields_edit_table table tbody tr').length;
@@ -524,20 +521,20 @@ caribou.admin = function() {
         $('.delete_link').click(fieldDeleteLink);
       }
     }
-    
+
   };
-  
+
   var showUploadForm = function(context) {
     $('#upload_context').val(context);
     $('#upload_dialog').dialog('open');
   };
-  
+
   /*//////////////////////////////////////////////
   //
   // SETUP ROUTING
   //
   *///////////////////////////////////////////////
-  
+
   caribou.routing.add('/login', 'login', loginView.init);
   caribou.routing.add('/password/new', 'new', passwordView.new.init);
   caribou.routing.add('/', 'dashboard', dashboardView.init);
@@ -545,13 +542,13 @@ caribou.admin = function() {
   caribou.routing.add('/:model/new', 'new', genericView.new.init);
   caribou.routing.add('/:view/:id', 'view', genericView.view.init);
   caribou.routing.add('/:view/:id/edit', 'edit', genericView.edit.init);
-  
+
   /*//////////////////////////////////////////////
   //
   // RETURN BLOCK
   //
   *///////////////////////////////////////////////
-  
+
   return {
     init: function() {
       caribou.init();
@@ -577,7 +574,7 @@ caribou.admin = function() {
     slugOptions: slugOptions,
     showUploadForm: showUploadForm
   };
-  
+
 }();
 
 
