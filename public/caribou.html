@@ -525,6 +525,17 @@ MODEL FIELD FORM TEMPLATES
   </div>
 </script>
 
+<script id="linkFieldOptions" type="text/x-jquery-tmpl">
+  <div class="field">
+    <label for="">Target Model</label>
+    <select name="model[fields][${index}][target_id]">
+      {{each(i, name) caribou.modelNames}}
+      <option{{if field.default_value == caribou.models[name].id}} selected="selected"{{/if}} value="${ caribou.models[name].id }">${ caribou.models[name].name }</option>
+      {{/each}}
+    </select>
+  </div>
+</script>
+
 <script id="slugLinkFieldOptions" type="text/x-jquery-tmpl">
   <div class="field">
     <label for="">Linked field</label>
