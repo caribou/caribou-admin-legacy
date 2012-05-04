@@ -151,8 +151,8 @@ caribou.admin = function() {
   *///////////////////////////////////////////////
   
   var contentCreate = function(name) {
-    var data = caribou.formData('#'+name+'_edit');
-    var url = '/' + name;
+    var data = caribou.formData('#'+name+'_edit'),
+        url = '/' + name;
 
     caribou.api.post({
       url: url,
@@ -433,7 +433,75 @@ caribou.admin = function() {
           action: 'create'
         });
         $('#main_content').html(main_content);
-        
+
+
+        // Grab all instances of models for all collections
+        // Then build up inputs for each
+        _.each(model.fields, function(field) {
+
+          if(/collection|link|part/.test(field.type)) {
+
+            caribou.api.get({
+              url: ['/', field.target().slug].join(''),
+              success: function(resp) {
+
+                // Build select input
+                var $select = $('<select style="width:76%" />');
+                $select
+                  .attr('data-placeholder', 'Select ' + _.capitalize(field.slug))
+                  .attr('name', model.slug +'['+ field.slug +'_id]');
+
+                // Make it a multiple select if the field is a collection or link
+                if(/collection|link/.test(field.type)) {
+                  $select.attr('multiple', true);
+                  $select.attr('name', model.slug +'['+ field.slug +'][][id]');
+                }
+
+                // Build the options
+                _.each(resp.response, function(instance) {
+                  var $option = $('<option />', {
+                    value: instance.id
+                  })
+                  .text(instance.id);
+
+                  $select.append($option);
+                });
+
+                // Prepend a blank option
+                $select.prepend($('<option/>'));
+
+                // Insert into the DOM
+                var selector = '#' + [model.slug, field.slug, 'input'].join('_');
+                $(selector).append($select);
+
+                // Chosen-ify it so it looks pretty
+                // Also allows us to set values for hidden fields
+                $select.chosen().change(function(e) {
+
+                  // Temporary: reset the hidden inputs
+                  //$(selector).find('input[type=hidden]').remove();
+
+                  //// Setup an input template
+                  //var $input = $('<input type="hidden" />');
+
+                  //// For each selected option
+                  //_.each($(e.target).find('option:selected'), function(opt) {
+                  //  // Build an input for each of the required types
+                  //  var $i = $input.clone()
+                  //            .attr('name', model.slug +'['+ field.slug +'][][id]')
+                  //            .val(opt.value);
+
+                  //  $(selector).append($i);
+                  //});
+
+                });
+              }
+            });
+          }
+
+        });
+
+
         var upload = caribou.api.upload(function(response) {
           var src = caribou.remoteAPI+'/'+response.url;
           $('#'+response.context+'_asset').val(response.asset_id);

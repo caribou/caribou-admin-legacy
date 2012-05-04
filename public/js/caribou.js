@@ -205,11 +205,23 @@ var caribou = function() {
     var data = {};
     var verbose = $(selector).serializeArray();
 
-    for (var i = 0; i < verbose.length; i++) {
-      if (verbose[i].value && !(verbose[i].value === '')) {
-        data[verbose[i].name] = verbose[i].value;
-      }
+    for (var i=0, l = verbose.length; i < l; i++) {
+      var key = verbose[i].name,
+          value = verbose[i].value;
+
+      // Skip if undefined or blank
+      if(_.isUndefined(value) || value === '') continue;
+
+      // If we have a collection of values, treat as such
+      // add an index to the collection
+      // TODO: group fields based on the nested model
+      if(/^.+\]\[\]\[.+$/.test(key))
+        key = key.replace(/\]\[\]\[/, '][' + i + '][');
+
+
+      data[key] = value;
     }
+
 
     var checks = $(selector + " input:checkbox");
     for (i = 0; i < checks.length; i++) {

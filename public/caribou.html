@@ -441,7 +441,7 @@ EDIT TEMPLATES
       <legend><span>Model Settings</span></legend>
       <ol>
         {{each(i, field) model.fields}}
-        {{if field.editable && field.slug != 'position'}}
+        {{if field.editable && !(/position|fields/).test(field.slug)}}
         <li class="${field.type} required" id="${$data.model.slug}_${field.slug}_input">
           {{tmpl({model: $data.model, content: $data.content, field: field}) "#"+field.type+"Field"}}
         </li>
@@ -532,7 +532,7 @@ MODEL FIELD FORM TEMPLATES
     <label for="">Target Model</label>
     <select name="model[fields][${index}][target_id]">
       {{each(i, name) caribou.modelNames}}
-      <option{{if field.default_value == caribou.models[name].id}} selected="selected"{{/if}} value="${ caribou.models[name].id }">${ caribou.models[name].name }</option>
+      <option{{if field.target_id == caribou.models[name].id}} selected="selected"{{/if}} value="${ caribou.models[name].id }">${ caribou.models[name].name }</option>
       {{/each}}
     </select>
   </div>
@@ -545,8 +545,6 @@ MODEL FIELD FORM TEMPLATES
   </div>
 </script>
 
-<script id="linkFieldOptions" type="text/x-jquery-tmpl">
-</script>
 
 <!-- 
 
@@ -651,8 +649,9 @@ FIELD INPUT TEMPLATES
 </script>
 
 <script id="collectionField" type="text/x-jquery-tmpl">
-  
+  <label for>${field.name}</label>
 </script>
+
 
 <script id="collectionFieldOld" type="text/x-jquery-tmpl">
   {{tmpl({model: field.target(), content: content[field.slug], meta: {}}) "#mainContentForList"}}
@@ -660,7 +659,7 @@ FIELD INPUT TEMPLATES
 
 <script id="partField" type="text/x-jquery-tmpl">
   <label for="${$data.model.slug}_${field.slug}">${field.name}<abbr title="required">*</abbr></label>
-  <input type="text" name="${model.slug}[${field.slug}]" value="${content[field.slug]}" />
+  <!-- <input type="text" name="${model.slug}[${field.slug}]" value="${content[field.slug]}" /> -->
 </script>
 
 <script id="linkField" type="text/x-jquery-tmpl">
