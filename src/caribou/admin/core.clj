@@ -4,7 +4,8 @@
   (:require [clojure.string :as string]
             [clojure.java.io :as io]
             [compojure.route :as route]
-            [compojure.handler :as handler]))
+            [compojure.handler :as handler]
+            [caribou.admin.layout :as layout]))
 
 (def file-separator
   (str (.get (java.lang.System/getProperties) "file.separator")))
@@ -26,7 +27,7 @@
 
 (defn render-index
   [& args]
-  (slurp (pathify [(which-public) "caribou.html"])))
+  layout/layout)
 
 (defroutes admin-routes
   (route/files "/" {:root (which-public)})
