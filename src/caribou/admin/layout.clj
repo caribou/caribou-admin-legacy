@@ -11,7 +11,7 @@
       [:title "Interface 3.0"]
       [:link {:href "/favicon.ico" :rel "icon" :type "image/x-icon"}]
       (include-js "/javascripts/ender.js")
-      (include-css "/stylesheets/active_admin.css")]
+      (include-css "/stylesheets/active_admin.css" "/css/caribou.css")]
 
     [:body.logged_in.admin_model.show
 
@@ -20,7 +20,7 @@
         [:div#header
 
           [:h1#site_title "Interface 3.0"]
-          [:ul#tabs.header-items]
+          [:ul#tabs.header-items.loading]
           [:p#utility_nav.header-item
             [:span.current_user "justin@weareinstrument.com"]
             [:a {:href "/logout"} "Logout"]]]

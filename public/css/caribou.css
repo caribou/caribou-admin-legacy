@@ -1,57 +1,18 @@
-body {
-    color: #fff;
-    background-color: #111;
-    font-family: Monospace;
-}
-
-ul {
-    list-style-type: none;
-}
-
 #header {
-    position: absolute;
-    height: 50px;
+  height: 19px;
+  padding: 11px 30px 9px;
 }
 
-#container {
-    position: absolute;
-    top: 50px;
+#header h1 {
+  display: block;
+  float: left;
 }
 
-#nav ul {
-    position: relative;
-    display: block;
+#header ul#tabs {
+  height: 18px;
 }
 
-#nav ul li {
-    float: left;
-    height: 19px;
-    padding: 5px 15px 3px 8px;
-}
-
-#nav ul li.selected {
-    color: #111;
-    background-color: #eed;
-}
-
-#add {
-    height: 30px;
-    padding: 11px 5px 0 5px;
-    color: #7777cc;
-}
-
-.save {
-    color: #7777cc;
-}
-
-.edit {
-    color: #55cc99 !important;
-}
-
-.delete {
-    color: #882222 !important;
-}
-
-.label {
-    color: #55cc99 !important;
+#header ul#tabs.loading {
+  width: 220px;
+  background: url('/images/global-nav-spinner.gif') no-repeat;
 }

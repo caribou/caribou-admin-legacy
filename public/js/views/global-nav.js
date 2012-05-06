@@ -10,6 +10,8 @@
 
     render: function() {
 
+      this.$el.removeClass('loading');
+
       this.collection.each(function(model) {
 
         // Build up the list element with link inside
