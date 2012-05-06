@@ -35,6 +35,8 @@ page tree handling, sorting, blah'ing
 create mediator
   use that to handle model -> view interactions
 
+group caribou files under a single dir, move all 3rd party to 'javascripts'
+
 
 ## NOTES
 assocations on instances

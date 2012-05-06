@@ -40,7 +40,7 @@
 
 
       [:div#footer
-        [:p "Props to Active Admin"]]
+        [:p "It looks like Active Admin, but its not."]]
 
 
       (include-js
