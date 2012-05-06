@@ -7,12 +7,19 @@
 
   app.collections.ModelData = Caribou.Collection.extend({
 
+
     model: app.models.ModelData,
 
 
     url: '/model',
 
 
+    // Customize the parsing mechanism
+    // Example response:
+    // {
+    //   meta: { status: '200', ... },
+    //   response: [ model1, model2, ... ]
+    // }
     parse: function(response) {
       this.meta = response.meta;
       return response.response;
@@ -21,30 +28,35 @@
 
 
     initialize: function() {
-      _.bindAll(this, 'buildModelDataModel');
-      this.on('reset', this.buildModelDataModel);
+      _.bindAll(this, 'buildEachModel', 'buildModel');
+
+      // Build a Caribou Model for each model in the response
+      this.on('reset', this.buildEachModel);
+      this.on('add', this.buildModel);
     },
 
 
 
-    buildModelDataModel: function() {
+    buildEachModel: function() {
+      this.each(this.buildModel);
+    },
 
-      this.each(function(model) {
-        var slug = model.get('slug'),
-            modelName = _.titlecase(slug);
 
-        app.models[modelName] = Caribou.Model.extend({});
 
-        app.collections[modelName] = Caribou.Collection.extend({
-          model: app.models[modelName],
-          url: '/'+slug,
-          parse: function(response) {
-            this.meta = response.meta;
-            return response.response;
-          }
-        });
+    buildModel: function(model) {
+      var slug = model.get('slug'),
+          modelName = _.titlecase(slug);
+
+      app.models[modelName] = Caribou.Model.extend({});
+
+      app.collections[modelName] = Caribou.Collection.extend({
+        model: app.models[modelName],
+        url: '/'+slug,
+        parse: function(response) {
+          this.meta = response.meta;
+          return response.response;
+        }
       });
-
     }
 
 
