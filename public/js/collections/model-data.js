@@ -31,7 +31,7 @@
       _.bindAll(this, 'buildEachModel', 'buildModel');
 
       // Build a Caribou Model for each model in the response
-      this.on('reset', this.buildEachModel);
+      this.on('sync', this.buildEachModel);
       this.on('add', this.buildModel);
     },
 

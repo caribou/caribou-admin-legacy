@@ -52,6 +52,7 @@
         "/js/inflections.js"
         ;"/js/admin.js"
         "/js/app.js"
+        "/js/mediator.js"
 
         ;; Include Models
         "/js/models/model-data.js"

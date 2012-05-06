@@ -18,12 +18,8 @@
       var modelData = new app.collections.ModelData;
 
       modelData.fetch({
-        success: function() {
-          // Render the tabs
-          // TODO: this needs to be applied globally
-          new app.views.GlobalNav({
-            collection: modelData
-          }).render();
+        success: function(collection) {
+          app.mediator.trigger('sync:modelData', collection);
         }
       });
 
