@@ -23,7 +23,7 @@
           [:ul#tabs.header-items]
           [:p#utility_nav.header-item
             [:span.current_user "justin@weareinstrument.com"]
-            [:a {:href "#"} "Logout"]]]
+            [:a {:href "/logout"} "Logout"]]]
 
       [:div#title_bar
 
@@ -50,10 +50,17 @@
         "/js/easyXDM.js"
         "/js/underscore.extensions.js"
         "/js/inflections.js"
-        "/js/caribou.js"
         ;"/js/admin.js"
+        "/js/app.js"
+
+        ;; Include Models
+        "/js/models/model-data.js"
+
+        ;; Include Collections
+        "/js/collections/model-data.js"
 
         ;; Include Views
+        "/js/views/global-nav.js"
         ;"/js/views/tools/action-item.js"
         ;"/js/views/generic/edit.js"
         ;"/js/views/generic/new.js"
@@ -71,7 +78,9 @@
         ;"/js/views/global/navigation/breadcrumb.js"
         ;"/js/views/global/notification/flash.js"
         ;"/js/views/abstract/row-for-model-edit.js")
-        )
+
+        ;; Last of all, the router
+        "/js/router.js")
 
 
       [:script (str "caribou.templates=" (generate-string templates/templates) ";")]

@@ -35,17 +35,6 @@
     },
 
 
-    // Provide a namespace (like goog.provides)
-    // 'foo.bar.baz' => { foo: { bar: { baz: {}}}}
-    provide: function(namespace, root) {
-      var bits = namespace.split('.');
-      for(i=0, l=bits.length, root= root || window; i<l; i++) {
-        root[bits[i]] = root[bits[i]] || {};
-        root = root[bits[i]];
-      }
-    },
-
-
     // Just like extend, except it won't overwrite an existing property
     reverseExtend: function(obj) {
       _.each(Array.prototype.slice.call(arguments, 1), function(source) {
@@ -72,7 +61,15 @@
       return _.map(string.split('-'), function(bit, i) {
         return i ? _.capitalize(bit) : bit;
       }).join('');
+    },
+
+
+    // Titlecase-ize strings
+    // 'default-string' => 'DefaultString'
+    titlecase: function(string) {
+      return _.lazyCapitalize(_.deparameterize(string));
     }
+
 
 
   });

@@ -32,6 +32,9 @@ Enjoy!
 create associations on model instances
 page tree handling, sorting, blah'ing
 
+create mediator
+  use that to handle model -> view interactions
+
 
 ## NOTES
 assocations on instances
@@ -50,3 +53,5 @@ assocations on instances
   the part assoc will only have one set of fields
     these can be generated when an option is selected
   so same process for either one, except the collection may need an index
+
+
