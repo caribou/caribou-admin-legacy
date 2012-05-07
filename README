@@ -25,28 +25,53 @@ Enjoy!
 
 
 ## FIXME
-
+  can't remove products from category
 
 
 ## TODO
 create associations on model instances
+  4. get it to work with habtm
+  2. then create a category and create a new product on the fly
+  3. then create a product and a new category on the fly
+
 page tree handling, sorting, blah'ing
 
 
 ## NOTES
-assocations on instances
-  need to pull in all instances of a model to populate the inputs
-  what fields do I need to populate?
-  will dynamically add fields to add as many assocs in a collection as desired
-    how does this work?
-    need to have a template of a field
-    also need to have an "add another" button to generate another one
-    indices will auto increment
-    look at fields on model creation, should be able to use the same strategy
 
-  what fields do I need to create the instance association?
-  the collection assoc will have multiple sets of fields
-    I need to generate those when I make a selection
-  the part assoc will only have one set of fields
-    these can be generated when an option is selected
-  so same process for either one, except the collection may need an index
+association identity
+  ideally I would be able to target a field on the association when I create the link
+
+
+
+new product on the fly
+search for a product, if I can't find it, use the place holder text as a link
+  the new link will open up a lightbox (ugh) with the new product form
+  category selection will be disabled (have to check against the current url maybe?)
+
+  when the form is submitted the dialog should disappear and the new id should be selected
+    this will just be the illusion of a new record though
+    won't actually save it to the db when the dialog is submitted
+    it will have to just create the hidden fields for the new product
+    then add basically a blank field to the select
+    will bind events to that select to remove the hidden fields when its x'd out
+  
+
+
+
+// Temporary: reset the hidden inputs
+$(selector).find('input[type=hidden]').remove();
+
+// Setup an input template
+var $input = $('<input type="hidden" />');
+
+// For each selected option
+_.each($(e.target).find('option:selected'), function(opt) {
+  // Build an input for each of the required types
+  var $i = $input.clone()
+            .attr('name', model.slug +'['+ field.slug +'][][id]')
+            .val(opt.value);
+
+  $(selector).append($i);
+});
+
