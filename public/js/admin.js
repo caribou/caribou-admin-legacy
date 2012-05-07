@@ -336,7 +336,7 @@ caribou.admin = function() {
       init: function(params, query) {
         var model = caribou.models[params.model];
         var include = _.map(_.filter(model.fields, function(field) {
-          return field.type === 'collection';
+          return /collection|part|link/.test(field.type);
         }), function(collection) {
           if (model.slug === 'model' && collection.slug === 'fields') {
             return collection.slug + '.link';
@@ -398,15 +398,27 @@ caribou.admin = function() {
 
                     // Add an option for each model instance
                     _.each(resp.response, function(instance) {
+                      // Grab the value of the firstmost field, this will be used for the display text
+                      var displayTxt = [instance.id, instance[field.target().fields[0].slug]].join(': ');
                       var $option = $('<option />', {
                         value: instance.id
                       })
-                      .text(instance.id);
+                      .text(displayTxt);
 
                       // If the instance is associated to our model
                       // Select it
-                      if(_.indexOf(_.pluck(modelData[field.slug], 'id'), instance.id) > -1)
-                        $option.attr('selected', true);
+                      var modelDataField = modelData[field.slug];
+                      if(_.isArray(modelDataField)) {
+                        if(_.indexOf(_.pluck(modelDataField, 'id'), instance.id) > -1) {
+                          $option.attr('selected', true);
+                        }
+                      } else {
+                        // If it isn't an array, it must be a single element (or a 'part')
+                        if(modelDataField.id == instance.id) {
+                          $option.attr('selected', true);
+                        }
+                      }
+
 
                       $select.append($option);
                     });
@@ -508,10 +520,12 @@ caribou.admin = function() {
 
                 // Add an option for each model instance
                 _.each(resp.response, function(instance) {
+                  // Grab the value of the firstmost field, this will be used for the display text
+                  var displayTxt = [instance.id, instance[field.target().fields[0].slug]].join(': ');
                   var $option = $('<option />', {
                     value: instance.id
                   })
-                  .text(instance.id);
+                  .text(displayTxt);
 
                   $select.append($option);
                 });
