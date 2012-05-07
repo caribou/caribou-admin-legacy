@@ -42,7 +42,10 @@
       //}
 
       // Render the table header columns
-      var columnNames = _.keys(_.first(this.collection.models).attributes);
+      var modelType = this.collection.meta.type,
+          modelData = app.modelData.where({ slug: modelType })[0],
+          columnNames = _.pluck(modelData.get('fields'), 'name');
+
       _.each(columnNames, this.renderColumnHead);
 
       //// Throw another one on the end if we have table actions enabled

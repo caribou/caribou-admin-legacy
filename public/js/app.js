@@ -46,8 +46,9 @@
     REMOTE = LOCATION.replace(/^(https?:\/\/)(admin)(\.[^\/]+).*/, "$1api$3")
 
   // Override Sync to allow for Cross-Domain requests
-  // All of this is the same except where the actual request is made
-  // Also removed some of the cruft for older browsers and added some helpers
+  // Removed some of the cruft for older browsers and added some helpers
+  // Enabled x-domain requests
+  // Allow params for GET requests
   Caribou.sync = function(method, model, options) {
 
     // Map from CRUD to HTTP for our default `Backbone.sync` implementation.
@@ -87,6 +88,11 @@
     if (!options.data && model && (method == 'create' || method == 'update')) {
       params.contentType = 'application/json';
       params.data = JSON.stringify(model.toJSON());
+    }
+
+    // If we have options, then lets use 'em
+    if (! params.data) {
+      params.data = options.data;
     }
 
     // Don't process data on a non-GET request.

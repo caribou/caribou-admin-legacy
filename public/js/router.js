@@ -18,6 +18,7 @@
       app.modelData = new app.collections.ModelData;
 
       app.modelData.fetch({
+        data: { include: 'fields' },
         success: function(collection) {
           app.mediator.trigger('sync:modelData', collection);
         }
