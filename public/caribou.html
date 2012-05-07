@@ -571,6 +571,8 @@ VIEW TEMPLATES
                   <li>${JSON.stringify(f)}</li>
                   {{/each}}
                   </ul>
+                {{else _.isObject($data.content[field.slug])}}
+                  ${JSON.stringify($data.content[field.slug])}
                 {{else}}
                   ${$data.content[field.slug]}
                 {{/if}}
