@@ -288,7 +288,7 @@ caribou.admin = function() {
         var include = _.map(_.filter(model.fields, function(field) {
           return field.type === 'collection';
         }), function(collection) {
-          return collection.name;
+          return collection.slug;
         }).join(',');
 
         var url = _.template('/<%= model %>/<%= id %>', params);

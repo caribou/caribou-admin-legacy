@@ -561,7 +561,21 @@ VIEW TEMPLATES
           {{each(i, field) model.fields}}
           <tr>
             <th><label class="label">${field.name}</label></th>
-            <td>{{if $data.content[field.slug] == null}}<span class="empty">Empty</span>{{else}}${$data.content[field.slug]}{{/if}}</td>
+            <td>
+              {{if $data.content[field.slug] == null}}
+                <span class="empty">Empty</span>
+              {{else}}
+                {{if $data.content[field.slug].constructor === Array }}
+                  <ul>
+                  {{each(i, f) $data.content[field.slug]}}
+                  <li>${JSON.stringify(f)}</li>
+                  {{/each}}
+                  </ul>
+                {{else}}
+                  ${$data.content[field.slug]}
+                {{/if}}
+              {{/if}}
+            </td>
           </tr>
           {{/each}}
         </table>
