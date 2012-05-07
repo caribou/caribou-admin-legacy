@@ -32,28 +32,9 @@ Enjoy!
 create associations on model instances
 page tree handling, sorting, blah'ing
 
-create mediator
-  use that to handle model -> view interactions
 
 group caribou files under a single dir, move all 3rd party to 'javascripts'
 
 
+
 ## NOTES
-assocations on instances
-  need to pull in all instances of a model to populate the inputs
-  what fields do I need to populate?
-  will dynamically add fields to add as many assocs in a collection as desired
-    how does this work?
-    need to have a template of a field
-    also need to have an "add another" button to generate another one
-    indices will auto increment
-    look at fields on model creation, should be able to use the same strategy
-
-  what fields do I need to create the instance association?
-  the collection assoc will have multiple sets of fields
-    I need to generate those when I make a selection
-  the part assoc will only have one set of fields
-    these can be generated when an option is selected
-  so same process for either one, except the collection may need an index
-
-
