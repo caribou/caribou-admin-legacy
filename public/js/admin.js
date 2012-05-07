@@ -331,7 +331,7 @@ caribou.admin = function() {
         });
       }
     },
-    
+
     edit: {
       init: function(params, query) {
         var model = caribou.models[params.model];
@@ -344,13 +344,16 @@ caribou.admin = function() {
             return collection.slug;
           }
         }).join(',');
-        
+
         var url = _.template('/<%= model %>/<%= id %>', params);
+
+        var modelData;
 
         caribou.api.get({
           url: url,
           data: {include: include},
           success: function(response) {
+            modelData = response.response;
 
             headerNav(params.model);
 
@@ -361,7 +364,7 @@ caribou.admin = function() {
 
             var sidebar = renderTemplate(model.slug, "sidebarFor<%= model %>Edit", {
               model: model, 
-              content: response.response, 
+              content: modelData, 
               meta: response.meta,
               action: 'update'
             });
@@ -369,12 +372,63 @@ caribou.admin = function() {
 
             var main_content = renderTemplate(model.slug, "mainContentFor<%= model %>Edit", {
               model: model, 
-              content: response.response, 
+              content: modelData, 
               meta: response.meta,
               action: 'update'
             });
             $('#main_content').html(main_content);
-            
+
+            // Chosen-ify selects to make them pretty
+            //$('.chzn').chosen({allow_single_deselect: true});
+
+            // Retrieve all instances of parts/collections/links to populated the selects
+            // This is less than ideal, so many requests!
+            var associatedFields = _.filter(model.fields, function(field) {
+              return /collection|link|part/.test(field.type);
+            });
+
+
+            _.each(associatedFields, function(field) {
+
+                caribou.api.get({
+                  url: '/' + field.target().slug,
+                  success: function(resp) {
+
+                    var $select = $('select', '#' + [model.slug, field.slug, 'input'].join('_'));
+
+                    // Add an option for each model instance
+                    _.each(resp.response, function(instance) {
+                      var $option = $('<option />', {
+                        value: instance.id
+                      })
+                      .text(instance.id);
+
+                      // If the instance is associated to our model
+                      // Select it
+                      if(_.indexOf(_.pluck(modelData[field.slug], 'id'), instance.id) > -1)
+                        $option.attr('selected', true);
+
+                      $select.append($option);
+                    });
+
+                    // Enable the select
+                    $select.removeAttr('disabled');
+
+
+                    // Update the chosen-ified select
+                    //$('.chzn').trigger('liszt:updated');
+
+                    // Can't chosenify fields until all options are there
+                    // refer to this bug: https://github.com/harvesthq/chosen/issues/609
+                    $select.chosen();
+
+                  }
+
+                });
+
+            });
+
+
             $('.sortable').sortable({
               axis: 'y',
               scroll: true,
@@ -435,29 +489,24 @@ caribou.admin = function() {
         $('#main_content').html(main_content);
 
 
-        // Grab all instances of models for all collections
-        // Then build up inputs for each
-        _.each(model.fields, function(field) {
+        // Chosen-ify selects to make them pretty
+        //$('.chzn').chosen({allow_single_deselect: true});
 
-          if(/collection|link|part/.test(field.type)) {
+        // Retrieve all instances of parts/collections/links to populated the selects
+        // This is less than ideal, so many requests!
+        var associatedFields = _.filter(model.fields, function(field) {
+          return /collection|link|part/.test(field.type);
+        });
+
+        _.each(associatedFields, function(field) {
 
             caribou.api.get({
-              url: ['/', field.target().slug].join(''),
+              url: '/' + field.target().slug,
               success: function(resp) {
 
-                // Build select input
-                var $select = $('<select style="width:76%" />');
-                $select
-                  .attr('data-placeholder', 'Select ' + _.capitalize(field.slug))
-                  .attr('name', model.slug +'['+ field.slug +'_id]');
+                var $select = $('select', '#' + [model.slug, field.slug, 'input'].join('_'));
 
-                // Make it a multiple select if the field is a collection or link
-                if(/collection|link/.test(field.type)) {
-                  $select.attr('multiple', true);
-                  $select.attr('name', model.slug +'['+ field.slug +'][][id]');
-                }
-
-                // Build the options
+                // Add an option for each model instance
                 _.each(resp.response, function(instance) {
                   var $option = $('<option />', {
                     value: instance.id
@@ -467,37 +516,20 @@ caribou.admin = function() {
                   $select.append($option);
                 });
 
-                // Prepend a blank option
-                $select.prepend($('<option/>'));
+                // Enable the select
+                $select.removeAttr('disabled');
 
-                // Insert into the DOM
-                var selector = '#' + [model.slug, field.slug, 'input'].join('_');
-                $(selector).append($select);
 
-                // Chosen-ify it so it looks pretty
-                // Also allows us to set values for hidden fields
-                $select.chosen().change(function(e) {
+                // Update the chosen-ified select
+                //$('.chzn').trigger('liszt:updated');
 
-                  // Temporary: reset the hidden inputs
-                  //$(selector).find('input[type=hidden]').remove();
+                // Can't chosenify fields until all options are there
+                // refer to this bug: https://github.com/harvesthq/chosen/issues/609
+                $select.chosen();
 
-                  //// Setup an input template
-                  //var $input = $('<input type="hidden" />');
-
-                  //// For each selected option
-                  //_.each($(e.target).find('option:selected'), function(opt) {
-                  //  // Build an input for each of the required types
-                  //  var $i = $input.clone()
-                  //            .attr('name', model.slug +'['+ field.slug +'][][id]')
-                  //            .val(opt.value);
-
-                  //  $(selector).append($i);
-                  //});
-
-                });
               }
+
             });
-          }
 
         });
 

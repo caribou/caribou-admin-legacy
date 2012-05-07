@@ -650,6 +650,10 @@ FIELD INPUT TEMPLATES
 
 <script id="collectionField" type="text/x-jquery-tmpl">
   <label for>${field.name}</label>
+  <select style="width:76%" data-placeholder="Select ${field.name}" multiple disabled name="${$data.model.slug}[${field.slug}][][id]" class="chzn">
+    <option></option>
+    <!-- remaining options are populated via js -->
+  </select>
 </script>
 
 
@@ -659,7 +663,10 @@ FIELD INPUT TEMPLATES
 
 <script id="partField" type="text/x-jquery-tmpl">
   <label for="${$data.model.slug}_${field.slug}">${field.name}<abbr title="required">*</abbr></label>
-  <!-- <input type="text" name="${model.slug}[${field.slug}]" value="${content[field.slug]}" /> -->
+  <select style="width:76%;" data-placeholder="Select ${field.name}" disabled name="${$data.model.slug}[${field.slug}_id]" class="chzn">
+    <option></option>
+    <!-- remaining options are populated via js -->
+  </select>
 </script>
 
 <script id="linkField" type="text/x-jquery-tmpl">
