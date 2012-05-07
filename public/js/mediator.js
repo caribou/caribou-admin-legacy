@@ -18,6 +18,15 @@
   });
 
 
+  mediator.on('sync:genericModelData', function(modelData) {
+    var view = new app.views.GenericModelList({
+      collection: modelData
+    });
+
+    $('#active_admin_content').empty().append(view.render().el);
+  });
+
+
 }(
   require('app'),
   require('Caribou'),

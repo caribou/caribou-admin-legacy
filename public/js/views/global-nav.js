@@ -7,6 +7,16 @@
     el: '#tabs',
 
 
+    initialize: function() {
+      _.bindAll(this, 'go');
+    },
+
+
+    events: {
+      'click li a': 'go'
+    },
+
+
 
     render: function() {
 
@@ -21,12 +31,8 @@
           href: '/' + model.get('slug')
         }, model.get('name'));
 
-        // FIXME: what is up with this?
-        // Apparently appending a link calls toString
-        // which for a link, renders the url
-        a.toString = function() { return this };
 
-        $(li).html(a);
+        $(li).append(a);
 
         // Attach to the view
         this.$el.append(li);
@@ -35,6 +41,16 @@
 
 
       return this;
+    },
+
+
+
+    go: function(e) {
+      e.preventDefault();
+
+      var url = $(e.target).attr('href');
+
+      app.router.navigate(url, { trigger: true });
     }
 
   });

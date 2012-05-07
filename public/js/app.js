@@ -12,14 +12,14 @@
   var app = {
     views       : {},
     models      : {},
-    collections : {}
+    collections : {},
+    templates   : window.TEMPLATES
   };
 
 
 
   // Secret sauce
   var Caribou = Backbone;
-
 
   // Accept viewSpec as a first-class citizen
   //

@@ -40,8 +40,11 @@
 
 
       [:div#footer
-        [:p "It looks like Active Admin, but its not."]]
+        [:p "It looks like Active Admin, but it's not."]]
 
+
+
+      [:script (str "window.TEMPLATES = " (generate-string templates/templates) ";")]
 
       (include-js
 
@@ -52,7 +55,6 @@
         "/js/inflections.js"
         ;"/js/admin.js"
         "/js/app.js"
-        "/js/mediator.js"
 
         ;; Include Models
         "/js/models/model-data.js"
@@ -62,6 +64,7 @@
 
         ;; Include Views
         "/js/views/global-nav.js"
+        "/js/views/generic/model-list.js"
         ;"/js/views/tools/action-item.js"
         ;"/js/views/generic/edit.js"
         ;"/js/views/generic/new.js"
@@ -72,8 +75,8 @@
         ;"/js/views/generic/view/panel.js"
         ;"/js/views/generic/view/panel-attributes-table.js"
         ;"/js/views/generic/form/fieldset.js"
-        ;"/js/views/generic/table/header-column.js"
-        ;"/js/views/generic/table/row.js"
+        "/js/views/generic/table/header-column.js"
+        "/js/views/generic/table/row.js"
         ;"/js/views/generic/table/column.js"
         ;"/js/views/global/navigation/tabs.js"
         ;"/js/views/global/navigation/breadcrumb.js"
@@ -81,10 +84,10 @@
         ;"/js/views/abstract/row-for-model-edit.js")
 
         ;; Last of all, the router
+        "/js/mediator.js"
         "/js/router.js")
 
 
-      [:script (str "caribou.templates=" (generate-string templates/templates) ";")]
       ;[:script "caribou.admin.init();"]
       ]]]))
 

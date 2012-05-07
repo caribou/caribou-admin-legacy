@@ -182,8 +182,8 @@
 
 
 
-    :generic
-    { :index
+    :generic-model
+    { :list
       { :main
         (html
           [:div#main_content

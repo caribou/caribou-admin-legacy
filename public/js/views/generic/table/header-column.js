@@ -1,48 +1,54 @@
-_.provide('caribou.Views.Generic.Table');
+(function(app, Caribou, _) {
 
-caribou.Views.Generic.Table.HeaderColumn = Backbone.View.extend({
+  app.views.genericTableHeaderColumn = Caribou.View.extend({
 
-  tagName: 'th',
-
-
-  initialize: function() {
-    _.bindAll(this, 'buildClassName');
-    _.reverseExtend(this, this.options);
-  },
+    tagName: 'th',
 
 
+    initialize: function() {
+      _.bindAll(this, 'buildClassName');
+    },
 
-  render: function() {
-    var output,
-        data = this.data;
 
-    // Add a class and a link if its sortable, otherwise just render the label
-    if(data.sortable) {
-      output = this.make('a', {
-        'class': this.buildClassName(),
-        'href' : '#'
-      }, data.label);
-    } else {
-      output = data.label;
+
+    render: function() {
+      var output, columnName = this.model;
+
+      // Add a class and a link if its sortable, otherwise just render the label
+      //if(model.get('sortable')) {
+      //  output = this.make('a', {
+      //    'class': this.buildClassName(),
+      //    'href' : '#'
+      //  }, columnName);
+      //} else {
+        output = columnName;
+      //}
+
+      this.$el.append(output);
+
+      return this;
+    },
+
+
+
+    buildClassName: function() {
+      //var classNames = []
+      //    model = this.model,
+      //    slug = model.get('slug'),
+      //    meta = model.collection.meta;
+
+      //if(slug === meta.order_by) {
+      //  classNames.push('sorted-' + meta.order);
+      //  classNames.push('sortable');
+      //  classNames.push(slug);
+      //}
+
+      //return classNames.join(' ');
     }
 
-    this.$el.html(output);
-
-    return this;
-  },
-
-
-
-  buildClassName: function() {
-    var classNames = [];
-
-    if(this.data.slug === this.table.viewData.meta.order_by) {
-      classNames.push('sorted-' + this.table.viewData.meta.order);
-      classNames.push(sortable);
-      classNames.push(this.data.slug);
-    }
-
-    return classNames.join(' ');
-  }
-
-});
+  });
+}(
+  require('app'),
+  require('Caribou'),
+  require('underscore')
+));

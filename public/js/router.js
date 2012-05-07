@@ -1,4 +1,4 @@
-(function(app, Caribou) {
+(function(app, Caribou, _) {
 
   // Application router
   // Handles all routes and delegate side effects of each
@@ -12,23 +12,39 @@
     },
 
 
-    dashboard: function() {
+    initialize: function() {
 
       // Retrieve the model data
-      var modelData = new app.collections.ModelData;
+      app.modelData = new app.collections.ModelData;
 
-      modelData.fetch({
+      app.modelData.fetch({
         success: function(collection) {
           app.mediator.trigger('sync:modelData', collection);
         }
       });
 
-
     },
 
 
+
+    dashboard: function() {},
+
+
+
     modelIndex: function(modelName) {
-      console.log(modelName);
+
+      // Fetch data for the specified model if we don't already have it
+      if(! app.collections[_.titlecase(modelName)]) {
+        app.modelData.add({ slug: _.slugify(modelName) });
+      }
+
+      var modelData = new app.collections[_.titlecase(modelName)];
+
+      modelData.fetch({
+        success: function(collection) {
+          app.mediator.trigger('sync:genericModelData', collection);
+        }
+      });
     },
 
 
@@ -40,7 +56,7 @@
 
 
   // Initialize routing
-  new app.Router;
+  app.router = new app.Router;
 
   // Backbone asks that we wait until the DOM is ready to kick this off
   // http://documentcloud.github.com/backbone/#History-start
@@ -49,11 +65,8 @@
   });
 
 
-  // Export our globals
-  provide('router', app.Router);
-
-
 }(
   require('app'),
-  require('Caribou')
+  require('Caribou'),
+  require('underscore')
 ));
