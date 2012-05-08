@@ -390,53 +390,74 @@ caribou.admin = function() {
 
             _.each(associatedFields, function(field) {
 
-                caribou.api.get({
-                  url: '/' + field.target().slug,
-                  success: function(resp) {
+              caribou.api.get({
+                url: '/' + field.target().slug,
+                success: function(resp) {
 
-                    var $select = $('select', '#' + [model.slug, field.slug, 'input'].join('_'));
+                  var $select = $('select', '#' + [model.slug, field.slug, 'input'].join('_'));
 
-                    // Add an option for each model instance
-                    _.each(resp.response, function(instance) {
-                      // Grab the value of the firstmost field, this will be used for the display text
-                      var displayTxt = [instance.id, instance[field.target().fields[0].slug]].join(': ');
-                      var $option = $('<option />', {
-                        value: instance.id
-                      })
-                      .text(displayTxt);
+                  // Add an option for each model instance
+                  _.each(resp.response, function(instance) {
 
-                      // If the instance is associated to our model
-                      // Select it
-                      var modelDataField = modelData[field.slug];
-                      if(_.isArray(modelDataField)) {
-                        if(_.indexOf(_.pluck(modelDataField, 'id'), instance.id) > -1) {
-                          $option.attr('selected', true);
-                        }
-                      } else {
-                        // If it isn't an array, it must be a single element (or a 'part')
-                        if(modelDataField.id == instance.id) {
-                          $option.attr('selected', true);
-                        }
+                    // Grab the value of the firstmost field, this will be used for the display text
+                    var displayTxt = [instance.id, instance[field.target().fields[0].slug]].join(': ');
+                    var $option = $('<option />', {
+                      value: instance.id
+                    })
+                    .text(displayTxt);
+
+                    // If the instance is associated to our model
+                    // Select it
+                    var modelDataField = modelData[field.slug];
+                    if(_.isArray(modelDataField)) {
+                      if(_.indexOf(_.pluck(modelDataField, 'id'), instance.id) > -1) {
+                        $option.attr('selected', true);
                       }
+                    } else {
+                      // If it isn't an array, it must be a single element (or a 'part')
+                      if(modelDataField.id == instance.id) {
+                        $option.attr('selected', true);
+                      }
+                    }
 
 
-                      $select.append($option);
+                    $select.append($option);
+                  });
+
+                  // Enable the select
+                  $select.removeAttr('disabled');
+
+
+                  // Update the chosen-ified select
+                  //$('.chzn').trigger('liszt:updated');
+
+                  // Can't chosenify fields until all options are there
+                  // refer to this bug: https://github.com/harvesthq/chosen/issues/609
+                  $select.chosen()
+
+                    // When we deselect an associated item we have to add it to the remove_$association_name$ input
+                    .change(function(e) {
+                      var selectedFieldIds = _.map($('option:selected', e.target), function(opt) {
+                            return parseInt(opt.value, 10);
+                          }),
+                          associatedIds = _.pluck(modelData[field.slug], 'id'),
+                          removableIds = _.compact( _.difference(associatedIds, selectedFieldIds) );
+
+                      var $input = $('<input />', {
+                        id: 'removed_' + field.slug,
+                        type: 'hidden',
+                        name: model.slug +'[removed_'+ field.slug +']',
+                        value: removableIds.join(',')
+                      });
+
+                      if(! $('#' + 'removed_' + field.slug).length)
+                        $select.after($input);
                     });
 
-                    // Enable the select
-                    $select.removeAttr('disabled');
 
+                }
 
-                    // Update the chosen-ified select
-                    //$('.chzn').trigger('liszt:updated');
-
-                    // Can't chosenify fields until all options are there
-                    // refer to this bug: https://github.com/harvesthq/chosen/issues/609
-                    $select.chosen();
-
-                  }
-
-                });
+              });
 
             });
 
