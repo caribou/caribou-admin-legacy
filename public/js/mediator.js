@@ -6,6 +6,8 @@
   // Mediator has a queue property that allows us to stack up events
   //   it waits until sync:modelData is fired before kicking them off
   //   this might be a terrible idea
+  //   should figure out a way to remove the boilerplate an automatically queue
+  //   the functions as defined
 
   // NOTE: Keep an eye on this file, it could get out of hand!
 
@@ -34,6 +36,22 @@
     var fn = function() {
       var view = new app.views.GenericModelList({
         collection: modelData
+      });
+
+      $('#active_admin_content').empty().append(view.render().el);
+    };
+
+    if(app.synced) return fn();
+
+    mediator.queue.push(fn);
+  });
+
+
+
+  mediator.on('sync:modelEdit', function(model) {
+    var fn = function() {
+      var view = new app.views.GenericModelEdit({
+        model: model
       });
 
       $('#active_admin_content').empty().append(view.render().el);

@@ -126,6 +126,7 @@
           break;
         case '403':
           // TODO: Navigate to login page
+          console.log('YOU ARE TRYING TO ACCESS THE FORBIDDEN ZONE');
           break;
       };
     };

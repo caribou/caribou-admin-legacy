@@ -52,7 +52,7 @@
 
         "/js/easyXDM.js"
         "/js/underscore.extensions.js"
-        "/js/inflections.js"
+        ;"/js/inflections.js"
         ;"/js/admin.js"
         "/js/app.js"
 
@@ -66,7 +66,7 @@
         "/js/views/global-nav.js"
         "/js/views/generic/model-list.js"
         ;"/js/views/tools/action-item.js"
-        ;"/js/views/generic/edit.js"
+        "/js/views/generic/edit.js"
         ;"/js/views/generic/new.js"
         ;"/js/views/generic/sidebar.js"
         ;"/js/views/generic/index.js"
@@ -81,7 +81,7 @@
         ;"/js/views/global/navigation/tabs.js"
         ;"/js/views/global/navigation/breadcrumb.js"
         ;"/js/views/global/notification/flash.js"
-        ;"/js/views/abstract/row-for-model-edit.js")
+        "/js/views/abstract/row-for-model-edit.js"
 
         ;; Last of all, the router
         "/js/mediator.js"

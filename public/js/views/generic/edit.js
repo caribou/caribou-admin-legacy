@@ -1,116 +1,127 @@
-_.provide('caribou.Views.Generic');
+(function(app, Caribou, _){
 
-caribou.Views.Generic.Edit = Backbone.View.extend({
+  // Renders the primary model edit form
 
-  id: 'main_content_wrapper',
+  app.views.GenericModelEdit = Caribou.View.extend({
 
-  template: caribou.templates.generic.edit.main,
+    id: 'main_content_wrapper',
 
-
-
-  initialize: function() {
-    _.bindAll(this, 'renderFieldset', 'renderAbstractField', 'updateModel');
-    _.reverseExtend(this, this.options);
-  },
+    template: app.templates['generic-model'].edit.main,
 
 
 
-  events: {
-    'click .commit a': 'updateModel'
-  },
+    initialize: function() {
+      _.bindAll(this, 'renderFieldset', 'renderAbstractField', 'updateModel');
+    },
 
 
 
-  render: function() {
-    this.model = caribou.models[this.viewData.meta.type];
-
-
-    var output = _.template(this.template, {
-      action: this.action,
-      model : this.viewSpec.meta.model,
-      label : this.viewSpec.meta.view.label
-    });
-
-
-    // Render template
-    this.$el.html(output);
-
-
-    // Render fieldsets
-    var fieldsets = _.filter(this.viewSpec.response.content.main_content, function(item) {
-      return item.type === 'fieldset';
-    });
-    _.each(fieldsets, this.renderFieldset);
-
-
-    // Render hidden input
-    $('form div:first', this.$el).html(this.make('input', {
-      type  : 'hidden',
-      name  : this.viewSpec.meta.model + '[id]',
-      value : this.viewData.response.id
-    }));
-
-
-    // Render abstract fields on model
-    var abstractFields = this.viewData.response.fields;
-    _.each(abstractFields, this.renderAbstractField);
-
-
-    // Render the sidebar
-    var sidebar = new caribou.Views.Generic.Sidebar({
-      viewSpec: this.viewSpec,
-      viewData: this.viewData,
-      panels: {
-        'model-details': {
-          id: ['attributes_table', this.viewSpec.meta.view.slug, this.viewData.response.id].join('_'),
-          className: this.viewSpec.meta.view.slug
-        },
-        'editable-fields': {}
-      }
-    });
-
-
-    // FIXME: This is a little janky right now, but we can't insert
-    // an element _after_ another until its actually in the DOM
-    var $el = this.$el;
-    this.el.addEventListener('DOMNodeInserted', _.once(function() {
-      $el.after(sidebar.render().el);
-    }), false);
-
-
-    return this;
-  },
+    events: {
+      'click .commit a': 'updateModel'
+    },
 
 
 
-  renderFieldset: function(fieldset) {
-    var view = new caribou.Views.Generic.Form.Fieldset({
-      fields: this.model.fields,
-      viewSpec: this.viewSpec,
-      viewData: this.viewData
-    });
-
-    $('#main_content form', this.$el).prepend(view.render().el);
-  },
+    render: function() {
+      var model = this.model;
 
 
-
-  renderAbstractField: function(field, i) {
-    var view = new caribou.Views.Abstract.RowForModelEdit({
-      field: field,
-      index: i,
-      model: this.model
-    });
-
-    $('.model_fields_edit_table table tbody', this.$el).append(view.render().el);
-  },
+      var output = _.template(this.template, {
+        action: this.action,
+        modelType : 'DEFINE ME',//this.model.meta.type,
+        label : 'DEFINE ME'//this.viewSpec.meta.view.label
+      });
 
 
+      // Render template
+      this.$el.html(output);
 
-  updateModel: function(e) {
-    e.preventDefault();
-    caribou.admin.update(this.viewSpec.meta.model, this.viewSpec.meta.view.slug);
-  }
+      // FIXME
+      // this references a model edit
+      // I still NEED a model instance edit view
+      // FIXME
 
 
-});
+      // Render fieldsets
+      //var fieldsets = _.filter(this.viewSpec.response.content.main_content, function(item) {
+      //  return item.type === 'fieldset';
+      //});
+      //_.each(fieldsets, this.renderFieldset);
+
+
+      // Render hidden input
+      //$('form div:first', this.$el).html(this.make('input', {
+      //  type  : 'hidden',
+      //  name  : this.viewSpec.meta.model + '[id]',
+      //  value : this.viewData.response.id
+      //}));
+
+
+      // Render abstract fields on model
+      _.each(model.get('fields'), this.renderAbstractField);
+
+
+      // Render the sidebar
+      //var sidebar = new caribou.Views.Generic.Sidebar({
+      //  viewSpec: this.viewSpec,
+      //  viewData: this.viewData,
+      //  panels: {
+      //    'model-details': {
+      //      id: ['attributes_table', this.viewSpec.meta.view.slug, this.viewData.response.id].join('_'),
+      //      className: this.viewSpec.meta.view.slug
+      //    },
+      //    'editable-fields': {}
+      //  }
+      //});
+
+
+      // FIXME: This is a little janky right now, but we can't insert
+      // an element _after_ another until its actually in the DOM
+      //var $el = this.$el;
+      //this.el.addEventListener('DOMNodeInserted', _.once(function() {
+      //  $el.after(sidebar.render().el);
+      //}), false);
+
+
+      return this;
+    },
+
+
+
+    renderFieldset: function(fieldset) {
+      var view = new caribou.Views.Generic.Form.Fieldset({
+        fields: this.model.fields,
+        viewSpec: this.viewSpec,
+        viewData: this.viewData
+      });
+
+      $('#main_content form', this.$el).prepend(view.render().el);
+    },
+
+
+
+    renderAbstractField: function(field, i) {
+      var view = new app.views.AbstractRowForModelEdit({
+        field: field,
+        index: i,
+        model: this.model
+      });
+
+      $('.model_fields_edit_table table tbody', this.$el).append(view.render().el);
+    },
+
+
+
+    updateModel: function(e) {
+      e.preventDefault();
+      caribou.admin.update(this.viewSpec.meta.model, this.viewSpec.meta.view.slug);
+    }
+
+
+  });
+
+}(
+  require('app'),
+  require('Caribou'),
+  require('underscore')
+));

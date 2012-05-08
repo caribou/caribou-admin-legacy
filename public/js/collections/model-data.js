@@ -54,6 +54,17 @@
           url += [slug, this.id].join('/');
 
           return url;
+        },
+
+        parse: function(response) {
+          // If we request the model directly,
+          // the response will be structured a little differently
+          if(response.meta && response.response) {
+            this.meta = response.meta;
+            return response.response;
+          }
+
+          return response;
         }
       });
 

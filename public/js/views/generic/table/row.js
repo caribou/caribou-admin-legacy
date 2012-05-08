@@ -86,15 +86,24 @@
     go: function(e) {
       e.preventDefault();
 
-      app.router.navigate([this.model.collection.meta.type, this.model.id].join('/'), { trigger:true });
+      app.router.navigate([
+        this.model.collection.meta.type,
+        this.model.id
+      ].join('/'), {trigger:true});
     },
 
 
 
     goEdit: function(e) {
-      this.go(e, 'edit');
-    }
+      e.preventDefault();
 
+
+      app.router.navigate([
+        this.model.collection.meta.type,
+        this.model.id,
+        'edit'
+      ].join('/'), {trigger:true});
+    }
 
 
   });

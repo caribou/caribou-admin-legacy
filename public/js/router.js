@@ -6,10 +6,12 @@
   app.Router = Caribou.Router.extend({
 
     routes: {
-      ''           : 'dashboard',
-      ':model'     : 'modelIndex',
-      ':model/:id' : 'modelShow'
+      ''                : 'dashboard',
+      ':model'          : 'modelIndex',
+      ':model/:id'      : 'modelShow',
+      ':model/:id/edit' : 'modelEdit'
     },
+
 
 
     initialize: function() {
@@ -49,9 +51,10 @@
     },
 
 
-    modelShow: function(modelName, id) {
-      console.log(modelName, id);
 
+    modelShow: function(modelName, id) {
+
+      // Fetch data for the specified model if we don't already have it
       if(! app.collections[_.titlecase(modelName)]) {
         app.modelData.add({ slug: _.slugify(modelName) });
       }
@@ -62,6 +65,27 @@
         // FIXME: replace with real code
         success: function(model) {
           $('#active_admin_content').empty().append(JSON.stringify(model.attributes))
+        }
+      });
+    },
+
+
+
+    // FIXME: this looks a lot like modelShow, opportunity to DRY
+    // TODO: think about the even naming schema here, not sure it works
+    modelEdit: function(modelName, id) {
+
+      // Fetch data for the specified model if we don't already have it
+      if(! app.collections[_.titlecase(modelName)]) {
+        app.modelData.add({ slug: _.slugify(modelName) });
+      }
+
+      // NOTE: This fetches a new model, we could potentially use the one that already exists
+      var model = new app.models[_.titlecase(modelName)]({ id: id });
+      model.fetch({
+        data: { include:'fields' },
+        success: function(model) {
+          app.mediator.trigger('sync:modelEdit', model);
         }
       });
     }

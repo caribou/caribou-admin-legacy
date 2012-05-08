@@ -293,8 +293,8 @@
             [:form
               { :accept-charset "UTF-8"
                 :action "{{ action }}"
-                :class "{{ model }}"
-                :id "{{ model }}_edit" }
+                :class "{{ modelType }}"
+                :id "{{ modelType }}_edit" }
 
             ;; Placeholder div, populated by js
             [:div { :style "margin:0;padding:0;display:inline"}]
@@ -308,7 +308,7 @@
               [:div.panel_contents.model_fields_edit_table
                 [:input#removed_fields
                   { :type "hidden"
-                    :name "{{ model }}[removed_fields]" }]
+                    :name "{{ modelType }}[removed_fields]" }]
                 [:table
                   { :borders "0"
                     :cellspacing "0"
