@@ -34,8 +34,8 @@ page tree handling, sorting, blah'ing
 
 figure out how to organize the views
 group caribou files under a single dir, move all 3rd party to 'javascripts'
+break caribou lib into its own file
 
-index actions
 show view
 edit view
 
@@ -45,6 +45,8 @@ update model
 create instance of model
 destroy instance
 update instance
+
+integrate view specs
 
 create associations
 
