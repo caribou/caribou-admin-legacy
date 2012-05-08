@@ -30,9 +30,16 @@
       // Add the appropriate classes and id
       this.$el.attr('id', model.get('slug') +'_'+ model.get('id'));
 
-      // Then render each column
-      _.each(model.attributes, this.renderColumn);
+      var modelType = model.collection.meta.type,
+          modelData = app.modelData.where({ slug: modelType })[0],
+          columnSlugs = _.pluck(modelData.get('fields'), 'slug');
 
+      // Then render each column
+      for(var i=0, l=columnSlugs.length; i<l; i++) {
+        this.renderColumn(model.attributes[columnSlugs[i]]);
+      }
+
+      //
       // Finally render the appropriate actions
       this.$el.append(this.make('td'));
       //$('td:last', this.$el).html(_.map(table.actions, this.renderAction));
