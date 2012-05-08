@@ -32,8 +32,27 @@ Enjoy!
 create associations on model instances
 page tree handling, sorting, blah'ing
 
-
+figure out how to organize the views
 group caribou files under a single dir, move all 3rd party to 'javascripts'
+
+index actions
+show view
+edit view
+
+create model
+destroy model
+update model
+create instance of model
+destroy instance
+update instance
+
+create associations
+
+hook up datatables
+refactor navigation
+authentication
+user roles
+
 
 
 
