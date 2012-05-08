@@ -51,6 +51,19 @@
 
     modelShow: function(modelName, id) {
       console.log(modelName, id);
+
+      if(! app.collections[_.titlecase(modelName)]) {
+        app.modelData.add({ slug: _.slugify(modelName) });
+      }
+
+      // NOTE: This fetches a new model, we could potentially use the one that already exists
+      var model = new app.models[_.titlecase(modelName)]({ id: id });
+      model.fetch({
+        // FIXME: replace with real code
+        success: function(model) {
+          $('#active_admin_content').empty().append(JSON.stringify(model.attributes))
+        }
+      });
     }
 
   });

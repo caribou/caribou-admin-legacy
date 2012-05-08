@@ -42,7 +42,8 @@
       //
       // Finally render the appropriate actions
       this.$el.append(this.make('td'));
-      //$('td:last', this.$el).html(_.map(table.actions, this.renderAction));
+      var actions = ['view', 'edit', 'delete'];
+      $('td:last', this.$el).append(_.map(actions, this.renderAction));
 
       return this;
     },
@@ -63,11 +64,10 @@
 
 
 
-    renderAction: function(params) {
-      var action = params.action,
+    renderAction: function(action) {
 
-          actionTemplate = this.make('a', {
-            'href'  : '#',
+      var actionTemplate = this.make('a', {
+            'href'  : [window.location.toString(), this.model.id].join('/'),
             'class' : ['member_link', action+'_link'].join(' ')
           }, _.capitalize(action));
 
@@ -83,10 +83,10 @@
 
 
 
-    go: function(e, pathSuffix) {
+    go: function(e) {
       e.preventDefault();
-      var path = _.compact([this.table.viewSpec.meta.view.slug, this.data.id, pathSuffix]).join('/');
-      caribou.go(path);
+
+      app.router.navigate([this.model.collection.meta.type, this.model.id].join('/'), { trigger:true });
     },
 
 

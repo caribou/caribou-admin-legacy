@@ -47,7 +47,15 @@
       var slug = model.get('slug'),
           modelName = _.titlecase(slug);
 
-      app.models[modelName] = Caribou.Model.extend({});
+      app.models[modelName] = Caribou.Model.extend({
+        url: function() {
+          var url = '/';
+
+          url += [slug, this.id].join('/');
+
+          return url;
+        }
+      });
 
       app.collections[modelName] = Caribou.Collection.extend({
         model: app.models[modelName],
