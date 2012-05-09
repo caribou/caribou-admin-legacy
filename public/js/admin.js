@@ -752,18 +752,16 @@ caribou.admin = function() {
             $('.new_'+ field.slug +'_trigger').live('click', function(e) {
               e.preventDefault();
 
-              var $modal, id = 'new_'+ field.target().slug;
+              var id = 'new_'+ field.target().slug;
 
 
               // Kill the dropdown, we don't want it interfering with the modal
               if($select.chosen().data().chosen)
                 $select.chosen().data().chosen.close_field();
-debugger;
-              // Build modal if it doesn't already exist
-              if(! ($modal = $('#'+id)).length) {
-                $modal = buildModal.call(this, id);
-                $('body').append($modal);
-              }
+
+              // Build modal
+              var $modal = buildModal.call(this, id);
+              $('body').append($modal);
 
               // Fire it up
               $modal.reveal();
