@@ -49,7 +49,10 @@
     // Parameratize's camel-cased strings
     // 'defaultString' => 'default-string'
     parameterize: function(string) {
-      return _.map(_.rest(string.match(/^(.*[a-z])([A-Z].*)$/)), function(bit) {
+      // It's a little crude but seems to work!
+      var matches = string.match(/([a-z]*$)|(\w+[a-z])([A-Z]\w+)/);
+
+      return _.map(_.chain(matches).compact().rest().value(), function(bit) {
         return bit.toLowerCase();
       }).join('-');
     },

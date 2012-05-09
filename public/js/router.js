@@ -26,6 +26,14 @@
         }
       });
 
+
+      // Retrieve field types
+      app.fieldTypes = new app.models.FieldTypes;
+
+      app.fieldTypes.fetch({
+        cache: false
+      });
+
     },
 
 

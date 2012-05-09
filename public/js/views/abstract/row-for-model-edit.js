@@ -32,7 +32,6 @@
       //    field = this.field;
       var field = this.options.field;
 
-      debugger;
       var output = _.template(this.template, {
         name          : field.name                  || '', // Can't let 'undefined' values go in
         type          : field.type                  || '',
@@ -56,7 +55,7 @@
 
 
       // Render the field options
-      //_.each(fieldTypes[field.type].options, this.renderFieldOptions);
+      _.each(app.fieldTypes.get(field.type).options, this.renderFieldOptions);
 
 
       // Set the value for the require checkboxes
@@ -81,15 +80,15 @@
 
       switch(key) {
         case 'string':
-          $('input[type=text]', $field).attr('value', this.field.default_value);
+          $('input[type=text]', $field).attr('value', this.options.field.default_value);
           break;
 
         case 'boolean':
-          $('option[value=' + this.field.default_value + ']', $field).attr('selected', 'selected');
+          $('option[value=' + this.options.field.default_value + ']', $field).attr('selected', 'selected');
           break;
 
         case 'link':
-          $('select', $field).html(caribou.admin.slugOptions(this.model, this.field.link));
+          //$('select', $field).html(caribou.admin.slugOptions(this.model, this.options.field.link));
           break;
       };
 

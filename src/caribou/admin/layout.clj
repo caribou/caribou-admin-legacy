@@ -61,6 +61,7 @@
 
         ;; Include Collections
         "/js/collections/model-data.js"
+        "/js/models/field-types.js"
 
         ;; Include Views
         "/js/views/global-nav.js"

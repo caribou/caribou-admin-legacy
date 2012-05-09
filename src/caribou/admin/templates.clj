@@ -437,4 +437,4 @@
               "Linked field"]
             [:select.slug_options
               { :name "model[fields][{{ index }}][link_slug]" }
-              "{{ slugOptions }}"]])}}})
+              ""]])}}})
