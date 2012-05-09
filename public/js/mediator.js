@@ -50,9 +50,12 @@
 
   mediator.on('sync:modelEdit', function(model) {
     var fn = function() {
-      var view = new app.views.GenericModelEdit({
-        model: model
-      });
+
+      var viewType = model.meta.type === 'model' ? 'AbstractModelEdit' : 'GenericModelEdit',
+
+          view = new app.views[viewType]({
+            model: model
+          });
 
       $('#active_admin_content').empty().append(view.render().el);
     };

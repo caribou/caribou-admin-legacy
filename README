@@ -33,7 +33,6 @@ create associations on model instances
 page tree handling, sorting, blah'ing
 
 figure out how to organize the views
-group caribou files under a single dir, move all 3rd party to 'javascripts'
 
 edit view
   need to differentiate between model edit and generic model edit

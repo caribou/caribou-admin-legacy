@@ -366,7 +366,56 @@
 
 
    :abstract
-   { :row-for-model-edit
+   { :edit
+      { :main
+        (html
+          [:div#main_content
+            [:form
+              { :accept-charset "UTF-8"
+                :action "{{ action }}"
+                :class "{{ modelType }}"
+                :id "{{ modelType }}_edit" }
+
+            ;; Placeholder div, populated by js
+            [:div { :style "margin:0;padding:0;display:inline"}]
+
+            ;; -------------------------
+            ;; Fieldsets populated by js
+            ;; -------------------------
+
+            [:div.panel
+              [:h3 "Model Fields"]
+              [:div.panel_contents.model_fields_edit_table
+                [:input#removed_fields
+                  { :type "hidden"
+                    :name "{{ modelType }}[removed_fields]" }]
+                [:table
+                  { :borders "0"
+                    :cellspacing "0"
+                    :cellpadding "0" }
+                  [:thead
+                    [:tr
+                      [:th "Name"]
+                      [:th "Type"]
+                      [:th "Options"]
+                      [:th "&nbsp;"]
+                      [:th "&nbsp;"]]]
+                  [:tbody.sortable
+                    ;; --------------------
+                    ;; Rows populated by js
+                    ;; --------------------
+                    ]]]]
+
+
+            [:fieldset.buttons
+              [:ol
+                [:li.commit.button
+                  [:a.button { :href "#" } "{{ action }} {{ label }}"]]
+                [:li.cancel
+                  [:a { :href "#" } "Cancel"]]]]]])}
+
+
+     :row-for-model-edit
      (html
        [:td.name
          [:input

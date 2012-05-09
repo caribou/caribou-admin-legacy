@@ -84,6 +84,7 @@
         ;"/js/views/global/navigation/breadcrumb.js"
         ;"/js/views/global/notification/flash.js"
         "/js/views/abstract/row-for-model-edit.js"
+        "/js/views/abstract/edit.js"
 
         ;; Last of all, the router
         "/js/mediator.js"
