@@ -26,13 +26,15 @@ Enjoy!
 
 ## FIXME
   can't remove products from category
+  adding multiple new association instances causes issues with layering, events
 
 
 ## TODO
 create associations on model instances
-  4. get it to work with habtm
-  2. then create a category and create a new product on the fly
-  3. then create a product and a new category on the fly
+  - get it to work with habtm
+
+  - create a category and create a new product on the fly
+  - create a product and a new category on the fly
 
 page tree handling, sorting, blah'ing
 
