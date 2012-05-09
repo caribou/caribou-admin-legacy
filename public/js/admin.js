@@ -378,9 +378,6 @@ caribou.admin = function() {
             });
             $('#main_content').html(main_content);
 
-            // Chosen-ify selects to make them pretty
-            //$('.chzn').chosen({allow_single_deselect: true});
-
             // Retrieve all instances of parts/collections/links to populated the selects
             // This is less than ideal, so many requests!
             var associatedFields = _.filter(model.fields, function(field) {
@@ -389,6 +386,14 @@ caribou.admin = function() {
 
 
             _.each(associatedFields, function(field) {
+
+              // Generate a hidden input container for each association, this will be used to manage new instances
+              var $container = $('<div />', {
+                style : 'display:none',
+                id    : [field.slug, 'input', 'container'].join('_'),
+                data  : { 'type': field.type }
+              }).appendTo( $('#main_content form') );
+
 
               caribou.api.get({
                 url: '/' + field.target().slug,
@@ -427,12 +432,6 @@ caribou.admin = function() {
                   // Enable the select
                   $select.removeAttr('disabled');
 
-
-                  // Update the chosen-ified select
-                  //$('.chzn').trigger('liszt:updated');
-
-                  // Can't chosenify fields until all options are there
-                  // refer to this bug: https://github.com/harvesthq/chosen/issues/609
                   $select.chosen({
                     // A fun little hack to get google-like instance creation on the fly
                     no_results_text: '<a href="/'+ [model.slug, field.slug].join('/') +'" class="new_'+ field.slug +'_trigger">Add a new '+ field.target().slug +'</a>: '
@@ -464,7 +463,7 @@ caribou.admin = function() {
                     var $modal, id = 'new_'+ field.target().slug;
 
                     // Kill the dropdown
-                    $select.data().chosen.close_field();
+                    $select.chosen().data().chosen.close_field();
 
                     // Build modal if it doesn't already exist
                     if(! ($modal = $('#'+id)).length) {
@@ -481,10 +480,14 @@ caribou.admin = function() {
 
                       $modal.append(content);
 
-                      // TODO
-                      // populate or hide the category
-                      // kill the inputs when an instantiated association is x'd out
-                      // add 'new product' button outside of form
+                      // Remove association fields (the associations will be set automatically)
+                      _.chain(field.target().fields)
+                        .filter(function(f) {
+                          return /collection|link|part/.test(f.type);
+                        })
+                        .each(function(f) {
+                          $(':input[name*='+ f.slug +']', $modal).closest('li').remove();
+                        });
 
                       // Override Cancel button
                       $('.cancel a', $modal).click(function(e) {
@@ -498,12 +501,22 @@ caribou.admin = function() {
                       $('.update', $modal).click(function(e) {
                         e.preventDefault();
 
-                        var formValues = $(this).closest('form').serializeArray();
-                        _.each(formValues, function(obj) {
-                          var name = obj.name, value = obj.value;
-                          var attributeMatch = name.match(/\[(.+)\]$/);
+                        var formValues = $(this).closest('form').serializeArray(),
+                            index = parseInt(new Date().getTime().toString().slice(8), 10);
 
-                          var index = parseInt(new Date().getTime().toString().slice(8), 10);
+                        // If its a many to one, we need to clear previous inputs
+                        // Also clear out any instantiated select options
+                        if(field.type === 'part') {
+                          $container.empty();
+                          $('option[value=""]', $select).remove();
+                          $select.trigger('liszt:updated');
+                        }
+
+                        _.each(formValues, function(obj) {
+                          var name = obj.name,
+                              value = obj.value,
+                              attributeMatch = name.match(/\[(.+)\]$/);
+
 
                           var $input = $('<input />', {
                             type  : 'hidden',
@@ -517,7 +530,7 @@ caribou.admin = function() {
                             $select.chosen().trigger('liszt:updated');
                           }
 
-                          $select.closest('form').append($input);
+                          $container.append($input);
 
                           $modal.trigger('reveal:close').remove();
 
