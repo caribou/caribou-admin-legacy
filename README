@@ -9,7 +9,7 @@ Add the following to your /etc/hosts file:
   127.0.0.1 admin.caribou.local
 
 ngingx
-Include the respective nginx config files from each repository in your main nginx config, 
+Include the respective nginx config files from each repository in your main nginx config,
 and swap out the root paths to point to your installation directory.
 
 Apache httpd
@@ -26,14 +26,20 @@ Enjoy!
 
 ## FIXME
   can't remove products from category
-  adding multiple new association instances causes issues with layering, events
+  backend isn't creating a new part entry on the fly
+  create a new association and save the part model, without refreshing the page try to create another new association
+   results in an error
 
 
 ## TODO
 create associations on model instances
   - get it to work with habtm
 
-  - create a category and create a new product on the fly
+  - FINISH: create a category and create a new product on the fly
+
+      kill the inputs when an instantiated association is x'd out
+      add 'new product' button outside of form
+
   - create a product and a new category on the fly
 
 page tree handling, sorting, blah'ing
@@ -60,20 +66,4 @@ search for a product, if I can't find it, use the place holder text as a link
   
 
 
-
-// Temporary: reset the hidden inputs
-$(selector).find('input[type=hidden]').remove();
-
-// Setup an input template
-var $input = $('<input type="hidden" />');
-
-// For each selected option
-_.each($(e.target).find('option:selected'), function(opt) {
-  // Build an input for each of the required types
-  var $i = $input.clone()
-            .attr('name', model.slug +'['+ field.slug +'][][id]')
-            .val(opt.value);
-
-  $(selector).append($i);
-});
 
