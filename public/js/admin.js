@@ -433,27 +433,107 @@ caribou.admin = function() {
 
                   // Can't chosenify fields until all options are there
                   // refer to this bug: https://github.com/harvesthq/chosen/issues/609
-                  $select.chosen()
+                  $select.chosen({
+                    // A fun little hack to get google-like instance creation on the fly
+                    no_results_text: '<a href="/'+ [model.slug, field.slug].join('/') +'" class="new_'+ field.slug +'_trigger">Add a new '+ field.target().slug +'</a>: '
+                  })
+                  // When we deselect an associated item we have to add it to the remove_$association_name$ input
+                  .change(function(e) {
+                    var selectedFieldIds = _.map($('option:selected', e.target), function(opt) {
+                          return parseInt(opt.value, 10);
+                        }),
+                        associatedIds = _.pluck(modelData[field.slug], 'id'),
+                        removableIds = _.compact( _.difference(associatedIds, selectedFieldIds) );
 
-                    // When we deselect an associated item we have to add it to the remove_$association_name$ input
-                    .change(function(e) {
-                      var selectedFieldIds = _.map($('option:selected', e.target), function(opt) {
-                            return parseInt(opt.value, 10);
-                          }),
-                          associatedIds = _.pluck(modelData[field.slug], 'id'),
-                          removableIds = _.compact( _.difference(associatedIds, selectedFieldIds) );
-
-                      var $input = $('<input />', {
-                        id: 'removed_' + field.slug,
-                        type: 'hidden',
-                        name: model.slug +'[removed_'+ field.slug +']',
-                        value: removableIds.join(',')
-                      });
-
-                      if(! $('#' + 'removed_' + field.slug).length)
-                        $select.after($input);
+                    var $input = $('<input />', {
+                      id: 'removed_' + field.slug,
+                      type: 'hidden',
+                      name: model.slug +'[removed_'+ field.slug +']',
+                      value: removableIds.join(',')
                     });
 
+                    if(! $('#' + 'removed_' + field.slug).length)
+                      $select.after($input);
+                  });
+
+                  // Handle creation of new instances on the fly
+                  // FIXME: shouldn't use live EVER, but delegate doesn't appear to be working?
+                  $('.new_'+ field.slug +'_trigger').live('click', function(e) {
+                    e.preventDefault();
+
+                    var $modal, id = 'new_'+ field.target().slug;
+
+                    // Cheap hack to kill the dropdown
+                    $('body').click();
+
+                    // Build modal if it doesn't already exist
+                    if(! ($modal = $('#'+id)).length) {
+                      $modal = $('<div />', {id: id, 'class':'reveal-modal'});
+
+                      var newViewContent = {};
+                      newViewContent[field.target().fields[0].slug] = $(this).siblings('span').text();
+
+                      var content = renderTemplate(model.slug, "mainContentFor<%= model %>Edit", {
+                        model: field.target(),
+                        content: newViewContent,
+                        action: 'create'
+                      });
+
+                      $modal.append(content);
+
+                      // TODO
+                      // populate or hide the category
+                      // kill the inputs when an instantiated association is x'd out
+                      // add 'new product' button outside of form
+
+                      // Override Cancel button
+                      $('.cancel a', $modal).click(function(e) {
+                        e.preventDefault();
+
+                        $modal.trigger('reveal:close').remove();
+                      });
+
+                      // Override the Create button
+                      $('.update', $modal).removeAttr('onclick');
+                      $('.update', $modal).click(function(e) {
+                        e.preventDefault();
+
+                        var formValues = $(this).closest('form').serializeArray();
+                        _.each(formValues, function(obj) {
+                          var name = obj.name, value = obj.value;
+                          var attributeMatch = name.match(/\[(.+)\]$/);
+
+                          var index = parseInt(new Date().getTime().toString().slice(8), 10);
+
+                          var $input = $('<input />', {
+                            type  : 'hidden',
+                            name  : model.slug +'['+ field.slug +']['+ index +']'+ attributeMatch[0],
+                            value : value
+                          });
+
+                          // Add relevant element to the select menu
+                          if(attributeMatch[1] === field.target().fields[0].slug) {
+                            $select.append( $('<option selected value="">' + value + '</option>') );
+                            $select.chosen().trigger('liszt:updated');
+                          }
+
+                          $select.closest('form').append($input);
+
+                          $modal.trigger('reveal:close').remove();
+
+                        });
+
+                      });
+
+
+                      // Append modal to the DOM
+                      $('body').append($modal);
+                    }
+
+                    // Fire it up
+                    $modal.reveal();
+
+                  });
 
                 }
 
