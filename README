@@ -40,7 +40,8 @@ create associations on model instances
       kill the inputs when an instantiated association is x'd out
       add 'new product' button outside of form
 
-  - create a product and a new category on the fly
+      refactor and build out for new models
+
 
 page tree handling, sorting, blah'ing
 

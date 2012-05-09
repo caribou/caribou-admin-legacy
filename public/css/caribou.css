@@ -1,4 +1,4 @@
-body {
+/*body {
     color: #fff;
     background-color: #111;
     font-family: Monospace;
@@ -54,4 +54,18 @@ ul {
 
 .label {
     color: #55cc99 !important;
+}
+
+*/
+
+.new_instance_button {
+  display: inline-block;
+  background: darkGray;
+  width: 25px;
+  text-align: center;
+  height: 23px;
+  color: white !important;
+  text-decoration: none !important;
+  vertical-align: top;
+  padding-top: 6px;
 }
