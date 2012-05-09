@@ -684,7 +684,8 @@ caribou.admin = function() {
               $('.cancel a', $modal).click(function(e) {
                 e.preventDefault();
 
-                $modal.trigger('reveal:close').remove();
+                $modal.trigger('reveal:close');
+                $modal.remove();
               });
 
 
@@ -735,7 +736,8 @@ caribou.admin = function() {
                   });
 
                   // Finally, close the dialog
-                  $modal.trigger('reveal:close').remove();
+                  $modal.trigger('reveal:close')
+                  $modal.remove();
 
                 });  // end click
 
