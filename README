@@ -38,10 +38,7 @@ create associations on model instances
   - get it to work with habtm
 
   - FINISH: create a category and create a new product on the fly
-
-      kill the inputs when an instantiated association is x'd out
-
-      refactor and build out for new models
+      SEE BUGS
 
 
 page tree handling, sorting, blah'ing

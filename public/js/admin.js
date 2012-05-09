@@ -586,6 +586,29 @@ caribou.admin = function() {
             })
 
             .change(function(e) {
+
+              // When a value is removed we have to trash its hidden fields as well so that
+              // the association doesn't get created!
+              // Gets kinda ugly here, but we want to make sure we have the proper scope
+              var $newInstanceFields = $('option[class=new_instance]', e.target),
+                  $selectedNewInstanceFields = $newInstanceFields.filter(':selected'),
+                  removableFieldsValues = _.map(_.difference(_.toArray($newInstanceFields), _.toArray($selectedNewInstanceFields)), function(el) {
+                    return el.innerText;
+                  });
+
+              _.each(removableFieldsValues, function(val) {
+                var $input = $(':input[value="'+ val +'"]', $parentForm),
+                    index  = $input.attr('name').match(/\[\w+\]\[(\d+)\]\[\w+\]/)[1];
+
+                // Remove the hidden inputs
+                $(':input[name*='+ index +']', $parentForm).remove();
+
+                // Also remove it from the dropdown
+                $('option:contains["'+ val +'"]', $select);
+              });
+
+
+
               // When we deselect an associated item we have to add it to the remove_$association_name$ input
               // First we need to figure out which ids _aren't_ selected...this requires a little work
               if(modelData) {
@@ -699,7 +722,7 @@ caribou.admin = function() {
                     // NOTE: By default the form will try to grab the innerText of the option tag
                     //   so we have to set an explicitly blank value so that the option is disregarded
                     if(attributeMatch[1] === fieldTargetSlug) {
-                      $select.append( $('<option selected value="">' + value + '</option>') );
+                      $select.append( $('<option selected value="" class="new_instance">' + value + '</option>') );
                       $select.chosen().trigger('liszt:updated');
                     }
 
@@ -717,30 +740,8 @@ caribou.admin = function() {
 
               return $modal;
 
-            }; // end buildModel
+            }; // end buildModal
 
-
-
-            // Listen to the deselecting of options
-            // If we find one that exists in our new instance container we need to trash it
-            //$('.search-choice-close').live('click', function(e) {
-            //  var instanceIdentifier = $(e.target).siblings('span').text();
-
-            //  // Gets kinda ugly here, but we want to make sure we have the proper scope
-            //  // so that we don't remove the wrong association
-            //  var associationType = $('select')
-            //                          .find('option')
-            //                          .filter(':contains("'+ instanceIdentifier +'")')
-            //                          .closest('select')
-            //                          .data('associationType');
-
-            //  var $parentForm = $('#'+ associationType +'_input_container');
-            //      $input = $(':input[value='+ instanceIdentifier +']', $parentForm),
-            //      index = $input.attr('name').match(/\[\w+\]\[(\d+)\]\[\w+\]/)[1];
-
-            //  $(':input[name*='+ index +']', $parentForm).remove();
-
-            //});
 
 
 
