@@ -450,6 +450,18 @@ caribou.admin = function() {
         $('#main_content').html(main_content);
 
 
+        // Retrieve all instances of parts/collections/links to populated the selects
+        // This is less than ideal, so many requests!
+        var associatedFields = _.filter(model.fields, function(field) {
+          return /collection|link|part/.test(field.type);
+        });
+
+        // Build up assocation fields for associated models
+        _.each(associatedFields, function(field) {
+          modelView.edit.associationFields(field, model);
+        });
+
+
         var upload = caribou.api.upload(function(response) {
           var src = caribou.remoteAPI+'/'+response.url;
           $('#'+response.context+'_asset').val(response.asset_id);
@@ -507,7 +519,7 @@ caribou.admin = function() {
       associationFields: function(field, model, modelData) {
 
         // Generate a hidden input container for each association, this will be used to manage new instances
-        var $container = $('<div />', {
+        var $parentForm = $('<div />', {
           style : 'display:none',
           id    : [field.slug, 'input', 'container'].join('_'),
           data  : { 'type': field.type }
@@ -541,14 +553,16 @@ caribou.admin = function() {
 
               // If the instance is associated to our model
               // Select it (looks at both parts and collections)
-              var modelDataField = modelData[field.slug];
-              if(_.isArray(modelDataField)) {
-                if(_.indexOf(_.pluck(modelDataField, 'id'), instance.id) > -1)
-                  $option.attr('selected', true);
-              } else {
-                // If it isn't an array, it must be a single element (or a 'part')
-                if(modelDataField.id == instance.id)
-                  $option.attr('selected', true);
+              if(modelData) {
+                var modelDataField = modelData[field.slug];
+                if(_.isArray(modelDataField)) {
+                  if(_.indexOf(_.pluck(modelDataField, 'id'), instance.id) > -1)
+                    $option.attr('selected', true);
+                } else {
+                  // If it isn't an array, it must be a single element (or a 'part')
+                  if(modelDataField.id == instance.id)
+                    $option.attr('selected', true);
+                }
               }
 
               // Append the option to the select
@@ -574,23 +588,30 @@ caribou.admin = function() {
             .change(function(e) {
               // When we deselect an associated item we have to add it to the remove_$association_name$ input
               // First we need to figure out which ids _aren't_ selected...this requires a little work
-              var selectedFieldIds = _.map($('option:selected', e.target), function(opt) {
-                    return parseInt(opt.value, 10);
-                  }),
-                  associatedIds = _.pluck(modelData[field.slug], 'id'),
-                  removableIds = _.compact( _.difference(associatedIds, selectedFieldIds) );
+              if(modelData) {
+                var selectedFieldIds = _.map($('option:selected', e.target), function(opt) {
+                      return parseInt(opt.value, 10);
+                    }),
+                    associatedIds = _.pluck(modelData[field.slug], 'id'),
+                    removableIds = _.compact( _.difference(associatedIds, selectedFieldIds) );
 
-              // Next we can take our ids and lump them into a special input
-              var $input = $('<input />', {
-                id: 'removed_' + field.slug,
-                type: 'hidden',
-                name: model.slug +'[removed_'+ field.slug +']',
-                value: removableIds.join(',')
-              });
+                // Next we can take our ids and lump them into a special input
+                var $input = $('<input />', {
+                  id: 'removed_' + field.slug,
+                  type: 'hidden',
+                  name: model.slug +'[removed_'+ field.slug +']',
+                  value: removableIds.join(',')
+                });
 
-              // Finally, add the input we don't already have it
-              if(! $('#' + 'removed_' + field.slug).length) $select.after($input);
+                // Finally, add the input we don't already have it
+                if(! $('#' + 'removed_' + field.slug).length) $select.after($input);
+              }
             });
+
+
+            // It's important that we add this data attribute AFTER we add chosen to the select
+            // because Chosen will throw away all of our previous datas
+            $select.data('associationType', field.slug);
 
 
             // Add the "New Blah Blah" button for the less-than-power users
@@ -656,7 +677,7 @@ caribou.admin = function() {
                   // If its a many to one, we need to clear previous inputs
                   // Also clear out any select options that were the result of a previous instantiation
                   if(field.type === 'part') {
-                    $container.empty();
+                    $parentForm.empty();
                     $('option[value=""]', $select).remove();
                     $select.trigger('liszt:updated');
                   }
@@ -675,24 +696,51 @@ caribou.admin = function() {
                     });
 
                     // Add relevant element to the select menu
-                    // By default the form will try to grab the innerText of the option tag
-                    // so we have to set an explicitly blank value so that the option is disregarded
-                    if(attributeMatch[1] === field.target().fields[0].slug) {
+                    // NOTE: By default the form will try to grab the innerText of the option tag
+                    //   so we have to set an explicitly blank value so that the option is disregarded
+                    if(attributeMatch[1] === fieldTargetSlug) {
                       $select.append( $('<option selected value="">' + value + '</option>') );
                       $select.chosen().trigger('liszt:updated');
                     }
 
-                    $container.append($input);
 
-                    // Finally, close the dialog
-                    $modal.trigger('reveal:close').remove();
+                    // Add the new input to the parent form
+                    $parentForm.append($input);
 
                   });
 
-              });
+                  // Finally, close the dialog
+                  $modal.trigger('reveal:close').remove();
+
+                });  // end click
+
 
               return $modal;
-            };
+
+            }; // end buildModel
+
+
+
+            // Listen to the deselecting of options
+            // If we find one that exists in our new instance container we need to trash it
+            //$('.search-choice-close').live('click', function(e) {
+            //  var instanceIdentifier = $(e.target).siblings('span').text();
+
+            //  // Gets kinda ugly here, but we want to make sure we have the proper scope
+            //  // so that we don't remove the wrong association
+            //  var associationType = $('select')
+            //                          .find('option')
+            //                          .filter(':contains("'+ instanceIdentifier +'")')
+            //                          .closest('select')
+            //                          .data('associationType');
+
+            //  var $parentForm = $('#'+ associationType +'_input_container');
+            //      $input = $(':input[value='+ instanceIdentifier +']', $parentForm),
+            //      index = $input.attr('name').match(/\[\w+\]\[(\d+)\]\[\w+\]/)[1];
+
+            //  $(':input[name*='+ index +']', $parentForm).remove();
+
+            //});
 
 
 
@@ -716,14 +764,13 @@ caribou.admin = function() {
 
               // Fire it up
               $modal.reveal();
-
             });
 
-          }
+          } // end success
 
-        });
+        }); // end caribou.api.get
 
-      }
+      } // end associationFields
     }
   };
   

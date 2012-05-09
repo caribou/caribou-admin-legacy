@@ -58,7 +58,7 @@ ul {
 
 */
 
-.new_instance_button {
+.chzn-container+.new_instance_button {
   display: inline-block;
   background: darkGray;
   width: 25px;
