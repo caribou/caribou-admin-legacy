@@ -604,7 +604,7 @@ caribou.admin = function() {
                 $(':input[name*='+ index +']', $parentForm).remove();
 
                 // Also remove it from the dropdown
-                $('option:contains["'+ val +'"]', $select);
+                $('option:contains("'+ val +'")', $select).remove();
               });
 
 
@@ -629,6 +629,8 @@ caribou.admin = function() {
                 // Finally, add the input we don't already have it
                 if(! $('#' + 'removed_' + field.slug).length) $select.after($input);
               }
+
+              $select.trigger('liszt:updated');
             });
 
 
@@ -754,9 +756,9 @@ caribou.admin = function() {
 
 
               // Kill the dropdown, we don't want it interfering with the modal
-              $select.chosen().data().chosen.close_field();
-
-
+              if($select.chosen().data().chosen)
+                $select.chosen().data().chosen.close_field();
+debugger;
               // Build modal if it doesn't already exist
               if(! ($modal = $('#'+id)).length) {
                 $modal = buildModal.call(this, id);
