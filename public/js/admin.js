@@ -463,8 +463,8 @@ caribou.admin = function() {
 
                     var $modal, id = 'new_'+ field.target().slug;
 
-                    // Cheap hack to kill the dropdown
-                    $('body').click();
+                    // Kill the dropdown
+                    $select.data().chosen.close_field();
 
                     // Build modal if it doesn't already exist
                     if(! ($modal = $('#'+id)).length) {
