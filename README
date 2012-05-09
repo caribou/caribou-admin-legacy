@@ -9,7 +9,7 @@ Add the following to your /etc/hosts file:
   127.0.0.1 admin.caribou.local
 
 ngingx
-Include the respective nginx config files from each repository in your main nginx config, 
+Include the respective nginx config files from each repository in your main nginx config,
 and swap out the root paths to point to your installation directory.
 
 Apache httpd
@@ -34,10 +34,15 @@ page tree handling, sorting, blah'ing
 
 figure out how to organize the views
 group caribou files under a single dir, move all 3rd party to 'javascripts'
-break caribou lib into its own file
+
+edit view
+  need to differentiate between model edit and generic model edit
+    model edit needs to have model settings field
+    also needs sidebar to add column types
+  this can be an explicit differentiator for now, just create a different view for the type
+  
 
 show view
-edit view
 
 create model
 destroy model

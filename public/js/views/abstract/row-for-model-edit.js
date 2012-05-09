@@ -92,7 +92,7 @@
           break;
       };
 
-      $('.options:first', this.$el).html($field);
+      $('.options', this.$el).first().append($field);
 
     },
 

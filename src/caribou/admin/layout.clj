@@ -50,11 +50,12 @@
 
         ;; Include libs
 
-        "/js/easyXDM.js"
+        "/javascripts/easyXDM.js"
         "/js/underscore.extensions.js"
         ;"/js/inflections.js"
         ;"/js/admin.js"
         "/js/app.js"
+        "/js/caribou.js"
 
         ;; Include Models
         "/js/models/model-data.js"
