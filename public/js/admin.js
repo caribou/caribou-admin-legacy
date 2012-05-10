@@ -532,8 +532,10 @@ caribou.admin = function() {
 
         // Make the request for the association to grab all instances
         // so that we can build a useful select menu!
+        var url = '/'+field.target().slug;
         caribou.api.get({
-          url: '/' + field.target().slug,
+          url: url,
+          data: { limit: 1000 },
           success: function(resp) {
 
             // Used to lookup the display text for the instance of a model
@@ -649,6 +651,9 @@ caribou.admin = function() {
             // overriding default form actions and removing association fields
             var buildModal = function(id) {
 
+              // Get rid of any existing modals
+              $('#' + id).remove();
+
               var $modal = $('<div />', {id: id, 'class':'reveal-modal'});
 
 
@@ -685,7 +690,6 @@ caribou.admin = function() {
                 e.preventDefault();
 
                 $modal.trigger('reveal:close');
-                $modal.remove();
               });
 
 
@@ -713,11 +717,19 @@ caribou.admin = function() {
                   _.each(formValues, function(obj) {
                     var name = obj.name,
                         value = obj.value,
-                        attributeMatch = name.match(/\[(.+)\]$/);
+                        attributeMatch = name.match(/\[(.+)\]$/),
+                        inputName = model.slug +'['+ field.slug +']';
+
+                    if(field.type === 'part') {
+                      inputName += attributeMatch[0];
+                    } else {
+                      inputName += ('['+ index +']'+ attributeMatch[0]);
+                    }
+
 
                     var $input = $('<input />', {
                       type  : 'hidden',
-                      name  : model.slug +'['+ field.slug +']['+ index +']'+ attributeMatch[0],
+                      name  : inputName,
                       value : value
                     });
 
@@ -737,7 +749,6 @@ caribou.admin = function() {
 
                   // Finally, close the dialog
                   $modal.trigger('reveal:close')
-                  $modal.remove();
 
                 });  // end click
 

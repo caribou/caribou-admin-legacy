@@ -25,13 +25,17 @@ Enjoy!
 
 
 ## FIXME
-  can't remove products from category
-  backend isn't creating a new part entry on the fly
-  modal is being buggy
-  create a new association and save the part model, without refreshing the page try to create another new association
-    results in an error
+
   closing out of the last option in a multiple select doesn't allow the user to collapse the dropdown
     this may be a chosen bug, have to use backspace to delete the last option
+
+  api issues:
+    requesting an include that has 0 records is fatal
+    can't remove associations
+    backend isn't creating a new part entry on the fly
+
+
+
 
 
 ## TODO
