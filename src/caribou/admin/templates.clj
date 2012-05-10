@@ -383,6 +383,7 @@
             ;; Fieldsets populated by js
             ;; -------------------------
 
+
             [:div.panel
               [:h3 "Model Fields"]
               [:div.panel_contents.model_fields_edit_table

@@ -43,10 +43,12 @@
 
 
       // Render fieldsets
+      // NOTE: A relic from viewSpecs, leave here as a reminder
       //var fieldsets = _.filter(this.viewSpec.response.content.main_content, function(item) {
       //  return item.type === 'fieldset';
       //});
       //_.each(fieldsets, this.renderFieldset);
+      this.renderFieldset();
 
 
       // Render hidden input
@@ -89,10 +91,8 @@
 
 
     renderFieldset: function(fieldset) {
-      var view = new caribou.Views.Generic.Form.Fieldset({
-        fields: this.model.fields,
-        viewSpec: this.viewSpec,
-        viewData: this.viewData
+      var view = new app.views.genericFormFieldset({
+        model: this.model,
       });
 
       $('#main_content form', this.$el).prepend(view.render().el);
@@ -114,7 +114,8 @@
 
     updateModel: function(e) {
       e.preventDefault();
-      caribou.admin.update(this.viewSpec.meta.model, this.viewSpec.meta.view.slug);
+      this.model.save();
+      //caribou.admin.update(this.viewSpec.meta.model, this.viewSpec.meta.view.slug);
     }
 
 

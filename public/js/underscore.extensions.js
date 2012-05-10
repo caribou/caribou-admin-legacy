@@ -71,8 +71,35 @@
     // 'default-string' => 'DefaultString'
     titlecase: function(string) {
       return _.lazyCapitalize(_.deparameterize(string));
-    }
+    },
 
+
+    // Convert JS object to params
+    // Lifted from Zepto
+    // http://zeptojs.com/zepto.js
+    param: function(obj, traditional) {
+
+      var escape = encodeURIComponent;
+
+      var serialize = function(params, obj, traditional, scope){
+        var array = _.isArray(obj);
+        _.each(obj, function(value, key, o) {
+          if (scope) key = traditional ? scope : scope + '[' + (array ? _.indexOf(_.keys(o), key.toString()) : key) + ']';
+          // handle data in serializeArray() format
+          if (!scope && array) params.add(value.name, value.value)
+          // recurse into nested objects
+          else if (traditional ? _.isArray(value) : _.isObject(value))
+            serialize(params, value, traditional, key)
+          else params.add(key, value)
+        });
+      };
+
+      var params = [];
+      params.add = function(k, v){ this.push(escape(k) + '=' + escape(v)) };
+      serialize(params, obj, traditional);
+      return params.join('&').replace('%20', '+');
+
+    }
 
 
   });

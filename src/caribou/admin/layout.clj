@@ -76,7 +76,7 @@
         ;"/js/views/generic/view.js"
         ;"/js/views/generic/view/panel.js"
         ;"/js/views/generic/view/panel-attributes-table.js"
-        ;"/js/views/generic/form/fieldset.js"
+        "/js/views/generic/form/fieldset.js"
         "/js/views/generic/table/header-column.js"
         "/js/views/generic/table/row.js"
         ;"/js/views/generic/table/column.js"

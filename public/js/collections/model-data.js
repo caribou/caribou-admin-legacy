@@ -76,6 +76,14 @@
           return response.response;
         }
       });
+    },
+
+
+
+    getModelByType: function(type) {
+      return this.detect(function(m) {
+        return m.get('slug') === type
+      }, this);
     }
 
 
