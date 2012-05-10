@@ -103,51 +103,50 @@
     }
 
 
-    params.type = 'GET'
-    params.url = 'http://127.0.0.1:33443' + params.url;
+    //params.url = 'http://127.0.0.1:33443' + params.url;
     // Make the request, allowing the user to override any Ajax options.
-    return $.ajax(_.extend(params, options));
+    //return $.ajax(_.extend(params, options));
 
 
     // Override standard ajax call with easyXDM
-    //var rpc = new easyXDM.Rpc({
-    //  remote: REMOTE+"/cors/"
-    //}, {
-    //  remote: {
-    //    request: {}
-    //  }
-    //});
+    var rpc = new easyXDM.Rpc({
+      remote: REMOTE+"/cors/"
+    }, {
+      remote: {
+        request: {}
+      }
+    });
 
-    //// easyXDM wants the arguments formatted a little differently,
-    //// so we have to do some playing around here
-    //var success = function(response) {
-    //  var data = JSON.parse(response.data),
-    //      statusCode = data.meta.status;
+    // easyXDM wants the arguments formatted a little differently,
+    // so we have to do some playing around here
+    var success = function(response) {
+      var data = JSON.parse(response.data),
+          statusCode = data.meta.status;
 
-    //  switch(statusCode) {
-    //    case '200':
-    //      options.success(data);
-    //      break;
-    //    case '403':
-    //      // TODO: Navigate to login page
-    //      console.log('YOU ARE TRYING TO ACCESS THE FORBIDDEN ZONE');
-    //      break;
-    //  };
-    //};
+      switch(statusCode) {
+        case '200':
+          options.success(data);
+          break;
+        case '403':
+          // TODO: Navigate to login page
+          console.log('YOU ARE TRYING TO ACCESS THE FORBIDDEN ZONE');
+          break;
+      };
+    };
 
-    //var error = function(response) {
-    //  options.error = options.error || function() {
-    //    console.log.apply(this, arguments);
-    //  }
+    var error = function(response) {
+      options.error = options.error || function() {
+        console.log.apply(this, arguments);
+      }
 
-    //  options.error(response);
-    //};
+      options.error(response);
+    };
 
-    //// easyXDM wants a 'method' rather than a 'type'
-    //params.method = params.type;
+    // easyXDM wants a 'method' rather than a 'type'
+    params.method = params.type;
 
-    //// Finally, make the actual request
-    //return rpc.request(params, success, error);
+    // Finally, make the actual request
+    return rpc.request(params, success, error);
 
 
   };
