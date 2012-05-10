@@ -1,5 +1,6 @@
 (ns caribou.admin.core
-  (:use compojure.core)
+  (:use compojure.core
+        [ring.middleware reload file stacktrace])
   (:require [clojure.string :as string]
             [clojure.java.io :as io]
             [compojure.route :as route]
@@ -35,4 +36,7 @@
 
 (defn init
   []
-  (def app (handler/site admin-routes)))
+  (def app (-> (handler/site admin-routes)
+               (wrap-reload 'caribou.admin.core)
+               (wrap-file "public")
+               (wrap-stacktrace))))

@@ -11,15 +11,21 @@
     <script src="/js/jquery.js" type="text/javascript"></script>
     <script src="/js/jquery-ui-1.8.2/jquery-ui.min.js" type="text/javascript"></script>
     <script src="/js/jquery.tmpl.js" type="text/javascript"></script>
+    <script src="/js/jquery.reveal.js" type="text/javascript"></script>
     <script src="/js/underscore.js" type="text/javascript"></script>
     <script src="/js/amplify.store.js" type="text/javascript"></script>
+    <script src="/js/chosen.jquery.min.js" type="text/javascript"></script>
     <script src="/js/history.adapter.jquery.js" type="text/javascript"></script>
     <script src="/js/history.js" type="text/javascript"></script>
     <script src="/js/sherpa.js" type="text/javascript"></script>
     <script src="/js/caribou.js" type="text/javascript"></script>
     <script src="/js/admin.js" type="text/javascript"></script>
     <link href="/stylesheets/active_admin.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="/stylesheets/chosen.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="/stylesheets/reveal.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="/css/caribou.css" rel="stylesheet" type="text/css" media="screen" />
   </head>
+
   
   <body class="logged_in admin_model show">
     
@@ -439,7 +445,7 @@ EDIT TEMPLATES
       <legend><span>Model Settings</span></legend>
       <ol>
         {{each(i, field) model.fields}}
-        {{if field.editable && field.slug != 'position'}}
+        {{if field.editable && !(/position|fields/).test(field.slug)}}
         <li class="${field.type} required" id="${$data.model.slug}_${field.slug}_input">
           {{tmpl({model: $data.model, content: $data.content, field: field}) "#"+field.type+"Field"}}
         </li>
@@ -525,6 +531,17 @@ MODEL FIELD FORM TEMPLATES
   </div>
 </script>
 
+<script id="linkFieldOptions" type="text/x-jquery-tmpl">
+  <div class="field">
+    <label for="">Target Model</label>
+    <select name="model[fields][${index}][target_id]">
+      {{each(i, name) caribou.modelNames}}
+      <option{{if field.target_id == caribou.models[name].id}} selected="selected"{{/if}} value="${ caribou.models[name].id }">${ caribou.models[name].name }</option>
+      {{/each}}
+    </select>
+  </div>
+</script>
+
 <script id="slugLinkFieldOptions" type="text/x-jquery-tmpl">
   <div class="field">
     <label for="">Linked field</label>
@@ -532,8 +549,6 @@ MODEL FIELD FORM TEMPLATES
   </div>
 </script>
 
-<script id="linkFieldOptions" type="text/x-jquery-tmpl">
-</script>
 
 <!-- 
 
@@ -550,7 +565,23 @@ VIEW TEMPLATES
           {{each(i, field) model.fields}}
           <tr>
             <th><label class="label">${field.name}</label></th>
-            <td>{{if $data.content[field.slug] == null}}<span class="empty">Empty</span>{{else}}${$data.content[field.slug]}{{/if}}</td>
+            <td>
+              {{if $data.content[field.slug] == null}}
+                <span class="empty">Empty</span>
+              {{else}}
+                {{if $data.content[field.slug].constructor === Array }}
+                  <ul>
+                  {{each(i, f) $data.content[field.slug]}}
+                  <li>${JSON.stringify(f)}</li>
+                  {{/each}}
+                  </ul>
+                {{else _.isObject($data.content[field.slug])}}
+                  ${JSON.stringify($data.content[field.slug])}
+                {{else}}
+                  ${$data.content[field.slug]}
+                {{/if}}
+              {{/if}}
+            </td>
           </tr>
           {{/each}}
         </table>
@@ -638,8 +669,13 @@ FIELD INPUT TEMPLATES
 </script>
 
 <script id="collectionField" type="text/x-jquery-tmpl">
-  
+  <label for>${field.name}</label>
+  <select style="width:76%" data-placeholder="Select ${field.name}" multiple disabled name="${$data.model.slug}[${field.slug}][][id]" class="chzn">
+    <option></option>
+    <!-- remaining options are populated via js -->
+  </select>
 </script>
+
 
 <script id="collectionFieldOld" type="text/x-jquery-tmpl">
   {{tmpl({model: field.target(), content: content[field.slug], meta: {}}) "#mainContentForList"}}
@@ -647,7 +683,10 @@ FIELD INPUT TEMPLATES
 
 <script id="partField" type="text/x-jquery-tmpl">
   <label for="${$data.model.slug}_${field.slug}">${field.name}<abbr title="required">*</abbr></label>
-  <input type="text" name="${model.slug}[${field.slug}]" value="${content[field.slug]}" />
+  <select style="width:76%;" data-placeholder="Select ${field.name}" disabled name="${$data.model.slug}[${field.slug}_id]" class="chzn">
+    <option></option>
+    <!-- remaining options are populated via js -->
+  </select>
 </script>
 
 <script id="linkField" type="text/x-jquery-tmpl">
