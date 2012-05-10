@@ -34,6 +34,7 @@ Enjoy!
     can't remove associations
     backend isn't creating a new part entry on the fly
 
+  habtm not supported yet
 
 
 
@@ -50,24 +51,3 @@ page tree handling, sorting, blah'ing
 
 
 ## NOTES
-
-association identity
-  ideally I would be able to target a field on the association when I create the link
-
-
-
-new product on the fly
-search for a product, if I can't find it, use the place holder text as a link
-  the new link will open up a lightbox (ugh) with the new product form
-  category selection will be disabled (have to check against the current url maybe?)
-
-  when the form is submitted the dialog should disappear and the new id should be selected
-    this will just be the illusion of a new record though
-    won't actually save it to the db when the dialog is submitted
-    it will have to just create the hidden fields for the new product
-    then add basically a blank field to the select
-    will bind events to that select to remove the hidden fields when its x'd out
-  
-
-
-
