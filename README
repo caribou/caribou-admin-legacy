@@ -48,26 +48,6 @@ Enjoy!
 create associations on model instances
   - get it to work with habtm
 
-habtm
-  create two new models
-  setup a 'link' between them
-
-  what does that look like?
-    on either side there will be a dropdown with the collection to associate to
-    when a model is chosen, the fields are generated, all I have to do is send the id
-
-  on the edit view
-    I need to filter out the fields that don't make any sense to have, it should just render a dropdown with the model
-
-  on the instance views
-    i need to have multiple selects on either side
-    hide the fields I don't need, create new instances on the fly, same as 1..n
-
-  # QUESTIONS
-  does the user care about the joins (do we want to display that model in the listings)?
-
-
-
 page tree handling, sorting, blah'ing
 
 
