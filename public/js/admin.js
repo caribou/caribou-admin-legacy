@@ -94,14 +94,16 @@ caribou.admin = function() {
   }();
 
   var headerNav = function(modelname) {
-    if ($('#tabs').html() == '') {
-      var choices = _.map(caribou.modelNames, function(modelName) {
-        var model = caribou.models[modelName];
-        return {url: _.template('/<%= slug %>', model), title: model.name};
-      });
-      var tabs = template.tabbedNavigation({chosen: modelname, choices: choices});
-      $('#tabs').html(tabs);
-    }
+
+    var choices = _.chain(caribou.modelNames).map(function(modelName) {
+      var model = caribou.models[modelName];
+      // We don't want any join models in here
+      if(model.join_model) return;
+
+      return {url: _.template('/<%= slug %>', model), title: model.name};
+    }).compact().value();
+    var tabs = template.tabbedNavigation({chosen: modelname, choices: choices});
+    $('#tabs').empty().append(tabs);
 
     nav.highlight(modelname);
   };
@@ -205,6 +207,10 @@ caribou.admin = function() {
       success: function(response) {
         var succeed = function() {
           $('#'+name+'_'+id).remove();
+          delete caribou.models[name];
+          delete caribou.models[id];
+          caribou.modelNames = _.reject(caribou.modelNames, function(n) { return n === name });
+          headerNav();
         };
         if (name === 'model') {
           caribou.resetModels(succeed);
@@ -291,6 +297,7 @@ caribou.admin = function() {
           return collection.slug;
         }).join(',');
 
+
         var url = _.template('/<%= model %>/<%= id %>', params);
 
         caribou.api.get({
@@ -320,9 +327,21 @@ caribou.admin = function() {
             });
             $('#sidebar').html(sidebar);
 
+
+            var joinModels = _.select(model.fields, function(field) {
+              return field.target() && field.target().join_model;
+            });
+
+            var modelData = response.response;
+
+            _.each(_.pluck(joinModels, 'slug'), function(name) {
+              delete modelData[name];
+              model.fields = _.reject(model.fields, function(field) { return field.slug === name });
+            });
+
             var main_content = renderTemplate(model.slug, "mainContentFor<%= model %>View", {
               model: model, 
-              content: response.response, 
+              content: modelData, 
               meta: response.meta,
               action: 'update'
             });
@@ -353,7 +372,19 @@ caribou.admin = function() {
           url: url,
           data: {include: include},
           success: function(response) {
+
+            var joinModels = _.select(model.fields, function(field) {
+              return field.target() && field.target().join_model;
+            });
+
+
             modelData = response.response;
+
+            _.each(_.pluck(joinModels, 'slug'), function(name) {
+              delete modelData[name];
+              model.fields = _.reject(model.fields, function(field) { return field.slug === name });
+            });
+
 
             headerNav(params.model);
 
@@ -386,6 +417,8 @@ caribou.admin = function() {
 
             // Build up assocation fields for associated models
             _.each(associatedFields, function(field) {
+              // We don't want to display the join models
+              if(field.target().join_model) return;
               modelView.edit.associationFields(field, model, modelData);
             });
 
