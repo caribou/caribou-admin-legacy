@@ -175,9 +175,10 @@ var caribou = function() {
             }(target_id) : function() {};
           }
 
+          if(!models[model.id]) modelNames.push(model.slug);
+
           models[model.id] = model;
           models[model.slug] = model;
-          modelNames.push(model.slug);
         });
 
         success();

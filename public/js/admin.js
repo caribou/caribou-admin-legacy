@@ -95,17 +95,15 @@ caribou.admin = function() {
 
   var headerNav = function(modelname) {
 
-    if ($('#tabs').html() == '') {
-      var choices = _.compact(_.map(caribou.modelNames, function(modelName) {
-        var model = caribou.models[modelName];
-        // We don't want any join models in here
-        if(model.join_model) return;
+    var choices = _.chain(caribou.modelNames).map(function(modelName) {
+      var model = caribou.models[modelName];
+      // We don't want any join models in here
+      if(model.join_model) return;
 
-        return {url: _.template('/<%= slug %>', model), title: model.name};
-      }));
-      var tabs = template.tabbedNavigation({chosen: modelname, choices: choices});
-      $('#tabs').html(tabs);
-    }
+      return {url: _.template('/<%= slug %>', model), title: model.name};
+    }).compact().value();
+    var tabs = template.tabbedNavigation({chosen: modelname, choices: choices});
+    $('#tabs').empty().append(tabs);
 
     nav.highlight(modelname);
   };
@@ -209,6 +207,10 @@ caribou.admin = function() {
       success: function(response) {
         var succeed = function() {
           $('#'+name+'_'+id).remove();
+          delete caribou.models[name];
+          delete caribou.models[id];
+          caribou.modelNames = _.reject(caribou.modelNames, function(n) { return n === name });
+          headerNav();
         };
         if (name === 'model') {
           caribou.resetModels(succeed);
