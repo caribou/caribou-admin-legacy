@@ -25,6 +25,7 @@ Enjoy!
 
 
 ## FIXME
+Abstract model sidebar events not working
 
 
 
@@ -34,12 +35,7 @@ page tree handling, sorting, blah'ing
 
 figure out how to organize the views
 
-edit view
-  need to differentiate between model edit and generic model edit
-    model edit needs to have model settings field
-    also needs sidebar to add column types
-  this can be an explicit differentiator for now, just create a different view for the type
-  
+instance edit view
 
 show view
 
@@ -50,9 +46,11 @@ create instance of model
 destroy instance
 update instance
 
-integrate view specs
-
 create associations
+
+view specs
+
+page sorting
 
 hook up datatables
 refactor navigation

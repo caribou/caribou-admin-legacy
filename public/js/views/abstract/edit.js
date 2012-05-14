@@ -36,11 +36,6 @@
       // Render template
       this.$el.html(output);
 
-      // FIXME
-      // this references a model edit
-      // I still NEED a model instance edit view
-      // FIXME
-
 
       // Render fieldsets
       // NOTE: A relic from viewSpecs, leave here as a reminder
@@ -51,38 +46,22 @@
       this.renderFieldset();
 
 
-      // Render hidden input
-      //$('form div:first', this.$el).html(this.make('input', {
-      //  type  : 'hidden',
-      //  name  : this.viewSpec.meta.model + '[id]',
-      //  value : this.viewData.response.id
-      //}));
-
-
       // Render abstract fields on model
       _.each(model.get('fields'), this.renderAbstractField);
 
 
       // Render the sidebar
-      //var sidebar = new caribou.Views.Generic.Sidebar({
-      //  viewSpec: this.viewSpec,
-      //  viewData: this.viewData,
-      //  panels: {
-      //    'model-details': {
-      //      id: ['attributes_table', this.viewSpec.meta.view.slug, this.viewData.response.id].join('_'),
-      //      className: this.viewSpec.meta.view.slug
-      //    },
-      //    'editable-fields': {}
-      //  }
-      //});
+      var sidebar = new app.views.AbstractSidebar({
+        model: model
+      });
 
 
       // FIXME: This is a little janky right now, but we can't insert
       // an element _after_ another until its actually in the DOM
-      //var $el = this.$el;
-      //this.el.addEventListener('DOMNodeInserted', _.once(function() {
-      //  $el.after(sidebar.render().el);
-      //}), false);
+      var $el = this.$el;
+      this.el.addEventListener('DOMNodeInserted', function() {
+        $el.after(sidebar.render().el);
+      }, false);
 
 
       return this;
@@ -114,8 +93,8 @@
 
     updateModel: function(e) {
       e.preventDefault();
+
       this.model.save();
-      //caribou.admin.update(this.viewSpec.meta.model, this.viewSpec.meta.view.slug);
     }
 
 

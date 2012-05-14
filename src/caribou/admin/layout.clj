@@ -70,7 +70,6 @@
         ;"/js/views/tools/action-item.js"
         "/js/views/generic/edit.js"
         ;"/js/views/generic/new.js"
-        ;"/js/views/generic/sidebar.js"
         ;"/js/views/generic/index.js"
         ;"/js/views/generic/index/footer.js"
         ;"/js/views/generic/view.js"
@@ -85,6 +84,7 @@
         ;"/js/views/global/notification/flash.js"
         "/js/views/abstract/row-for-model-edit.js"
         "/js/views/abstract/edit.js"
+        "/js/views/abstract/sidebar.js"
 
         ;; Last of all, the router
         "/js/mediator.js"

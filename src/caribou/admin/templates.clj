@@ -460,31 +460,60 @@
            "Drag"]])
 
 
-      :field-options
-      { :string
-        (html
-          [:div.field
-            [:label
-              "Default value"]
-            [:input.slug_options
-              { :type "text"
-                :name "model[fields][{{ index }}][default_value]" }]]) ;; "value" attribute is set by js
+     :field-options
+     { :string
+       (html
+         [:div.field
+           [:label
+             "Default value"]
+           [:input.slug_options
+             { :type "text"
+               :name "model[fields][{{ index }}][default_value]" }]]) ;; "value" attribute is set by js
 
-        :boolean
-        (html
-          [:div.field
-            [:label
-              "Default value"]
-            [:select
-              { :name "model[fields][{{ index }}][default_value]" }
-              [:option { :value "true" } "true"]      ;; "selected" attribute is set by js
-              [:option { :value "false" } "false"]]]) ;; "selected" attribute is set by js
+       :boolean
+       (html
+         [:div.field
+           [:label
+             "Default value"]
+           [:select
+             { :name "model[fields][{{ index }}][default_value]" }
+             [:option { :value "true" } "true"]      ;; "selected" attribute is set by js
+             [:option { :value "false" } "false"]]]) ;; "selected" attribute is set by js
 
-        :link
-        (html
-          [:div.field
-            [:label
-              "Linked field"]
-            [:select.slug_options
-              { :name "model[fields][{{ index }}][link_slug]" }
-              ""]])}}})
+       :link
+       (html
+         [:div.field
+           [:label
+             "Linked field"]
+           [:select.slug_options
+             { :name "model[fields][{{ index }}][link_slug]" }
+             ""]])}
+
+
+     :sidebar
+     { :model-details
+       (html
+         [:div#filters_sidebar_section.panel.sidebar_section
+           [:h3 "Model Details"]
+           [:div.panel_contents
+             [:div
+               { :class "attributes_table {{ className }}" }
+               [:table
+                 { :border "0"
+                   :cellspacing "0"
+                   :cellpadding "0" }
+                 ;; --------------------
+                 ;; Rows populated by js
+                 ;; --------------------
+                 ]]]])
+
+       :editable-fields
+       (html
+         [:div#fields_sidebar_section.panel.sidebar_section
+           [:h3 "Model Builder"]
+           [:div.panel_contents
+             [:ul
+               ;; ----------------------
+               ;; Fields populated by js
+               ;; ----------------------
+               ]]])}}})
