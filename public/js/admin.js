@@ -346,6 +346,16 @@ caribou.admin = function() {
               action: 'update'
             });
             $('#main_content').html(main_content);
+
+
+            // Bind 'show all fields' event
+            $('.toggle-fields', '#main_content').click(function(e) {
+              e.preventDefault();
+
+              var $panel = $(this).closest('.panel');
+
+              $panel.find('tr.hidden').toggle(300);
+            });
           }
         });
       }
@@ -825,6 +835,60 @@ caribou.admin = function() {
     $('#upload_context').val(context);
     $('#upload_dialog').dialog('open');
   };
+
+
+  /*//////////////////////////////////////////////
+  //
+  // HELPERS
+  //
+  *///////////////////////////////////////////////
+
+  var isPresentable = function(field, view) {
+
+    var strategies = {
+
+      list: function(field) {
+        var c = [], whitelist = ['id', 'updated_at'];
+
+        // Is it editable or whitelisted?
+        c.push(field.editable || _.contains(whitelist, field.slug));
+
+        // Ensure it isn't a join model
+        c.push(! field.join_model);
+
+        // Ensure it isn't a collection
+        c.push(field.type !== 'collection');
+
+        return c;
+      },
+
+
+      view: function(field) {
+        var c = [], whitelist = ['id', 'updated_at'];
+
+        // Is it editable or whitelisted?
+        c.push(field.editable || _.contains(whitelist, field.slug));
+
+        // Ensure it isn't an associated position
+        c.push(! /_position$/.test(field.slug));
+
+        return c;
+
+      },
+
+
+      edit: function(field) {}
+    };
+
+
+    // Run the strategies
+    var criterion = strategies[view](field);
+
+    // Finally make sure all of our tests are truthy
+    return _.all(criterion, _.identity);
+
+  };
+
   
   /*//////////////////////////////////////////////
   //
@@ -867,7 +931,8 @@ caribou.admin = function() {
     genericView: genericView,
     modelView: modelView,
     slugOptions: slugOptions,
-    showUploadForm: showUploadForm
+    showUploadForm: showUploadForm,
+    isPresentable: isPresentable
   };
   
 }();

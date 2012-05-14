@@ -31,24 +31,20 @@ Enjoy!
   closing out of the last option in a multiple select doesn't allow the user to collapse the dropdown
     this may be a chosen bug, have to use backspace to delete the last option
 
-  api issues:
-    can't remove associations
-    backend isn't creating a new part entry on the fly
-
-
-  habtm bugs
-    creating a new person on the fly didn't work
-      (it created a new join, but with no referencing model, no errors)
-    everytime I update it creates a new join
-    hide join model display in edit/new form
+  show 'part' link or name in table views
 
 
 
 ## TODO
-create associations on model instances
-  - get it to work with habtm
-
+viewspec
+  view page
+  edit page
 page tree handling, sorting, blah'ing
 
 
 ## NOTES
+viewspecs
+  to start:
+  in the views, same thing, but gather all fields into a hidden div
+  have option to see other fields in a 'see more' link
+

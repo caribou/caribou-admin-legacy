@@ -69,3 +69,17 @@ ul {
   vertical-align: top;
   padding-top: 6px;
 }
+
+.hidden {
+  display: none;
+}
+
+.toggle-fields {
+  float: right;
+  font-weight: normal;
+  font-size: 90%;
+  text-transform: uppercase;
+  text-shadow: none;
+  text-decoration: none !important;
+}
+

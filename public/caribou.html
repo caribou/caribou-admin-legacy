@@ -299,7 +299,9 @@ LIST TEMPLATES
 
 <script id="mainContentForGenericRow" type="text/x-jquery-tmpl">
   {{each(i, field) model.fields}}
+  {{if caribou.admin.isPresentable(field, 'list') }}
   <td>{{if i==0}}<a href="javascript:;" onclick="caribou.go('/${$data.model.slug}/${content.id}')">{{/if}}${content[field.slug]}{{if i==0}}</a>{{/if}}</td>
+  {{/if}}
   {{/each}}
   <td>
     <a href="javascript:;" onclick="caribou.go('/${model.slug}/${content.id}')" class="member_link view_link">View</a>
@@ -335,9 +337,11 @@ LIST TEMPLATES
             <thead>
               <tr>
                 {{each(i, field) model.fields}}
+                {{if caribou.admin.isPresentable(field, 'list') }}
                 <th class="{{if field.slug === meta.order_by}}sorted-${meta.order}{{/if}} sortable">
                   <a href="javascript:;" onclick="caribou.go('/${$data.model.slug}?page=${meta.page}&page_size=${meta.page_size}&order_by=${field.slug}&order=${meta.order === 'asc' ? 'desc' : 'asc'}')">${field.name}</a>
                 </th>
+                {{/if}}
                 {{/each}}
                 <th>&nbsp;</th>
               </tr>
@@ -558,12 +562,12 @@ VIEW TEMPLATES
 
 <script id="mainContentForGenericView" type="text/x-jquery-tmpl">
   <div class="panel">
-    <h3>${model.name} Details</h3>
+    <h3>${model.name} Details <a href="#" class="toggle-fields">Toggle Hidden Fields</a></h3>
     <div class="panel_contents">
       <div class="${model.slug} attributes_table" id="attributes_table_${model.slug}_${content.id}">
         <table border="0" cellspacing="0" cellpadding="0">
           {{each(i, field) model.fields}}
-          <tr>
+          <tr {{if !caribou.admin.isPresentable(field, 'view') }}class="hidden"{{/if}}>
             <th><label class="label">${field.name}</label></th>
             <td>
               {{if $data.content[field.slug] == null}}
