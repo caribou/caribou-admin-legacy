@@ -85,6 +85,7 @@
         "/js/views/abstract/row-for-model-edit.js"
         "/js/views/abstract/edit.js"
         "/js/views/abstract/sidebar.js"
+        "/js/views/abstract/form/fieldset.js"
 
         ;; Last of all, the router
         "/js/mediator.js"

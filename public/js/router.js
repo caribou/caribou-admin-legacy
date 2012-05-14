@@ -80,7 +80,7 @@
 
 
     // FIXME: this looks a lot like modelShow, opportunity to DRY
-    // TODO: think about the even naming schema here, not sure it works
+    // TODO: think about the event naming schema here, not sure it works
     modelEdit: function(modelName, id) {
 
       // Fetch data for the specified model if we don't already have it

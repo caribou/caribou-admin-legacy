@@ -303,30 +303,6 @@
             ;; Fieldsets populated by js
             ;; -------------------------
 
-            [:div.panel
-              [:h3 "Model Fields"]
-              [:div.panel_contents.model_fields_edit_table
-                [:input#removed_fields
-                  { :type "hidden"
-                    :name "{{ modelType }}[removed_fields]" }]
-                [:table
-                  { :borders "0"
-                    :cellspacing "0"
-                    :cellpadding "0" }
-                  [:thead
-                    [:tr
-                      [:th "Name"]
-                      [:th "Type"]
-                      [:th "Options"]
-                      [:th "&nbsp;"]
-                      [:th "&nbsp;"]]]
-                  [:tbody.sortable
-                    ;; --------------------
-                    ;; Rows populated by js
-                    ;; --------------------
-                    ]]]]
-
-
             [:fieldset.buttons
               [:ol
                 [:li.commit.button

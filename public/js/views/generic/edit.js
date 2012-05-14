@@ -1,6 +1,6 @@
 (function(app, Caribou, _){
 
-  // Renders the primary model edit form
+  // Renders the generic model edit form
 
   app.views.GenericModelEdit = Caribou.View.extend({
 
@@ -11,7 +11,7 @@
 
 
     initialize: function() {
-      _.bindAll(this, 'renderFieldset', 'renderAbstractField', 'updateModel');
+      _.bindAll(this, 'renderFieldset', 'updateModel');
     },
 
 
@@ -36,17 +36,9 @@
       // Render template
       this.$el.html(output);
 
-      // FIXME
-      // this references a model edit
-      // I still NEED a model instance edit view
-      // FIXME
 
-
-      // Render fieldsets
-      //var fieldsets = _.filter(this.viewSpec.response.content.main_content, function(item) {
-      //  return item.type === 'fieldset';
-      //});
-      //_.each(fieldsets, this.renderFieldset);
+      // Render fieldset
+      this.renderFieldset();
 
 
       // Render hidden input
@@ -55,10 +47,6 @@
       //  name  : this.viewSpec.meta.model + '[id]',
       //  value : this.viewData.response.id
       //}));
-
-
-      // Render abstract fields on model
-      _.each(model.get('fields'), this.renderAbstractField);
 
 
       // Render the sidebar
@@ -88,26 +76,12 @@
 
 
 
-    renderFieldset: function(fieldset) {
-      var view = new caribou.Views.Generic.Form.Fieldset({
-        fields: this.model.fields,
-        viewSpec: this.viewSpec,
-        viewData: this.viewData
+    renderFieldset: function() {
+      var view = new app.views.GenericFormFieldset({
+        model: this.model,
       });
 
       $('#main_content form', this.$el).prepend(view.render().el);
-    },
-
-
-
-    renderAbstractField: function(field, i) {
-      var view = new app.views.AbstractRowForModelEdit({
-        field: field,
-        index: i,
-        model: this.model
-      });
-
-      $('.model_fields_edit_table table tbody', this.$el).append(view.render().el);
     },
 
 

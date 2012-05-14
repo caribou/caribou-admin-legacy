@@ -1,8 +1,9 @@
 (function(app, Caribou, _) {
 
   // Renders a fieldset with fields
+  // Usually references a special set of data that doesn't fit into the rest
 
-  app.views.GenericFormFieldset = Caribou.View.extend({
+  app.views.AbstractFormFieldset = Caribou.View.extend({
 
     tagName: 'fieldset',
 
@@ -24,18 +25,18 @@
 
     render: function() {
 
-      var output = this.make('ol');
+      var output = [
+        this.make('legend', {}, '<span>Model Settings</span>'),
+        this.make('ol')];
 
-      this.$el.append(output);
+      this.$el.html(output);
 
 
       // Append each of the appropriate fields
-      var fields = app.modelData.getModelByType(this.model.meta.type).get('fields'),
+      var fields = app.modelData.get(this.model.id).get('fields'),
           filteredFields = _.filter(fields, function(field) {
             return field.editable && !(/position|fields/).test(field.slug);
           });
-
-      debugger;
 
       _.each(filteredFields, this.renderField);
 

@@ -24,6 +24,13 @@ Navigate to http://admin.caribou.local
 Enjoy!
 
 
+
+## GOALS today
+basic generic edit view
+basic show views for generic and abstract
+
+
+
 ## FIXME
 Abstract model sidebar events not working
 
@@ -35,7 +42,14 @@ page tree handling, sorting, blah'ing
 
 figure out how to organize the views
 
-instance edit view
+generic edit view
+  model details (sidebar)
+
+
+abstract edit view
+  sortable fields
+  delete fields
+  model details
 
 show view
 
@@ -61,3 +75,11 @@ user roles
 
 
 ## NOTES
+generic fieldset is trying to do to much
+the abstract model has a model settings section that it needs
+
+the generic fieldset should just render the fields for the generic field list
+
+and it should render all fields that are editable
+
+then abstract model fieldset should 

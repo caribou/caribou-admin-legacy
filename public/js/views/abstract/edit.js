@@ -69,8 +69,8 @@
 
 
 
-    renderFieldset: function(fieldset) {
-      var view = new app.views.genericFormFieldset({
+    renderFieldset: function() {
+      var view = new app.views.AbstractFormFieldset({
         model: this.model,
       });
 
