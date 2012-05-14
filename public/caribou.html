@@ -414,9 +414,10 @@ EDIT TEMPLATES
       {{/if}}
     </div>
     <fieldset class="inputs">
+      <h3><a href="#" class="toggle-fields">Toggle Hidden Fields</a></h3>
       <ol>
         {{each(i, field) model.fields}}
-        <li class="${field.type} required" id="${$data.model.slug}_${field.slug}_input">
+        <li class="${field.type} required {{if !caribou.admin.isPresentable(field, 'edit') }}hidden{{/if}}" id="${$data.model.slug}_${field.slug}_input">
           {{if field.editable}}
           {{tmpl({model: $data.model, content: $data.content, field: field}) "#"+field.type+"Field"}}
           {{else}}

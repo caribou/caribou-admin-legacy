@@ -419,6 +419,17 @@ caribou.admin = function() {
             });
             $('#main_content').html(main_content);
 
+
+            // Bind 'show all fields' event
+            $('.toggle-fields', '#main_content').click(function(e) {
+              e.preventDefault();
+
+              var $fieldset = $(this).closest('fieldset');
+
+              $fieldset.find('li.hidden').fadeToggle(300);
+            });
+
+
             // Retrieve all instances of parts/collections/links to populated the selects
             // This is less than ideal, so many requests!
             var associatedFields = _.filter(model.fields, function(field) {
@@ -492,6 +503,14 @@ caribou.admin = function() {
         });
         $('#main_content').html(main_content);
 
+        // Bind 'show all fields' event
+        $('.toggle-fields', '#main_content').click(function(e) {
+          e.preventDefault();
+
+          var $fieldset = $(this).closest('fieldset');
+
+          $fieldset.find('li.hidden').fadeToggle(300);
+        });
 
         // Retrieve all instances of parts/collections/links to populated the selects
         // This is less than ideal, so many requests!
@@ -877,7 +896,17 @@ caribou.admin = function() {
       },
 
 
-      edit: function(field) {}
+      edit: function(field) {
+        var c = [], whitelist = ['id', 'updated_at'];
+
+        // Is it editable or whitelisted?
+        c.push(field.editable || _.contains(whitelist, field.slug));
+
+        // Ensure it isn't an associated position
+        c.push(! /_position$/.test(field.slug));
+
+        return c;
+      }
     };
 
 
