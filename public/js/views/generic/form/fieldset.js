@@ -24,9 +24,11 @@
 
     render: function() {
 
-      var output = this.make('ol');
+      var legend = this.make('legend', {}, '<span>Model Fields</span>'),
+          output = this.make('ol');
 
-      this.$el.append(output);
+      this.$el.append([legend, output]);
+
 
 
       // Append each of the appropriate fields
@@ -35,9 +37,10 @@
             return field.editable && !(/position|fields/).test(field.slug);
           });
 
-      debugger;
 
       _.each(filteredFields, this.renderField);
+
+      // TODO: render filtered-out fields in a hidden container as a 'see more' type of thang
 
       return this;
     },
