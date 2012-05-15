@@ -733,6 +733,10 @@ caribou.admin = function() {
               });
 
 
+              // Remove the toggle fiends button
+              $('.toggle-fields', content).remove();
+
+
               // Populate the modal with the newly generated content
               $modal.append(content);
 
