@@ -25,20 +25,16 @@ Enjoy!
 
 
 
-## GOALS today
-
+## EOW goals
+associations (rendering, interactions) (still can't save cause of xdomain shit)
+view specs
 
 
 ## FIXME
-Abstract model sidebar events not working
 
 
 
 ## TODO
-create associations on model instances
-page tree handling, sorting, blah'ing
-
-figure out how to organize the views
 
 
 abstract edit view
@@ -64,7 +60,9 @@ breadcrumbs
 actions
 
 
-page sorting
+page tree handling, sorting, blah'ing
+
+figure out how to organize the views
 
 hook up datatables
 refactor navigation
