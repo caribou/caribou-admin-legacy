@@ -24,6 +24,10 @@
 
       this.collection.each(function(model) {
 
+        // Hide join models
+        if(model.get('join_model')) return;
+
+
         // Build up the list element with link inside
         var li = this.make('li');
 
