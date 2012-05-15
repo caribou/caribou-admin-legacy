@@ -33,7 +33,7 @@
 
 
       // Append each of the appropriate fields
-      var fields = app.modelData.get(this.model.id).get('fields'),
+      var fields = app.modelData.getModelByType(this.model.meta.type).get('fields'),
           filteredFields = _.filter(fields, function(field) {
             return field.editable && !(/position|fields/).test(field.slug);
           });

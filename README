@@ -26,8 +26,6 @@ Enjoy!
 
 
 ## GOALS today
-basic generic edit view
-basic show views for generic and abstract
 
 
 
@@ -42,14 +40,14 @@ page tree handling, sorting, blah'ing
 
 figure out how to organize the views
 
-generic edit view
-  model details (sidebar)
-
 
 abstract edit view
   sortable fields
-  delete fields
   model details
+
+associations
+
+view specs
 
 show view
 
@@ -62,7 +60,9 @@ update instance
 
 create associations
 
-view specs
+breadcrumbs
+actions
+
 
 page sorting
 

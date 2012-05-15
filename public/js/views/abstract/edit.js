@@ -50,20 +50,6 @@
       _.each(model.get('fields'), this.renderAbstractField);
 
 
-      // Render the sidebar
-      var sidebar = new app.views.AbstractSidebar({
-        model: model
-      });
-
-
-      // FIXME: This is a little janky right now, but we can't insert
-      // an element _after_ another until its actually in the DOM
-      var $el = this.$el;
-      this.el.addEventListener('DOMNodeInserted', function() {
-        $el.after(sidebar.render().el);
-      }, false);
-
-
       return this;
     },
 

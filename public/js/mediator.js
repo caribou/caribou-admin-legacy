@@ -39,6 +39,8 @@
       });
 
       $('#active_admin_content').empty().append(view.render().el);
+
+      return true;
     };
 
     if(app.synced) return fn();
@@ -48,22 +50,38 @@
 
 
 
-  mediator.on('sync:modelEdit', function(model) {
+  mediator.on('sync:modelEdit sync:modelNew', function(model) {
     var fn = function() {
 
-      var viewType = model.meta.type === 'model' ? 'AbstractModelEdit' : 'GenericModelEdit',
+      var viewType = model.meta.type === 'model' ? 'Abstract'
+                                                 : 'Generic';
 
-          view = new app.views[viewType]({
-            model: model
-          });
 
-      $('#active_admin_content').empty().append(view.render().el);
+      // Render the primary 'edit' view
+      var editView = new app.views[viewType+'ModelEdit']({
+        model: model
+      });
+
+
+      // Render the sidebar
+      var sidebar = new app.views[viewType+'Sidebar']({
+        model: model
+      });
+
+
+      $('#active_admin_content').empty()
+        .append(editView.render().el)
+        .append(sidebar.render().el);
+
+      return true;
     };
 
     if(app.synced) return fn();
 
     mediator.queue.push(fn);
   });
+
+
 
 
 }(

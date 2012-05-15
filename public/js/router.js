@@ -8,6 +8,7 @@
     routes: {
       ''                : 'dashboard',
       ':model'          : 'modelIndex',
+      ':model/new'      : 'modelNew',
       ':model/:id'      : 'modelShow',
       ':model/:id/edit' : 'modelEdit'
     },
@@ -96,6 +97,24 @@
           app.mediator.trigger('sync:modelEdit', model);
         }
       });
+    },
+
+
+
+    // FIXME: this looks a lot like modelShow, opportunity to DRY
+    // TODO: think about the event naming schema here, not sure it works
+    modelNew: function(modelName) {
+
+      // Fetch data for the specified model if we don't already have it
+      if(! app.collections[_.titlecase(modelName)]) {
+        app.modelData.add({ slug: _.slugify(modelName) });
+      }
+
+      // NOTE: This fetches a new model, we could potentially use the one that already exists
+      var model = new app.models[_.titlecase(modelName)];
+      model.meta = model.meta || {};
+      model.meta.type = modelName;
+      app.mediator.trigger('sync:modelNew', model);
     }
 
   });

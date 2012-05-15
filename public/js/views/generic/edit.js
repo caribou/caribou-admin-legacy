@@ -63,12 +63,6 @@
       //});
 
 
-      // FIXME: This is a little janky right now, but we can't insert
-      // an element _after_ another until its actually in the DOM
-      //var $el = this.$el;
-      //this.el.addEventListener('DOMNodeInserted', _.once(function() {
-      //  $el.after(sidebar.render().el);
-      //}), false);
 
 
       return this;

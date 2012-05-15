@@ -30,8 +30,6 @@
 
       this.$el.append(this.renderEditableFields());
 
-      // FIXME: Event bindings aren't working, maybe due to delayed DOM insertion?
-
       return this;
     },
 
@@ -113,23 +111,22 @@
 
 
     addField: function(e) {
-      debugger;
       e.preventDefault();
 
-      //var fieldTypes = caribou.modelFieldTypes(),
-      //    type = $(e.target).data('type');
+      var fieldTypes = app.fieldTypes,
+          type = $(e.target).data('type');
 
-      //// FIXME: get rid of the stench of outside references
-      //var $modelEditTable = $('.model_fields_edit_table table tbody');
+      // FIXME: get rid of the stench of outside references
+      var $modelEditTable = $('.model_fields_edit_table table tbody');
 
-      //var field = new caribou.Views.Abstract.RowForModelEdit({
-      //  field: _.extend(fieldTypes[type], { type: type }),
-      //  index: $('tr', $modelEditTable).length,
-      //  model: this.model
-      //});
+      var field = new app.views.AbstractRowForModelEdit({
+        field: _.extend(fieldTypes.get(type), { type: type }),
+        index: $('tr', $modelEditTable).length,
+        model: this.model
+      });
 
-      //// Render to the DOM
-      //$modelEditTable.append(field.render().el);
+      // Render to the DOM
+      $modelEditTable.append(field.render().el);
     }
 
 
