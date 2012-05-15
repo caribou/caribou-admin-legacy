@@ -211,7 +211,7 @@ var caribou = function() {
           value = verbose[i].value;
 
       // Skip if undefined or blank
-      if(_.isUndefined(value) || value === '') continue;
+      if(_.isUndefined(value)) continue;
 
       // If we have a collection of values, treat as such
       // add an index to the collection
