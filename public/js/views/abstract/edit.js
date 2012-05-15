@@ -50,6 +50,14 @@
       _.each(model.get('fields'), this.renderAbstractField);
 
 
+      //this.el.addEventListener('DOMNodeInsertedIntoDocument', function() {
+      //  new Dragdealer($('.sortable', this.$el)[0], {
+      //    horizontal: false,
+      //    vertical  : true
+      //  });
+      //});
+
+
       return this;
     },
 

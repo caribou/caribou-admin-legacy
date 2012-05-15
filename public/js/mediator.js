@@ -62,16 +62,23 @@
         model: model
       });
 
-
-      // Render the sidebar
-      var sidebar = new app.views[viewType+'Sidebar']({
-        model: model
-      });
+      var $content = $('#active_admin_content').empty();
+      $content.append(editView.render().el)
 
 
-      $('#active_admin_content').empty()
-        .append(editView.render().el)
-        .append(sidebar.render().el);
+
+      // Render the sidebar (if we have one)
+      var sidebarView = app.views[viewType+'Sidebar'];
+
+      if(sidebarView) {
+        var sidebar = new sidebarView({
+          model: model
+        });
+
+        $content.append(sidebar.render().el);
+      }
+
+
 
       return true;
     };

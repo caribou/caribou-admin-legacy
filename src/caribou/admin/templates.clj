@@ -432,7 +432,8 @@
        [:td.actions
          ;; Optional "delete" field inserted with js
          [:a.member_link.handle_link
-           { :href "#" }
+           { :href "#"
+             :class "handle" }
            "Drag"]])
 
 
