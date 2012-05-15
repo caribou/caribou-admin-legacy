@@ -23,7 +23,7 @@ var caribou = function() {
   }
   console.log(REMOTE);
   var rpc = new easyXDM.Rpc({
-    remote: REMOTE+"/cors/"
+    remote: REMOTE+"/cors/index.html"
   }, {
     remote: {
       request: {}

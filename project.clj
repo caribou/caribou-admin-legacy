@@ -1,4 +1,4 @@
-(defproject antler/caribou-admin "0.3.6"
+(defproject antler/caribou-admin "0.4.0"
   :description "Flexible and adaptive admin for caribou-api"
   :url "http://github.com/antler/caribou-admin"
   :license {:name "Eclipse Public License"
@@ -13,6 +13,7 @@
          :servlet-name "caribou-admin"
          :init caribou.admin.core/init
          :port 33553}
+  :resources-path "resources"
   :repositories {"snapshots" {:url "http://battlecat:8080/nexus/content/repositories/snapshots" 
                               :username "deployment" :password "deployment"}
                  "releases"  {:url "http://battlecat:8080/nexus/content/repositories/releases" 
