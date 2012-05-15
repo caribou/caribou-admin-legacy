@@ -6,30 +6,31 @@
             [compojure.route :as route]
             [compojure.handler :as handler]))
 
-(def file-separator
-  (str (.get (java.lang.System/getProperties) "file.separator")))
+;; (def file-separator
+;;   (str (.get (java.lang.System/getProperties) "file.separator")))
 
-(defn pathify
-  [paths]
-  (string/join file-separator paths))
+;; (defn pathify
+;;   [paths]
+;;   (string/join file-separator paths))
 
-(defn file-exists?
-  [path]
-  (.exists (io/file path)))
+;; (defn file-exists?
+;;   [path]
+;;   (.exists (io/file path)))
 
-(defn which-public
-  []
-  (let [admin-path (pathify ["admin" "public"])]
-    (if (file-exists? admin-path)
-      admin-path
-      "public")))
+;; (defn which-public
+;;   []
+;;   (let [admin-path (pathify ["admin" "public"])]
+;;     (if (file-exists? admin-path)
+;;       admin-path
+;;       "public")))
 
 (defn render-index
   [& args]
-  (slurp (pathify [(which-public) "caribou.html"])))
+  (slurp (io/resource "public/caribou.html")))
+  ;; (slurp (pathify [(which-public) "caribou.html"])))
 
 (defroutes admin-routes
-  (route/files "/" {:root (which-public)})
+  (route/resources "/")
   (route/not-found (render-index)))
 
 (declare app)
@@ -38,5 +39,4 @@
   []
   (def app (-> (handler/site admin-routes)
                (wrap-reload 'caribou.admin.core)
-               (wrap-file "public")
                (wrap-stacktrace))))

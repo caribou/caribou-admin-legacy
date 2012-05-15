@@ -13,6 +13,7 @@
          :servlet-name "caribou-admin"
          :init caribou.admin.core/init
          :port 33553}
+  :resources-path "resources"
   :repositories {"snapshots" {:url "http://battlecat:8080/nexus/content/repositories/snapshots" 
                               :username "deployment" :password "deployment"}
                  "releases"  {:url "http://battlecat:8080/nexus/content/repositories/releases" 
