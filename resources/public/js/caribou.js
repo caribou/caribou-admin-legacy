@@ -213,6 +213,7 @@ var caribou = function() {
       // Skip if undefined or blank
       if(_.isUndefined(value)) continue;
 
+
       // If we have a collection of values, treat as such
       // add an index to the collection
       // TODO: group fields based on the nested model

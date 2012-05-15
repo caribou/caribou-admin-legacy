@@ -909,10 +909,12 @@ caribou.admin = function() {
         // Ensure it isn't an associated position
         c.push(! /_position$/.test(field.slug));
 
+        // Ensure it isn't a link
+        c.push(! field.link_id);
+
         return c;
       }
     };
-
 
     // Run the strategies
     var criterion = strategies[view](field);
