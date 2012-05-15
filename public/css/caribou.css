@@ -105,3 +105,8 @@ ul {
   color: #EFEFEF;
 
 }
+
+
+form fieldset {
+  padding: 0 0 10px;
+}

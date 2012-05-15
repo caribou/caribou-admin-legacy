@@ -31,20 +31,31 @@ Enjoy!
   closing out of the last option in a multiple select doesn't allow the user to collapse the dropdown
     this may be a chosen bug, have to use backspace to delete the last option
 
-  show 'part' link or name in table views
+  !show 'part' link or name in table views
 
 
 
 ## TODO
 viewspec
-  view page
-  edit page
+
 page tree handling, sorting, blah'ing
 
 
 ## NOTES
 viewspecs
-  to start:
-  in the views, same thing, but gather all fields into a hidden div
-  have option to see other fields in a 'see more' link
+  create a viewspec model
+  if a viewspec model exists then I can show the toggle fields button
+  model has a reference to the type of view, and to the field type on the model
+  +-----------+------------+
+  | model_id  | view       |
+  +-----------+------------+
+  | 1         | 'edit'     |
+  +-----------+------------+
 
+  then each time I render a table, I have to do a lookup on that model, which means I need to load that data upfront
+  there would be a custom view that has a list of all the models
+    for each model the user can see a list of fields with checkboxes
+    they default to shown
+    e.g. Status [view] [edit] [list]
+
+  use strategies to set defaults

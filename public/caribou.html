@@ -413,8 +413,8 @@ EDIT TEMPLATES
       <input type="hidden" name="${model.slug}[id]" value="${content.id}" />
       {{/if}}
     </div>
-    <fieldset class="inputs">
-      <h3><a href="#" class="toggle-fields">Toggle Hidden Fields</a></h3>
+    <fieldset class="inputs panel">
+      <h3>${model.name} Details <a href="#" class="toggle-fields">Toggle Hidden Fields</a></h3>
       <ol>
         {{each(i, field) model.fields}}
         <li class="${field.type} required {{if !caribou.admin.isPresentable(field, 'edit') }}hidden{{/if}}" id="${$data.model.slug}_${field.slug}_input">
