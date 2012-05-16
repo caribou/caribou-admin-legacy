@@ -544,7 +544,7 @@ MODEL FIELD FORM TEMPLATES
       <option{{if field.target_id == caribou.models[name].id}} selected="selected"{{/if}} value="${ caribou.models[name].id }">${ caribou.models[name].name }</option>
       {{/each}}
     </select>
-    <input type="text" name="model[fields][${index}][reciprocal_name]" placeholder="Reciprocal Name" />
+    {{if !field.id}}<input type="text" name="model[fields][${index}][reciprocal_name]" placeholder="Reciprocal Name" />{{/if}}
   </div>
 </script>
 
