@@ -910,7 +910,7 @@ caribou.admin = function() {
         c.push(! /_position$/.test(field.slug));
 
         // Ensure it isn't a link
-        c.push(! field.link_id);
+        //c.push(! field.link_id);
 
         return c;
       }
