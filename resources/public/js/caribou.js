@@ -213,6 +213,9 @@ var caribou = function() {
       // Skip if undefined or blank
       if(_.isUndefined(value)) continue;
 
+      // Skip id if it is blank
+      if(/\[id\]$/.test(key) && value === '') continue;
+
 
       // If we have a collection of values, treat as such
       // add an index to the collection
