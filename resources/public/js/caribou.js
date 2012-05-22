@@ -19,7 +19,7 @@ var caribou = function() {
   /* TODO: change this. don't make assumptions that admin will live at the 'admin' subdomain */
   var LOCATION = window.location.toString();
   var REMOTE = 'http://localhost:33443';
-  if (!LOCATION.match(/^https?:\/\/admin/)) {
+  if (LOCATION.match(/^https?:\/\/admin/)) {
     REMOTE = LOCATION.replace(/^(https?:\/\/)(admin)(\.[^\/]+).*/, "$1api$3")
   }
   console.log(REMOTE);
