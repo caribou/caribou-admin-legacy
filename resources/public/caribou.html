@@ -339,7 +339,7 @@ LIST TEMPLATES
                 {{each(i, field) model.fields}}
                 {{if caribou.admin.isPresentable(field, 'list') }}
                 <th class="{{if field.slug === meta.order_by}}sorted-${meta.order}{{/if}} sortable">
-                  <a href="javascript:;" onclick="caribou.go('/${$data.model.slug}?page=${meta.page}&page_size=${meta.page_size}&order_by=${field.slug}&order=${meta.order === 'asc' ? 'desc' : 'asc'}')">${field.name}</a>
+                  <a href="javascript:;" onclick="caribou.go('/${$data.model.slug}?page=${meta.page}&page_size=${meta.page_size}&order=${field.slug} {meta.order === 'asc' ? 'desc' : 'asc'}')">${field.name}</a>
                 </th>
                 {{/if}}
                 {{/each}}
@@ -362,12 +362,12 @@ LIST TEMPLATES
       <nav class="pagination">
         {{if meta.page > 1}}
         <span class="first">
-          <a href="javascript:;" onclick="caribou.go('/${model.slug}?page=1&page_size=${meta.page_size}&order_by=${meta.order_by}&order=${meta.order}')">First &laquo;</a>
+          <a href="javascript:;" onclick="caribou.go('/${model.slug}?page=1&page_size=${meta.page_size}&order=${meta.order_by} ${meta.order}')">First &laquo;</a>
         </span>
         {{/if}}
         {{if meta.page > 1}}
         <span class="previous">
-          <a href="javascript:;" onclick="caribou.go('/${model.slug}?page=${meta.page-1}&page_size=${meta.page_size}&order_by=${meta.order_by}&order=${meta.order}')" rel="previous">Previous &lsaquo;</a>
+          <a href="javascript:;" onclick="caribou.go('/${model.slug}?page=${meta.page-1}&page_size=${meta.page_size}&order=${meta.order_by} ${meta.order}')" rel="previous">Previous &lsaquo;</a>
         </span>
         {{/if}}
         {{each(i, page) _.range(1, meta.total_pages+1)}}
@@ -375,19 +375,19 @@ LIST TEMPLATES
         <span class="page current">${$data.meta.page}</span>
         {{else}}
         <span class="page">
-          <a href="javascript:;" onclick="caribou.go('/${model.slug}?page=${page}&page_size=${$data.meta.page_size}&order_by=${$data.meta.order_by}&order=${$data.meta.order}')">${page}</a>
+          <a href="javascript:;" onclick="caribou.go('/${model.slug}?page=${page}&page_size=${$data.meta.page_size}&order=${$data.meta.order_by} ${$data.meta.order}')">${page}</a>
         </span>
         {{/if}}
         {{/each}}
         <!--<span class="page gap">...</span>-->
         {{if meta.page < meta.total_pages}}
         <span class="next">
-          <a href="javascript:;" onclick="caribou.go('/${model.slug}?page=${meta.page+1}&page_size=${meta.page_size}&order_by=${meta.order_by}&order=${meta.order}')" rel="next">Next &rsaquo;</a>
+          <a href="javascript:;" onclick="caribou.go('/${model.slug}?page=${meta.page+1}&page_size=${meta.page_size}&order=${meta.order_by} ${meta.order}')" rel="next">Next &rsaquo;</a>
         </span>
         {{/if}}
         {{if meta.page < meta.total_pages}}
         <span class="last">
-          <a href="javascript:;" onclick="caribou.go('/${model.slug}?page=${meta.total_pages}&page_size=${meta.page_size}&order_by=${meta.order_by}&order=${meta.order}')">Last &raquo;</a>
+          <a href="javascript:;" onclick="caribou.go('/${model.slug}?page=${meta.total_pages}&page_size=${meta.page_size}&order=${meta.order_by} ${meta.order}')">Last &raquo;</a>
         </span>
         {{/if}}
       </nav>
