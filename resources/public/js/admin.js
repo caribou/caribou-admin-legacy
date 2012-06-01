@@ -365,7 +365,9 @@ caribou.admin = function() {
       init: function(params, query) {
         var model = caribou.models[params.model];
         var include = _.map(_.filter(model.fields, function(field) {
-          return /collection|part|link/.test(field.type) && !field.target().join_model;
+          var target = field.target();
+          var doInclude = target ? !target.join_model : true;
+          return /collection|part|link/.test(field.type) && doInclude;
         }), function(collection) {
           if (model.slug === 'model' && collection.slug === 'fields') {
             return collection.slug + '.link';
@@ -439,7 +441,9 @@ caribou.admin = function() {
             // Build up assocation fields for associated models
             _.each(associatedFields, function(field) {
               // We don't want to display the join models
-              if(field.target().join_model) return;
+              var target = field.target();
+              var doInclude = target ? !target.join_model : true;
+              if(!doInclude) return;
               modelView.edit.associationFields(field, model, modelData);
             });
 
