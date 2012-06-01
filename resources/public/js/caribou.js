@@ -16,6 +16,7 @@ _.slugify = function(string) {
 }
 
 var caribou = function() {
+  /* TODO: change this. don't make assumptions that admin will live at the 'admin' subdomain */
   var LOCATION = window.location.toString();
   var REMOTE = 'http://localhost:33443';
   if (LOCATION.match(/^https?:\/\/admin/)) {

@@ -5,7 +5,7 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.3.0"]
                  [compojure "1.0.4"]
-                 [ring/ring-core "1.1.0"
+                 [ring "1.1.0"
                   :exclusions [org.clojure/clojure
                                clj-stacktrace
                                hiccup]]]
