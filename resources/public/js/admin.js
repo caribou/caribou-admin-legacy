@@ -365,7 +365,7 @@ caribou.admin = function() {
       init: function(params, query) {
         var model = caribou.models[params.model];
         var include = _.map(_.filter(model.fields, function(field) {
-          return /collection|part|link/.test(field.type);
+          return /collection|part|link/.test(field.type) && !field.target().join_model;
         }), function(collection) {
           if (model.slug === 'model' && collection.slug === 'fields') {
             return collection.slug + '.link';
