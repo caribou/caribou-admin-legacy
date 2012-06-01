@@ -338,8 +338,8 @@ LIST TEMPLATES
               <tr>
                 {{each(i, field) model.fields}}
                 {{if caribou.admin.isPresentable(field, 'list') }}
-                <th class="{{if field.slug === meta.order_by}}sorted-${meta.order}{{/if}} sortable">
-                  <a href="javascript:;" onclick="caribou.go('/${$data.model.slug}?page=${meta.page}&page_size=${meta.page_size}&order=${field.slug} {meta.order === 'asc' ? 'desc' : 'asc'}')">${field.name}</a>
+                <th class="{{if field.slug === meta.order.split(' ')[0]}}sorted-${meta.order.split(' ')[1]}{{/if}} sortable">
+                  <a href="javascript:;" onclick="caribou.go('/${$data.model.slug}?page=${meta.page}&page_size=${meta.page_size}&order=${field.slug} ${meta.order.split(' ')[1] === 'asc' ? 'desc' : 'asc'}')">${field.name}</a>
                 </th>
                 {{/if}}
                 {{/each}}
