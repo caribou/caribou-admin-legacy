@@ -1,6 +1,6 @@
 (ns caribou.admin.core
   (:use compojure.core
-        [ring.middleware reload file stacktrace])
+        [ring.middleware reload file stacktrace resource file-info])
   (:require [clojure.string :as string]
             [clojure.java.io :as io]
             [compojure.route :as route]
@@ -10,13 +10,16 @@
   [& args]
   (slurp (io/resource "public/caribou.html")))
 
-(defroutes admin-routes
-  (route/resources "/")
-  (route/not-found (render-index)))
+(defn admin
+  [request]
+  {:status 200 :body (render-index)})
 
 (declare app)
 
 (defn init
   []
-  (def app (-> (handler/site admin-routes)
+  (def app (-> admin
+               (wrap-resource "public")
+               (wrap-file-info)
+               (wrap-reload #'app '(caribou.admin.core))
                (wrap-stacktrace))))
