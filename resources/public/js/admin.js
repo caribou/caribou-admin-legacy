@@ -202,23 +202,27 @@ caribou.admin = function() {
 
   var contentDelete = function(name, id) {
     var url = '/' + name + '/' + id;
-    caribou.api.delete({
-      url: url,
-      success: function(response) {
-        var succeed = function() {
-          $('#'+name+'_'+id).remove();
-          delete caribou.models[name];
-          delete caribou.models[id];
-          caribou.modelNames = _.reject(caribou.modelNames, function(n) { return n === name });
-          headerNav();
-        };
-        if (name === 'model') {
-          caribou.resetModels(succeed);
-        } else {
-          succeed();
+    if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS PROBABLY NOT?")) {
+      caribou.api.delete({
+        url: url,
+        success: function(response) {
+          var succeed = function() {
+            $('#'+name+'_'+id).remove();
+            delete caribou.models[name];
+            delete caribou.models[id];
+            caribou.modelNames = _.reject(caribou.modelNames, function(n) { return n === name });
+            headerNav();
+          };
+          if (name === 'model') {
+            caribou.resetModels(succeed);
+          } else {
+            succeed();
+          }
         }
-      }
-    });
+      });
+    } else {
+
+    }
   };
   
   fieldDeleteLink = function(e){
