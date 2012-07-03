@@ -710,10 +710,12 @@ FIELD INPUT TEMPLATES
     </label>
     <input id="${field.slug}_asset" name="${model.slug}[${field.slug}_id]" type="hidden" value="${content[field.slug+'_id']}"/>
     <span class="update" onclick="caribou.admin.showUploadForm('${field.slug}')">Choose Asset</span>
+    <span class="update" onclick="caribou.admin.removeAsset('${field.slug}')">Remove Asset</span>
     <span id="${field.slug}_thumbnail">
       {{if content[field.slug] && content[field.slug].path}}
-      <a target="_blank" href="${caribou.remoteAPI}/${content[field.slug].path}">
-        <img src="/${caribou.remoteAPI}/${content[field.slug].path}" height="100" /></a>
+      <a id="${field.slug}_showing" target="_blank" href="${caribou.remoteAPI}/${content[field.slug].path}">
+        <img src="/${caribou.remoteAPI}/${content[field.slug].path}" height="100" />
+      </a>
       {{/if}}
     </span>
   </div>

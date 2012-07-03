@@ -867,6 +867,10 @@ caribou.admin = function() {
     $('#upload_dialog').dialog('open');
   };
 
+  var removeAsset = function(context) {
+    $('#'+context+'_asset').val('0');
+    $('#'+context+'_thumbnail').html('');
+  };
 
   /*//////////////////////////////////////////////
   //
@@ -975,6 +979,7 @@ caribou.admin = function() {
     modelView: modelView,
     slugOptions: slugOptions,
     showUploadForm: showUploadForm,
+    removeAsset: removeAsset,
     isPresentable: isPresentable
   };
   
