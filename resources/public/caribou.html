@@ -530,8 +530,8 @@ MODEL FIELD FORM TEMPLATES
   <div class="field">
     <label for="">Default value</label>
     <select name="model[fields][${index}][default_value]">
-      <option{{if field.default_value}} selected="selected"{{/if}}>true</option>
-      <option{{if !field.default_value}} selected="selected"{{/if}}>false</option>
+      <option{{if field.default_value === "true"}} selected="selected"{{/if}}>true</option>
+      <option{{if field.default_value !== "true"}} selected="selected"{{/if}}>false</option>
     </select>
   </div>
 </script>
