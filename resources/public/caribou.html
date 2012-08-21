@@ -551,7 +551,7 @@ MODEL FIELD FORM TEMPLATES
 <script id="slugLinkFieldOptions" type="text/x-jquery-tmpl">
   <div class="field">
     <label for="">Linked field</label>
-    <select name="model[fields][${index}][link_slug]" class="slug_options">{{html caribou.admin.slugOptions(content, field.link)}}</select>
+    <select name="model[fields][${index}][link_slug]" class="slug_options">{{html caribou.admin.slugOptions($data.model, field.link)}}</select>
   </div>
 </script>
 
