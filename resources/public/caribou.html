@@ -714,7 +714,7 @@ FIELD INPUT TEMPLATES
     <span id="${field.slug}_thumbnail">
       {{if content[field.slug] && content[field.slug].path}}
       <a id="${field.slug}_showing" target="_blank" href="${caribou.remoteAPI}/${content[field.slug].path}">
-        <img src="${caribou.remoteAPI}/${content[field.slug].path}" height="100" />
+        <img src="${content[field.slug].path}" height="100" />
       </a>
       {{/if}}
     </span>
