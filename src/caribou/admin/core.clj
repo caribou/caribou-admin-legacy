@@ -21,5 +21,5 @@
 (defn init
   []
   (def app admin)
-  (if-not (System/getProperty "environment")
-    (swank/start-server :host "127.0.0.1" :port 9903)))
+  (if-let [swank-port (System/getProperty "admin-swank-port")]
+    (swank/start-server :host "127.0.0.1" :port (Integer/parseInt swank-port))))
