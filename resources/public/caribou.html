@@ -41,6 +41,10 @@
         <span class="breadcrumb">&nbsp;</span>
         <h2 id="page_title">&nbsp;</h2>
         <div class="action_items">&nbsp;</div>
+        <div id="locale_dropdown">
+          <select id="locale_options" name="locale">
+          </select>
+        </div>
       </div>
       
       <div class="flashes"></div>
@@ -147,15 +151,15 @@ ACTION ITEM TEMPLATES
 -->
 
 <script id="actionItemsForGenericList" type="text/x-jquery-tmpl">
-  <span class="action_item"><a href="javascript:;" onclick="caribou.go('/${model.slug}/new')">New ${model.name}</a></span>
+  <span class="action_item"><a href="javascript:;" onclick="caribou.go(caribou.admin.localize('/${model.slug}/new'))">New ${model.name}</a></span>
 </script>
 
 <script id="actionItemsForGenericEdit" type="text/x-jquery-tmpl">
-  <span class="action_item"><a href="javascript:;" onclick="caribou.go('/${model.slug}/new')">New ${model.name}</a></span>
+  <span class="action_item"><a href="javascript:;" onclick="caribou.go(caribou.admin.localize('/${model.slug}/new'))">New ${model.name}</a></span>
 </script>
 
 <script id="actionItemsForGenericView" type="text/x-jquery-tmpl">
-  <span class="action_item"><a href="javascript:;" onclick="caribou.go('/${model.slug}/${content.id}/edit')">Edit ${model.name}</a></span>
+  <span class="action_item"><a href="javascript:;" onclick="caribou.go(caribou.admin.localize('/${model.slug}/${content.id}/edit'))">Edit ${model.name}</a></span>
   <span class="action_item"><a href="/${model.slug}/${content.id}" data-confirm="Are you sure you want to delete this?" data-method="delete" rel="nofollow">Delete ${model.name}</a></span>
 </script>
 
@@ -300,12 +304,12 @@ LIST TEMPLATES
 <script id="mainContentForGenericRow" type="text/x-jquery-tmpl">
   {{each(i, field) model.fields}}
   {{if caribou.admin.isPresentable(field, 'list') }}
-  <td>{{if i==0}}<a href="javascript:;" onclick="caribou.go('/${$data.model.slug}/${content.id}')">{{/if}}${content[field.slug]}{{if i==0}}</a>{{/if}}</td>
+  <td>{{if i==0}}<a href="javascript:;" onclick="caribou.go(caribou.admin.localize('/${$data.model.slug}/${content.id}'))">{{/if}}${content[field.slug]}{{if i==0}}</a>{{/if}}</td>
   {{/if}}
   {{/each}}
   <td>
-    <a href="javascript:;" onclick="caribou.go('/${model.slug}/${content.id}')" class="member_link view_link">View</a>
-    <a href="javascript:;" onclick="caribou.go('/${model.slug}/${content.id}/edit')" class="member_link edit_link">Edit</a>
+    <a href="javascript:;" onclick="caribou.go(caribou.admin.localize('/${model.slug}/${content.id}'))" class="member_link view_link">View</a>
+    <a href="javascript:;" onclick="caribou.go(caribou.admin.localize('/${model.slug}/${content.id}/edit'))" class="member_link edit_link">Edit</a>
     {{if !content.locked}}
     <a href="javascript:;" onclick="caribou.admin.delete('${model.slug}', ${content.id})" class="member_link delete_link" data-confirm="Are you sure you want to delete this?" data-method="delete" rel="nofollow">Delete</a>
     {{/if}}
@@ -339,7 +343,7 @@ LIST TEMPLATES
                 {{each(i, field) model.fields}}
                 {{if caribou.admin.isPresentable(field, 'list') }}
                 <th class="{{if field.slug === meta.order.split(' ')[0]}}sorted-${meta.order.split(' ')[1]}{{/if}} sortable">
-                  <a href="javascript:;" onclick="caribou.go('/${$data.model.slug}?page=${meta.page}&page_size=${meta.page_size}&order=${field.slug} ${meta.order.split(' ')[1] === 'asc' ? 'desc' : 'asc'}')">${field.name}</a>
+                  <a href="javascript:;" onclick="caribou.go(caribou.admin.localize('/${$data.model.slug}?page=${meta.page}&page_size=${meta.page_size}&order=${field.slug} ${meta.order.split(' ')[1] === 'asc' ? 'desc' : 'asc'}'))">${field.name}</a>
                 </th>
                 {{/if}}
                 {{/each}}
@@ -362,12 +366,12 @@ LIST TEMPLATES
       <nav class="pagination">
         {{if meta.page > 1}}
         <span class="first">
-          <a href="javascript:;" onclick="caribou.go('/${model.slug}?page=1&page_size=${meta.page_size}&order=${meta.order_by} ${meta.order}')">First &laquo;</a>
+          <a href="javascript:;" onclick="caribou.go(caribou.admin.localize('/${model.slug}?page=1&page_size=${meta.page_size}&order=${meta.order_by} ${meta.order}'))">First &laquo;</a>
         </span>
         {{/if}}
         {{if meta.page > 1}}
         <span class="previous">
-          <a href="javascript:;" onclick="caribou.go('/${model.slug}?page=${meta.page-1}&page_size=${meta.page_size}&order=${meta.order_by} ${meta.order}')" rel="previous">Previous &lsaquo;</a>
+          <a href="javascript:;" onclick="caribou.go(caribou.admin.localize('/${model.slug}?page=${meta.page-1}&page_size=${meta.page_size}&order=${meta.order_by} ${meta.order}'))" rel="previous">Previous &lsaquo;</a>
         </span>
         {{/if}}
         {{each(i, page) _.range(1, meta.total_pages+1)}}
@@ -375,19 +379,19 @@ LIST TEMPLATES
         <span class="page current">${$data.meta.page}</span>
         {{else}}
         <span class="page">
-          <a href="javascript:;" onclick="caribou.go('/${model.slug}?page=${page}&page_size=${$data.meta.page_size}&order=${$data.meta.order_by} ${$data.meta.order}')">${page}</a>
+          <a href="javascript:;" onclick="caribou.go(caribou.admin.localize('/${model.slug}?page=${page}&page_size=${$data.meta.page_size}&order=${$data.meta.order_by} ${$data.meta.order}'))">${page}</a>
         </span>
         {{/if}}
         {{/each}}
         <!--<span class="page gap">...</span>-->
         {{if meta.page < meta.total_pages}}
         <span class="next">
-          <a href="javascript:;" onclick="caribou.go('/${model.slug}?page=${meta.page+1}&page_size=${meta.page_size}&order=${meta.order_by} ${meta.order}')" rel="next">Next &rsaquo;</a>
+          <a href="javascript:;" onclick="caribou.go(caribou.admin.localize('/${model.slug}?page=${meta.page+1}&page_size=${meta.page_size}&order=${meta.order_by} ${meta.order}'))" rel="next">Next &rsaquo;</a>
         </span>
         {{/if}}
         {{if meta.page < meta.total_pages}}
         <span class="last">
-          <a href="javascript:;" onclick="caribou.go('/${model.slug}?page=${meta.total_pages}&page_size=${meta.page_size}&order=${meta.order_by} ${meta.order}')">Last &raquo;</a>
+          <a href="javascript:;" onclick="caribou.go(caribou.admin.localize('/${model.slug}?page=${meta.total_pages}&page_size=${meta.page_size}&order=${meta.order_by} ${meta.order}'))">Last &raquo;</a>
         </span>
         {{/if}}
       </nav>

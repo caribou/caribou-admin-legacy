@@ -50,11 +50,60 @@ caribou.admin = function() {
   };
 
   var buildSlugOptions = function() {
-    var slug_options = _.map($('.string_field'), function(string) {
+    var slugOptions = _.map($('.string_field'), function(string) {
       return '<option>'+$(string).val()+'</option>';
     }).join('');
 
-    $('.slug_options').html(slug_options);
+    $('.slug_options').html(slugOptions);
+  };
+
+  // locale functionality
+
+  var updateURLParameter = function(url, param, paramVal){
+    var newAdditionalURL = "";
+    var tempArray = url.split("?");
+    var baseURL = tempArray[0];
+    var additionalURL = tempArray[1];
+    var temp = "";
+    if (additionalURL) {
+      tempArray = additionalURL.split("&");
+      for (i=0; i<tempArray.length; i++){
+        if(tempArray[i].split('=')[0] != param){
+          newAdditionalURL += temp + tempArray[i];
+          temp = "&";
+        }
+      }
+    }
+
+    var rows_txt = temp + "" + param + "=" + paramVal;
+    return baseURL + "?" + newAdditionalURL + rows_txt;
+  }
+
+  var selectLocale = function(locale) {
+    $('#locale_options').val(locale);
+  }
+
+  var currentLocale = function() {
+    return $('#locale_options').val() || 'en_US';
+  }
+
+  var localizeUrl = function(url) {
+    return updateURLParameter(url, 'locale', currentLocale());
+  }
+
+  var buildLocaleOptions = function(locales) {
+    if (locales.length === 0) {
+      $('#locale_dropdown').hide();
+    } else {
+      var localeOptions = _.map(locales, function(locale) {
+        return '<option value="'+locale+'">'+locale+'</option>';
+      }).join('');
+      $('#locale_options').html(localeOptions);
+      $('#locale_options').change(function() {
+        var url = localizeUrl(window.location.toString());
+        caribou.go(url);
+      });
+    }
   };
 
   /*//////////////////////////////////////////////
@@ -100,7 +149,7 @@ caribou.admin = function() {
       // We don't want any join models in here
       if(model.join_model) return;
 
-      return {url: _.template('/<%= slug %>', model), title: model.name};
+      return {url: localizeUrl(_.template('/<%= slug %>', model)), title: model.name};
     }).compact().value();
     var tabs = template.tabbedNavigation({chosen: modelname, choices: choices});
     $('#tabs').empty().append(tabs);
@@ -153,15 +202,15 @@ caribou.admin = function() {
   *///////////////////////////////////////////////
   
   var contentCreate = function(name) {
-    var data = caribou.formData('#'+name+'_edit'),
-        url = '/' + name;
+    var data = caribou.formData('#'+name+'_edit');
+    var url = '/' + name;
 
     caribou.api.post({
       url: url,
       data: data,
       success: function(response) {
         var succeed = function() {
-          caribou.go(url + '/' + response.response.id + '/edit');
+          caribou.go(localizeUrl(url + '/' + response.response.id + '/edit'));
         };
 
         if (name === 'model') {
@@ -179,14 +228,15 @@ caribou.admin = function() {
     var data = caribou.formData('#'+name+'_edit');
     var id = name + '[id]';
     var url = '/' + name + '/' + data[id];
+    data.locale = currentLocale();
     delete data[id];
 
     caribou.api.put({
-      url: url,
+      url: localizeUrl(url),
       data: data,
       success: function(response) {
         var succeed = function() {
-          caribou.go(url + '/edit');
+          caribou.go(localizeUrl(url + '/edit'));
           setFlashNotice(_.capitalize(name) + ' was successfully updated.');
         };
         if (name === 'model') {
@@ -259,6 +309,7 @@ caribou.admin = function() {
     
     list: {
       init: function(params, query) {
+        selectLocale(query.locale);
         caribou.api.get({
           url: _.template('/<%= model %>', params),
           data: query,
@@ -294,6 +345,7 @@ caribou.admin = function() {
     
     view: {
       init: function(params, query) {
+        selectLocale(query.locale);
         var model = caribou.models[params.model];
         var include = _.map(_.filter(model.fields, function(field) {
           return /collection|part|link/.test(field.type);
@@ -306,7 +358,7 @@ caribou.admin = function() {
 
         caribou.api.get({
           url: url,
-          data: {include: include},
+          data: {include: include, locale: currentLocale()},
           success: function(response) {
 
             headerNav(params.model);
@@ -367,6 +419,7 @@ caribou.admin = function() {
 
     edit: {
       init: function(params, query) {
+        selectLocale(query.locale);
         var model = caribou.models[params.model];
         var include = _.map(_.filter(model.fields, function(field) {
           var target = field.target();
@@ -386,7 +439,7 @@ caribou.admin = function() {
 
         caribou.api.get({
           url: url,
-          data: {include: include},
+          data: {include: include, locale: currentLocale()},
           success: function(response) {
 
             var joinModels = _.select(model.fields, function(field) {
@@ -493,7 +546,8 @@ caribou.admin = function() {
     },
     
     new: {
-      init: function(params) {
+      init: function(params, query) {
+        selectLocale(query.locale);
         headerNav(params.model);
         var model = caribou.models[params.model];
 
@@ -958,7 +1012,9 @@ caribou.admin = function() {
   
   return {
     init: function() {
-      caribou.init();
+      caribou.init(function() {
+        buildLocaleOptions(caribou.locales);
+      });
       $('#upload_dialog').dialog({
         autoOpen: false,
         modal: true,
@@ -980,7 +1036,8 @@ caribou.admin = function() {
     slugOptions: slugOptions,
     showUploadForm: showUploadForm,
     removeAsset: removeAsset,
-    isPresentable: isPresentable
+    isPresentable: isPresentable,
+    localize: localizeUrl
   };
   
 }();

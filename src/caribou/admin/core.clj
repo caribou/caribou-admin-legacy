@@ -10,11 +10,13 @@
 
 (defn admin
   [request]
-  (if-let [resource (io/resource (str "public" (:uri request)))]
-    {:status 200
-     :body (slurp resource)
-     :headers {"Content-Type" (mime/mime-type-of (:uri request))}}
-    {:status 200 :body (render-index)}))
+  (try 
+    (let [resource (io/resource (str "public" (:uri request)))]
+      {:status 200
+       :body (slurp resource)
+       :headers {"Content-Type" (mime/mime-type-of (:uri request))}})
+    (catch Exception e
+      {:status 200 :body (render-index)})))
 
 (declare app)
 

@@ -160,7 +160,6 @@ var caribou = function() {
 
   var models = {};
   var modelNames = [];
-
   var resetModels = function(success) {
     api.get({
       url: "/model",
@@ -182,6 +181,22 @@ var caribou = function() {
           models[model.slug] = model;
         });
 
+        success();
+      }
+    });
+  };
+
+  var locales = [];
+  var resetLocales = function(success) {
+    success = success || function() {};
+    api.get({
+      url: "/locale",
+      cache: false,
+      data: {},
+      success: function(response) {
+        _.each(response.response, function(locale) {
+          locales.push(locale.code);
+        });
         success();
       }
     });
@@ -248,6 +263,7 @@ var caribou = function() {
   var init = function(success) {
     window.onstatechange = act;
     resetModels(act);
+    resetLocales(success);
     retrieveFieldTypes();
   };
 
@@ -257,6 +273,7 @@ var caribou = function() {
     go: go,
     act: act,
     models: models,
+    locales: locales,
     modelNames: modelNames,
     modelFieldTypes: function() {return modelFieldTypes;},
     routing: routing,
