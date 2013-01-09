@@ -537,7 +537,7 @@ caribou.admin = function() {
             var upload = caribou.api.upload(function(response) {
               var src = response.url;
               $('#'+response.context+'_asset').val(response.asset_id);
-              $('#'+response.context+'_thumbnail').html('<a target="_blank" href="'+src+'"><img src="'+src+'" height="100" /></a>');
+              $('#'+response.context+'_thumbnail').html('<a target="_blank" href="/'+src+'"><img src="/'+src+'" height="100" /></a>');
               $('#upload_dialog').dialog("close");
             });
           }

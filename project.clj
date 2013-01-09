@@ -1,4 +1,4 @@
-(defproject antler/caribou-admin "0.7.4"
+(defproject antler/caribou-admin "0.7.5"
   :description "Flexible and adaptive admin for caribou-api"
   :url "http://github.com/antler/caribou-admin"
   :license {:name "Eclipse Public License"
@@ -6,6 +6,7 @@
   :dependencies [[org.clojure/clojure "1.3.0"]
                  [swank-clojure "1.4.2"]
                  [com.novemberain/pantomime "1.4.0"]
+                 [ring "1.1.6"]
                  [compojure "1.1.3"]]
   :ring {:handler caribou.admin.core/app
          :servlet-name "caribou-admin"

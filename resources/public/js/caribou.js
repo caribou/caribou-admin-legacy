@@ -232,7 +232,6 @@ var caribou = function() {
       // Skip id if it is blank
       if(/\[id\]$/.test(key) && value === '') continue;
 
-
       // If we have a collection of values, treat as such
       // add an index to the collection
       // TODO: group fields based on the nested model
@@ -242,7 +241,6 @@ var caribou = function() {
 
       data[key] = value;
     }
-
 
     var checks = $(selector + " input:checkbox");
     for (i = 0; i < checks.length; i++) {
