@@ -223,12 +223,11 @@ var caribou = function() {
     var verbose = $(selector).serializeArray();
 
     for (var i=0, l = verbose.length; i < l; i++) {
-      var key = verbose[i].name,
-          value = verbose[i].value;
+      var key = verbose[i].name;
+      var value = verbose[i].value;
 
       // Skip if undefined or blank
       if(_.isUndefined(value)) continue;
-
       // Skip id if it is blank
       if(/\[id\]$/.test(key) && value === '') continue;
 
@@ -237,7 +236,6 @@ var caribou = function() {
       // TODO: group fields based on the nested model
       if(/^.+\]\[\]\[.+$/.test(key))
         key = key.replace(/\]\[\]\[/, '][' + i + '][');
-
 
       data[key] = value;
     }
@@ -255,6 +253,7 @@ var caribou = function() {
     //     data[files[i].name] = checks[i].checked;
     // }
 
+    console.log(data)
     return data;
   };
 

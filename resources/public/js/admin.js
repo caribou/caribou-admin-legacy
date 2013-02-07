@@ -88,7 +88,8 @@ caribou.admin = function() {
   }
 
   var localizeUrl = function(url) {
-    return updateURLParameter(url, 'locale', currentLocale());
+    return url;
+    // return updateURLParameter(url, 'locale', currentLocale());
   }
 
   var buildLocaleOptions = function(locales) {
@@ -228,7 +229,7 @@ caribou.admin = function() {
     var data = caribou.formData('#'+name+'_edit');
     var id = name + '[id]';
     var url = '/' + name + '/' + data[id];
-    data.locale = currentLocale();
+    // data.locale = currentLocale();
     delete data[id];
 
     caribou.api.put({
@@ -358,7 +359,7 @@ caribou.admin = function() {
 
         caribou.api.get({
           url: url,
-          data: {include: include, locale: currentLocale()},
+          data: {include: include}, // , locale: currentLocale()},
           success: function(response) {
 
             headerNav(params.model);
@@ -439,7 +440,7 @@ caribou.admin = function() {
 
         caribou.api.get({
           url: url,
-          data: {include: include, locale: currentLocale()},
+          data: {include: include}, // locale: currentLocale()},
           success: function(response) {
 
             var joinModels = _.select(model.fields, function(field) {
@@ -918,11 +919,12 @@ caribou.admin = function() {
   
   var showUploadForm = function(context) {
     $('#upload_context').val(context);
+    $("#upload_dialog").find("input[type=file]").replaceWith('<input type="file" name="upload" id="upload_dialog_file" />');
     $('#upload_dialog').dialog('open');
   };
 
   var removeAsset = function(context) {
-    $('#'+context+'_asset').val('0');
+    $('#'+context+'_asset').val('');
     $('#'+context+'_thumbnail').html('');
   };
 
