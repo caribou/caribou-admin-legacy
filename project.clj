@@ -1,4 +1,4 @@
-(defproject antler/caribou-admin "0.8.0"
+(defproject antler/caribou-admin "0.8.1"
   :description "Flexible and adaptive admin for caribou-api"
   :url "http://github.com/antler/caribou-admin"
   :license {:name "Eclipse Public License"
