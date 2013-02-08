@@ -642,6 +642,11 @@ FIELD INPUT TEMPLATES
   <input type="text" id="${model.slug}_${field.slug}" name="${model.slug}[${field.slug}]" maxlength="255" value="${content[field.slug]}" />
 </script>
 
+<script id="passwordField" type="text/x-jquery-tmpl">
+  <label for="${$data.model.slug}_${field.slug}">${field.name}<abbr title="required">*</abbr></label>
+  <input type="password" id="${model.slug}_${field.slug}" name="${model.slug}[${field.slug}]" maxlength="255" value="${content[field.slug]}" />
+</script>
+
 <script id="slugField" type="text/x-jquery-tmpl">
   <label for="${$data.model.slug}_${field.slug}">${field.name}<abbr title="required">*</abbr></label>
   <input type="text" name="${model.slug}[${field.slug}]" value="${content[field.slug]}" />
