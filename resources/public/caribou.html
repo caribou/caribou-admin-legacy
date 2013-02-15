@@ -559,6 +559,13 @@ MODEL FIELD FORM TEMPLATES
   </div>
 </script>
 
+<script id="urlslugLinkFieldOptions" type="text/x-jquery-tmpl">
+  <div class="field">
+    <label for="">Linked field</label>
+    <select name="model[fields][${index}][link_slug]" class="slug_options">{{html caribou.admin.slugOptions($data.model, field.link)}}</select>
+  </div>
+</script>
+
 
 <!-- 
 
@@ -648,6 +655,11 @@ FIELD INPUT TEMPLATES
 </script>
 
 <script id="slugField" type="text/x-jquery-tmpl">
+  <label for="${$data.model.slug}_${field.slug}">${field.name}<abbr title="required">*</abbr></label>
+  <input type="text" name="${model.slug}[${field.slug}]" value="${content[field.slug]}" />
+</script>
+
+<script id="urlslugField" type="text/x-jquery-tmpl">
   <label for="${$data.model.slug}_${field.slug}">${field.name}<abbr title="required">*</abbr></label>
   <input type="text" name="${model.slug}[${field.slug}]" value="${content[field.slug]}" />
 </script>
