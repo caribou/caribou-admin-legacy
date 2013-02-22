@@ -3,7 +3,7 @@
   :url "http://github.com/antler/caribou-admin"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[org.clojure/clojure "1.3.0"]
+  :dependencies [[org.clojure/clojure "1.4.0"]
                  [swank-clojure "1.4.2"]
                  [com.novemberain/pantomime "1.4.0"]
                  [ring "1.1.6"]
